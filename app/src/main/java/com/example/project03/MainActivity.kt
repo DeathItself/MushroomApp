@@ -32,11 +32,7 @@ import com.google.gson.Gson
 import java.io.File
 import java.net.URI
 
-data class Mushroom(
-    val commonName: String,
-    val scientificName: String,
-    val imageResourceId: Int
-)
+
 
 val mushrooms = listOf(
     Mushroom("Chanterelle", "Cantharellus cibarius", R.drawable.fly_agaric_mushroom),
