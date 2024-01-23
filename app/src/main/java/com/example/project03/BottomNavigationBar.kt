@@ -15,6 +15,7 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 val items = listOf(
     BottomNavigation(
@@ -46,13 +47,22 @@ val items = listOf(
 @Composable
 fun BottomNavigationBar() {
     NavigationBar {
+        val mainViewModel: MainViewModel = viewModel()
         Row(
             modifier = Modifier.background(MaterialTheme.colorScheme.inverseOnSurface)
         ) {
             items.forEachIndexed { index, item ->
                 NavigationBarItem(
                     selected = index == 0,
-                    onClick = { },
+                    onClick = {
+                          when(index){
+                              0 -> Unit
+                              1 -> Unit
+                              2 -> Unit
+                              3 -> Unit
+                              4 -> mainViewModel.showBottomSheet = true
+                          }
+                    },
                     icon = {
                         Icon(
                             imageVector = item.icon,
@@ -61,6 +71,8 @@ fun BottomNavigationBar() {
                         )
                     }
                 )
+
+
             }
         }
     }
