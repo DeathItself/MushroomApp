@@ -99,7 +99,7 @@ fun MushroomList(mushrooms: List<Mushroom>) {
     }
 }
 
-class MainActivity : ComponentActivity() {
+class Activity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
