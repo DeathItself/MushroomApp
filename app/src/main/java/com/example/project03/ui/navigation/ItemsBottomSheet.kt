@@ -6,21 +6,21 @@ import androidx.compose.material.icons.rounded.Dining
 import androidx.compose.material.icons.rounded.Diversity3
 import androidx.compose.ui.graphics.vector.ImageVector
 
-sealed class Items_BottomSheet (
+sealed class ItemsBottomSheet (
     val title: String,
     val icon: ImageVector
 ){
-    object Item_menu01: Items_BottomSheet(
+    object ItemMenu01: ItemsBottomSheet(
         "Aprender",
         Icons.Rounded.Category
     )
 
-    object Item_menu02: Items_BottomSheet(
+    object ItemMenu02: ItemsBottomSheet(
         "Comer",
         Icons.Rounded.Dining
     )
 
-    object Item_menu03: Items_BottomSheet(
+    object ItemMenu03: ItemsBottomSheet(
         "Comunidad",
         Icons.Rounded.Diversity3
     )

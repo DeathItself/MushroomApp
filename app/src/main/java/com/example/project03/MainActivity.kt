@@ -32,8 +32,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.project03.ui.components.TopAppBarWithScaffold
 import com.example.project03.ui.navigation.BottomNavigationBar
+import com.example.project03.ui.navigation.ItemsBottomSheet
 import com.example.project03.ui.theme.Project03Theme
-import com.example.project03.ui.navigation.Items_BottomSheet.*
 import com.example.project03.viewmodel.MainViewModel
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
@@ -101,10 +101,10 @@ class MainActivity : ComponentActivity() {
     fun ContentBottomSheet(
         mainViewModel: MainViewModel
     ) {
-        val items_menu = listOf(
-            Item_menu01,
-            Item_menu02,
-            Item_menu03
+        val itemsMenu = listOf(
+            ItemsBottomSheet.ItemMenu01,
+            ItemsBottomSheet.ItemMenu02,
+            ItemsBottomSheet.ItemMenu03
         )
         Column (
             modifier = Modifier
@@ -115,7 +115,7 @@ class MainActivity : ComponentActivity() {
 
                     )
         ){
-            items_menu.forEach{item ->
+            itemsMenu.forEach{item ->
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
