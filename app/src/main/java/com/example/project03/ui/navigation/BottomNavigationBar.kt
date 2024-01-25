@@ -1,4 +1,4 @@
-package com.example.project03
+package com.example.project03.ui.navigation
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
@@ -17,6 +17,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.project03.model.BottomNavigation
+import com.example.project03.viewmodel.MainViewModel
 
 val items = listOf(
     BottomNavigation(

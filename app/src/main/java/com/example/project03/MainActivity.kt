@@ -30,8 +30,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.project03.ui.components.TopAppBarWithScaffold
+import com.example.project03.ui.navigation.BottomNavigationBar
 import com.example.project03.ui.theme.Project03Theme
-import com.example.project03.Items_BottomSheet.*
+import com.example.project03.ui.navigation.Items_BottomSheet.*
+import com.example.project03.viewmodel.MainViewModel
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 class MainActivity : ComponentActivity() {
@@ -65,7 +68,6 @@ class MainActivity : ComponentActivity() {
 
     @Preview(showBackground = true, showSystemUi = true)
     @OptIn(ExperimentalMaterial3Api::class)
-    @Preview
     @Composable
     fun HomeScreen() {
         val mainViewModel: MainViewModel = viewModel()

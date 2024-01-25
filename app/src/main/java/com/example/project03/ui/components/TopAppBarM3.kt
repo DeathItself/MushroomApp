@@ -1,4 +1,4 @@
-package com.example.project03
+package com.example.project03.ui.components
 
 import android.annotation.SuppressLint
 import androidx.compose.material.icons.Icons

@@ -1,4 +1,4 @@
-package com.example.project03
+package com.example.project03.ui.navigation
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Category
