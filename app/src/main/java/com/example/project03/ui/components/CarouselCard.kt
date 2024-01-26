@@ -49,7 +49,7 @@ fun CarouselCard() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 8.dp)
+            .padding(horizontal = 20.dp)
             .aspectRatio(1.8f)
     ) {
 

@@ -2,8 +2,6 @@ package com.example.project03.ui.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -25,11 +23,11 @@ import com.example.project03.R
 
 @Preview
 @Composable
-fun BannerCard(){
+fun BannerCard() {
     ElevatedCard(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp),
+            .padding(horizontal = 20.dp),
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(8.dp)
     ) {
@@ -45,35 +43,35 @@ fun BannerCard(){
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding( horizontal=8.dp),
-                contentAlignment = Alignment.BottomStart
-            ){
-                Column (modifier = Modifier.padding(horizontal = 5.dp)) {
-                    Text(
-                        modifier = Modifier.shadow(
-                            elevation = 8.dp,
-                            shape = RoundedCornerShape(12.dp)
-                        ),
-                        text = "Seta del dia",
-                        style = MaterialTheme.typography.headlineMedium,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 35.sp,
-                        color = Color.White
+                    .padding(horizontal = 8.dp),
+            ) {
+                Text(
+                    modifier = Modifier.shadow(
+                        elevation = 20.dp,
+                        shape = RoundedCornerShape(12.dp)
                     )
-
-                    Spacer(modifier = Modifier.padding(top = 195.dp))
-
-                    Text(
-                        modifier = Modifier.shadow(
-                            elevation = 4.dp,
-                            shape = RoundedCornerShape(12.dp)
-                        ),
-                        text = "Boletus",
-                        style = MaterialTheme.typography.bodySmall,
-                        fontSize = 20.sp,
-                        color = Color.White
-                    )
-                }
+                        .padding(8.dp),
+                    text = "Seta del dia",
+                    style = MaterialTheme.typography.headlineMedium,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 35.sp,
+                    color = Color.White
+                )
+            }
+            Box(modifier = Modifier
+                .align(Alignment.BottomStart)
+                .padding(30.dp)) {
+                Text(
+                    modifier = Modifier.shadow(
+                        elevation = 4.dp,
+                        shape = RoundedCornerShape(12.dp),
+                    ),
+                    text = "Boletus",
+                    style = MaterialTheme.typography.bodySmall,
+                    fontSize = 20.sp,
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold
+                )
             }
         }
     }
