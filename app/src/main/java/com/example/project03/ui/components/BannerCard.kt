@@ -1,4 +1,4 @@
-package com.example.project03.ui.screens.home
+package com.example.project03.ui.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
@@ -31,7 +31,7 @@ fun BannerCard(){
             .fillMaxWidth()
             .padding(8.dp),
         shape = RoundedCornerShape(12.dp),
-        elevation = CardDefaults.cardElevation(1.dp)
+        elevation = CardDefaults.cardElevation(8.dp)
     ) {
         Box(
             modifier = Modifier.fillMaxWidth()

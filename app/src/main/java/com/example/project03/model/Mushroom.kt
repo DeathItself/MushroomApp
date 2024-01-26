@@ -1,4 +1,4 @@
-package com.example.project03
+package com.example.project03.model
 
 data class Mushroom(
     val commonName: String,

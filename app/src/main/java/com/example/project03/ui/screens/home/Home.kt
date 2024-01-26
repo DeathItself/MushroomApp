@@ -17,10 +17,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.project03.ui.components.BannerCard
 import com.example.project03.ui.components.TopAppBarWithoutScaffold
 import com.example.project03.ui.navigation.BottomNavigationBar
 import com.example.project03.ui.navigation.ContentBottomSheet
 import com.example.project03.viewmodel.MainViewModel
+import com.example.project03.ui.components.CarouselCard
 
 @Preview(showBackground = true, showSystemUi = true)
 @OptIn(ExperimentalMaterial3Api::class)
@@ -42,7 +44,7 @@ fun HomeScreen() {
             TopAppBarWithoutScaffold(isHome)
             Spacer(modifier = Modifier.padding(5.dp))
             BannerCard()
-            Spacer(modifier = Modifier.padding(5.dp))
+            CarouselCard(modifier=Modifier)
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
