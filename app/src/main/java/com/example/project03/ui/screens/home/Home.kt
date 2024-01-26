@@ -44,7 +44,7 @@ fun HomeScreen() {
             TopAppBarWithoutScaffold(isHome)
             Spacer(modifier = Modifier.padding(5.dp))
             BannerCard()
-            CarouselCard(modifier=Modifier)
+            CarouselCard()
             Column(
                 modifier = Modifier
                     .fillMaxWidth()

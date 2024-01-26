@@ -48,7 +48,7 @@ fun BannerCard(){
                     .padding( horizontal=8.dp),
                 contentAlignment = Alignment.BottomStart
             ){
-                Column {
+                Column (modifier = Modifier.padding(horizontal = 5.dp)) {
                     Text(
                         modifier = Modifier.shadow(
                             elevation = 8.dp,

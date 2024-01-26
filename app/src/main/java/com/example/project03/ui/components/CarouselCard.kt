@@ -37,7 +37,7 @@ import com.google.accompanist.pager.rememberPagerState
 @OptIn(ExperimentalFoundationApi::class, ExperimentalPagerApi::class)
 @Composable
 @Preview(showBackground = true, showSystemUi = true)
-fun CarouselCard(modifier: Modifier = Modifier) {
+fun CarouselCard() {
     Modifier.padding(8.dp)
     val pagerState = rememberPagerState(initialPage = 1)
     val sliderMap = mapOf(
@@ -66,15 +66,19 @@ fun CarouselCard(modifier: Modifier = Modifier) {
             modifier = Modifier.height(800.dp),
         ) { page ->
             ElevatedCard(
-                elevation = CardDefaults.cardElevation(8.dp)
-                , colors = CardDefaults.elevatedCardColors(Color.Transparent)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal=8.dp),
+                shape = RoundedCornerShape(12.dp),
+                elevation = CardDefaults.cardElevation(8.dp),
+                colors = CardDefaults.elevatedCardColors(Color.Transparent)
 
             ) {
                 Box(contentAlignment = Alignment.BottomCenter) {
                     AsyncImage(
                         model = ImageRequest.Builder(LocalContext.current)
                             .data(sliderMap.values.toList()[page])
-                            .crossfade(true).scale(Scale.FIT)
+                            .crossfade(true).scale(Scale.FILL)
                             .build(),
                         contentDescription = null,
                         contentScale = ContentScale.Crop,
@@ -87,10 +91,11 @@ fun CarouselCard(modifier: Modifier = Modifier) {
                             .padding(horizontal = 8.dp),
                         contentAlignment = Alignment.Center
                     ) {
+
                         Text(
                             modifier = Modifier
                                 .shadow(
-                                    elevation = 8.dp,
+                                    elevation = 10.dp,
                                     shape = RoundedCornerShape(12.dp)
                                 )
                                 .padding(8.dp),
