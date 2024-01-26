@@ -22,7 +22,7 @@ import com.example.project03.viewmodel.MainViewModel
 
 val items = listOf(
     BottomNavigation(
-        title = "Home",
+        title = "Inicio",
         icon = Icons.Rounded.Home
     ),
 
