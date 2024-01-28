@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.example.project03.model.BottomNavigation
 import com.example.project03.viewmodel.MainViewModel
 
@@ -47,9 +48,8 @@ val items = listOf(
     )
 )
 
-@Preview
 @Composable
-fun BottomNavigationBar() {
+fun BottomNavigationBar(navController: NavController) {
     NavigationBar {
         val mainViewModel: MainViewModel = viewModel()
         Row(
@@ -60,8 +60,8 @@ fun BottomNavigationBar() {
                     selected = index == 0,
                     onClick = {
                           when(index){
-                              0 -> Unit
-                              1 -> Unit
+                              0 -> navController.navigate(route = AppScreens.HomeScreen.route)
+                              1 -> navController.navigate(route = AppScreens.MapScreen.route)
                               2 -> Unit
                               3 -> Unit
                               4 -> mainViewModel.showBottomSheet = true

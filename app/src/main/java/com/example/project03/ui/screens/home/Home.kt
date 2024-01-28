@@ -1,9 +1,9 @@
 package com.example.project03.ui.screens.home
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
@@ -17,47 +17,31 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.example.project03.ui.components.BannerCard
 import com.example.project03.ui.components.TopAppBarWithoutScaffold
 import com.example.project03.ui.navigation.BottomNavigationBar
-import com.example.project03.ui.navigation.ContentBottomSheet
 import com.example.project03.viewmodel.MainViewModel
 import com.example.project03.ui.components.CarouselCard
+import com.example.project03.ui.navigation.ContentBottomSheet
 
-@Preview(showBackground = true, showSystemUi = true)
 @OptIn(ExperimentalMaterial3Api::class)
+//@Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun HomeScreen() {
+fun HomeScreen(navController: NavController) {
     val mainViewModel: MainViewModel = viewModel()
     var isHome by remember { mutableStateOf(true) }
     Scaffold(
-        bottomBar = {
-            BottomNavigationBar()
-        }
-    ) { padding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding)
-        ) {
-            //Secciones
+        topBar = {
             TopAppBarWithoutScaffold(isHome)
-            Spacer(modifier = Modifier.padding(5.dp))
-            BannerCard()
-            CarouselCard()
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(
-                        horizontal = 20.dp,
-                        vertical = 20.dp
-                    )
-            ) {
-            }
+        },
+        bottomBar = {
+            BottomNavigationBar(navController)
         }
+    ) {padding ->
+        ContentHomeScreen(padding = padding)
 
-
-
+        //submenu
         if (mainViewModel.showBottomSheet) {
             ModalBottomSheet(
                 onDismissRequest = { mainViewModel.showBottomSheet = false }
@@ -65,5 +49,18 @@ fun HomeScreen() {
                 ContentBottomSheet(mainViewModel)
             }
         }
+    }
+}
+@Composable
+fun ContentHomeScreen(padding: PaddingValues){
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(padding)
+
+    ) {
+        Spacer(modifier = Modifier.padding(5.dp))
+        BannerCard()
+        CarouselCard()
     }
 }
