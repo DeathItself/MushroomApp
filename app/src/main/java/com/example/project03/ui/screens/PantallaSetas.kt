@@ -25,26 +25,27 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.project03.R
 import com.example.project03.model.Mushroom
+import com.google.firebase.firestore.FirebaseFirestore
 
 
-val mushrooms = listOf(
-    Mushroom("Chanterelle", "Cantharellus cibarius", R.drawable.fly_agaric_mushroom),
-    Mushroom("Fly Agaric", "Amanita muscaria", R.drawable.fresh_enoki_mushroom_500x500),
-    Mushroom("Morel", "Morchella", R.drawable.chant_3),
-    Mushroom("Lion's Mane", "Hericium erinaceus", R.drawable.lions_mane_2),
-    Mushroom("Shiitake", "Lentinula edodes", R.drawable.shiitake_cultivo),
-    Mushroom("Porcini", "Boletus edulis", R.drawable._200px_pleurotus_ostreatus_jpg7),
-    Mushroom("Oyster Mushroom", "Pleurotus ostreatus", R.drawable.descarga),
-    Mushroom(
-        "Reishi",
-        "Ganoderma lucidum",
-        R.drawable.hongo_inmortalidad_anticancerigeno_que_reduce_estres_alarga_vida_98
-    ),
-    Mushroom("Enoki Mushroom", "Flammulina velutipes", R.drawable.istockphoto_505505411_612x612)
-)
+val mushrooms: MutableList<Mushroom> = mutableListOf()
 
 @Composable
-fun MushroomList(mushrooms: List<Mushroom>) {
+fun MushroomList() {
+    val db = FirebaseFirestore.getInstance()
+    val mushroomRef = db.collection("setas")
+
+    mushroomRef.get().addOnSuccessListener { documents ->
+        for (document in documents) {
+            val mushroomData = document.toObject(Mushroom::class.java)
+            if (mushroomData != null) {
+                mushrooms.add(mushroomData)
+            }
+        }
+    }.addOnFailureListener { exception ->
+        println("Error getting mushrooms from Firebase: ${exception.message}")
+    }
+
     LazyColumn {
 
         items(mushrooms) { mushroom ->
@@ -96,7 +97,7 @@ class Activity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MushroomList(mushrooms)
+            MushroomList()
         }
     }
 }
