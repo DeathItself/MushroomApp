@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1045267699408",
+    "project_id": "mushapp01",
+    "storage_bucket": "mushapp01.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1045267699408:android:f127efe94401a8b96330d5",
+        "android_client_info": {
+          "package_name": "com.example.project03"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAyAxu8lByzXTv318XUUSpnY83h7pq1Vvo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
