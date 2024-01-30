@@ -1,7 +1,7 @@
 package com.example.project03.ui.components
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Face
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -12,6 +12,8 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
+import com.example.project03.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -33,7 +35,7 @@ fun LargeTopAppBarM3(
         if (!isHome) {
             run {
                 IconButton(onClick = { /* acción de regreso */ }) {
-                    Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Regresar")
+                    Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.topAppBarReturn))
                 }
             }
         }
@@ -53,7 +55,7 @@ fun SmallTopAppBarM3(
         if (!isHome) {
             run {
                 IconButton(onClick = { /* acción de regreso */ }) {
-                    Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Regresar")
+                    Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.topAppBarReturn))
                 }
             }
         }

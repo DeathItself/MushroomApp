@@ -77,4 +77,5 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.5.0")
     testImplementation("junit:junit:4.13.2")
     implementation("com.google.accompanist:accompanist-permissions:0.29.1-alpha")
+    implementation("androidx.navigation:navigation-runtime-ktx:2.7.6")
 }

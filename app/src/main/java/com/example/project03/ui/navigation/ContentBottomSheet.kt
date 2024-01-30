@@ -13,6 +13,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.project03.viewmodel.MainViewModel
 
@@ -20,11 +21,13 @@ import com.example.project03.viewmodel.MainViewModel
 fun ContentBottomSheet(
     mainViewModel: MainViewModel
 ) {
+
     val itemsMenu = listOf(
         ItemsBottomSheet.ItemMenu01,
         ItemsBottomSheet.ItemMenu02,
         ItemsBottomSheet.ItemMenu03
     )
+
     Column (
         modifier = Modifier
             .fillMaxSize()
@@ -40,13 +43,15 @@ fun ContentBottomSheet(
                 modifier = Modifier
                     .height(48.dp)
             ){
-                Icon(item.icon, item.title)
+                // Usar stringResource para obtener el string del ID del recurso
+                val titleString = stringResource(id = item.titleRes)
+                Icon(item.icon, contentDescription = titleString)
                 Spacer(
                     modifier = Modifier
                         .width(24.dp)
                 )
                 Text(
-                    text = item.title,
+                    text = titleString,
                     style = MaterialTheme.typography.bodyLarge,
                 )
             }

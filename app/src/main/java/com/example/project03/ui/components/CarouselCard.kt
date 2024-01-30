@@ -22,6 +22,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -54,7 +55,7 @@ fun CarouselCard() {
     ) {
 
         Text(
-            text = "Mis setas",
+            text = stringResource(R.string.carrouselMyMush),
             Modifier.padding(8.dp),
             style = MaterialTheme.typography.headlineMedium
         )
@@ -68,7 +69,7 @@ fun CarouselCard() {
             ElevatedCard(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal=8.dp),
+                    .padding(horizontal = 8.dp),
                 shape = RoundedCornerShape(12.dp),
                 elevation = CardDefaults.cardElevation(8.dp),
                 colors = CardDefaults.elevatedCardColors(Color.Transparent)

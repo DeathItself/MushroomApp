@@ -15,41 +15,42 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.project03.R
 import com.example.project03.model.BottomNavigation
 import com.example.project03.viewmodel.MainViewModel
 
-val items = listOf(
-    BottomNavigation(
-        title = "Inicio",
-        icon = Icons.Rounded.Home
-    ),
-
-    BottomNavigation(
-        title = "Mapa",
-        icon = Icons.Rounded.Map
-    ),
-
-    BottomNavigation(
-        title = "Añadir Seta",
-        icon = Icons.Rounded.AddCircle
-    ),
-
-    BottomNavigation(
-        title = "Mis Setas",
-        icon = Icons.Rounded.ShoppingBasket
-    ),
-
-    BottomNavigation(
-        title = "Menu",
-        icon = Icons.Rounded.Menu
-    )
-)
 
 @Composable
 fun BottomNavigationBar(navController: NavController) {
+    val items = listOf(
+        BottomNavigation(
+            title = stringResource(R.string.BottomNavHome),
+            icon = Icons.Rounded.Home
+        ),
+
+        BottomNavigation(
+            title = stringResource( R.string.BottomNavMap),
+            icon = Icons.Rounded.Map
+        ),
+
+        BottomNavigation(
+            title = stringResource(R.string.BottomNavAdd),
+            icon = Icons.Rounded.AddCircle
+        ),
+
+        BottomNavigation(
+            title = stringResource(R.string.BottomNavMyMush),
+            icon = Icons.Rounded.ShoppingBasket
+        ),
+
+        BottomNavigation(
+            title = stringResource(R.string.BottomNavMenu),
+            icon = Icons.Rounded.Menu
+        )
+    )
     NavigationBar {
         val mainViewModel: MainViewModel = viewModel()
         Row(
@@ -59,13 +60,13 @@ fun BottomNavigationBar(navController: NavController) {
                 NavigationBarItem(
                     selected = index == 0,
                     onClick = {
-                          when(index){
-                              0 -> navController.navigate(route = AppScreens.HomeScreen.route)
-                              1 -> navController.navigate(route = AppScreens.MapScreen.route)
-                              2 -> Unit
-                              3 -> Unit
-                              4 -> mainViewModel.showBottomSheet = true
-                          }
+                        when (index) {
+                            0 -> navController.navigate(route = AppScreens.HomeScreen.route)
+                            1 -> navController.navigate(route = AppScreens.MapScreen.route)
+                            2 -> Unit
+                            3 -> Unit
+                            4 -> mainViewModel.showBottomSheet = true
+                        }
                     },
                     icon = {
 
