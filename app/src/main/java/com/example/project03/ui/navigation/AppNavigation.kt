@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.project03.ui.screens.myMush.MostrarDatosScreen
 import com.example.project03.ui.screens.home.HomeScreen
 import com.example.project03.ui.screens.maps.MapScreen
 
@@ -16,6 +17,9 @@ fun AppNavigation(){
         }
         composable(route = AppScreens.MapScreen.route){
             MapScreen(navController)
+        }
+        composable(route = AppScreens.MisSetasScreen.route ) {
+            MostrarDatosScreen(navController)
         }
     }
 }

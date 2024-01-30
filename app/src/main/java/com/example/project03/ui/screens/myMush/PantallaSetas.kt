@@ -1,10 +1,7 @@
-package com.example.project03.ui.screens
+package com.example.project03.ui.screens.myMush
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,26 +10,38 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Button
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.project03.R
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import coil.compose.AsyncImage
 import com.example.project03.model.Mushroom
-import com.google.firebase.firestore.FirebaseFirestore
+import com.example.project03.ui.components.TopAppBarWithoutScaffold
+import com.example.project03.ui.navigation.BottomNavigationBar
+import com.example.project03.ui.navigation.ContentBottomSheet
+import com.example.project03.viewmodel.MainViewModel
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 
 
 val mushrooms: MutableList<Mushroom> = mutableListOf()
 
 @Composable
 fun MushroomList() {
-    val db = FirebaseFirestore.getInstance()
+    val db = Firebase.firestore
     val mushroomRef = db.collection("setas")
 
     mushroomRef.get().addOnSuccessListener { documents ->
@@ -40,16 +49,50 @@ fun MushroomList() {
             val mushroomData = document.toObject(Mushroom::class.java)
             if (mushroomData != null) {
                 mushrooms.add(mushroomData)
+
             }
         }
     }.addOnFailureListener { exception ->
         println("Error getting mushrooms from Firebase: ${exception.message}")
     }
+}
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun MostrarDatosScreen(navController: NavController){
+    val mainViewModel: MainViewModel = viewModel()
+    var isHome by remember { mutableStateOf(false) }
+     Scaffold (
+         topBar = {
+             TopAppBarWithoutScaffold(isHome)
+         },
+         bottomBar = {
+             BottomNavigationBar(navController)
+         })
+     {padding ->
+         MushroomList()
+         mostrarSetas(padding = padding)
+         //submenu
+         if (mainViewModel.showBottomSheet) {
+             ModalBottomSheet(
+                 onDismissRequest = { mainViewModel.showBottomSheet = false }
+             ) {
+                 ContentBottomSheet(mainViewModel)
+             }
+         }
+     }
+
+
+}
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun mostrarSetas(padding: PaddingValues){
     LazyColumn {
 
         items(mushrooms) { mushroom ->
-            ElevatedCard {
+            ElevatedCard (onClick = {/*TODO*/}){
                 Column(
                     modifier = Modifier
                         .padding(vertical = 8.dp)
@@ -57,10 +100,9 @@ fun MushroomList() {
                 ) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.padding(16.dp)
+                        modifier = Modifier.padding(horizontal = 26.dp)
                     ) {
-                        Image(
-                            painter = painterResource(id = mushroom.imageResourceId),
+                        AsyncImage(model = mushroom.photo,
                             contentDescription = null,
                             modifier = Modifier.size(64.dp)
                         )
@@ -75,29 +117,14 @@ fun MushroomList() {
                             Text(
                                 text = mushroom.scientificName,
                                 fontSize = 16.sp,
-                                modifier = Modifier.padding(bottom = 4.dp)
+                                modifier = Modifier.padding(bottom = 4.dp).padding(end = 10.dp)
                             )
                         }
                     }
-                    Button(
-                        onClick = {
-                            /* Do something! */
-                        }
-                    ) {
-                        Text("Buy")
-                    }
+
                 }
             }
 
-        }
-    }
-}
-
-class Activity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            MushroomList()
         }
     }
 }
