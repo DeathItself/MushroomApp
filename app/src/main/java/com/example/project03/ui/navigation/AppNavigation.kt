@@ -6,6 +6,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.project03.ui.screens.home.HomeScreen
 import com.example.project03.ui.screens.maps.MapScreen
+import com.example.project03.ui.screens.permission.LocationPermission
 
 @Composable
 fun AppNavigation(){
@@ -16,6 +17,10 @@ fun AppNavigation(){
         }
         composable(route = AppScreens.MapScreen.route){
             MapScreen(navController)
+        }
+
+        composable(route = AppScreens.LocationScreen.route){
+            LocationPermission(navController)
         }
     }
 }
