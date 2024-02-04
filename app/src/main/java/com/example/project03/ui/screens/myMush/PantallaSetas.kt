@@ -59,28 +59,28 @@ fun MushroomList() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MostrarDatosScreen(navController: NavController){
+fun MostrarDatosScreen(navController: NavController, text: String?) {
     val mainViewModel: MainViewModel = viewModel()
     var isHome by remember { mutableStateOf(false) }
-     Scaffold (
-         topBar = {
-             TopAppBarWithoutScaffold(isHome)
-         },
-         bottomBar = {
-             BottomNavigationBar(navController)
-         })
-     {padding ->
-         MushroomList()
-         mostrarSetas(padding = padding)
-         //submenu
-         if (mainViewModel.showBottomSheet) {
-             ModalBottomSheet(
-                 onDismissRequest = { mainViewModel.showBottomSheet = false }
-             ) {
-                 ContentBottomSheet(mainViewModel)
-             }
-         }
-     }
+    Scaffold(
+        topBar = {
+            TopAppBarWithoutScaffold(isHome)
+        },
+        bottomBar = {
+            BottomNavigationBar(navController)
+        })
+    { padding ->
+        MushroomList()
+        mostrarSetas(padding, navController, text)
+        //submenu
+        if (mainViewModel.showBottomSheet) {
+            ModalBottomSheet(
+                onDismissRequest = { mainViewModel.showBottomSheet = false }
+            ) {
+                ContentBottomSheet(mainViewModel)
+            }
+        }
+    }
 
 
 }
@@ -88,11 +88,21 @@ fun MostrarDatosScreen(navController: NavController){
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun mostrarSetas(padding: PaddingValues){
-    LazyColumn {
+fun mostrarSetas(padding: PaddingValues, navController: NavController, text: String?) {
+    text?.let {
+        Text(it)
+    }
+
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(padding)
+    ) {
 
         items(mushrooms) { mushroom ->
-            ElevatedCard (onClick = {/*TODO*/}){
+            ElevatedCard(
+                modifier = Modifier.padding(2.dp),
+                onClick = { navController.navigate("detail_screen" + mushroom.commonName) }) {
                 Column(
                     modifier = Modifier
                         .padding(vertical = 8.dp)
@@ -102,7 +112,8 @@ fun mostrarSetas(padding: PaddingValues){
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.padding(horizontal = 26.dp)
                     ) {
-                        AsyncImage(model = mushroom.photo,
+                        AsyncImage(
+                            model = mushroom.photo,
                             contentDescription = null,
                             modifier = Modifier.size(64.dp)
                         )
@@ -117,7 +128,9 @@ fun mostrarSetas(padding: PaddingValues){
                             Text(
                                 text = mushroom.scientificName,
                                 fontSize = 16.sp,
-                                modifier = Modifier.padding(bottom = 4.dp).padding(end = 10.dp)
+                                modifier = Modifier
+                                    .padding(bottom = 4.dp)
+                                    .padding(end = 10.dp)
                             )
                         }
                     }
