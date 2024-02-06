@@ -1,21 +1,25 @@
 package com.example.project03.ui.screens.myMush
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,14 +36,40 @@ import com.example.project03.model.Mushroom
 import com.example.project03.ui.components.TopAppBarWithoutScaffold
 import com.example.project03.ui.navigation.BottomNavigationBar
 import com.example.project03.ui.navigation.ContentBottomSheet
+import com.example.project03.util.db.getMushrooms
 import com.example.project03.viewmodel.MainViewModel
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
-
-
-val mushrooms: MutableList<Mushroom> = mutableListOf()
+import com.google.firebase.firestore.FirebaseFirestore
 
 @Composable
+fun PantallaSetas(navController: NavController) {
+    // Contexto de la base de datos Firestore
+    val db = FirebaseFirestore.getInstance()
+
+    // Estados de la UI
+    var mushroomList by remember { mutableStateOf(listOf<Mushroom>()) }
+    var loading by remember { mutableStateOf(true) }
+
+    // Efecto lanzado para cargar los datos
+    LaunchedEffect(key1 = Unit) {
+        mushroomList = db.getMushrooms()
+        loading = false
+    }
+
+    // UI condicional basada en el estado de carga
+    if (loading) {
+//        LoadingState()
+    } else {
+        MushroomList(mushrooms = mushroomList, navController)
+    }
+}
+
+@Composable
+fun LoadingState() {
+    CircularProgressIndicator() // Ejemplo de componente de carga, puede ser sustituido por cualquier otro
+}
+//val mushrooms: MutableList<Mushroom> = mutableListOf()
+
+/*@Composable
 fun MushroomList() {
     val db = Firebase.firestore
     val mushroomRef = db.collection("setas")
@@ -55,7 +85,7 @@ fun MushroomList() {
     }.addOnFailureListener { exception ->
         println("Error getting mushrooms from Firebase: ${exception.message}")
     }
-}
+}*/
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -70,8 +100,9 @@ fun MostrarDatosScreen(navController: NavController, text: String?) {
             BottomNavigationBar(navController)
         })
     { padding ->
-        MushroomList()
-        mostrarSetas(padding, navController, text)
+        Column (Modifier.padding(padding)) {
+            PantallaSetas(navController)
+        }
         //submenu
         if (mainViewModel.showBottomSheet) {
             ModalBottomSheet(
@@ -88,25 +119,22 @@ fun MostrarDatosScreen(navController: NavController, text: String?) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun mostrarSetas(padding: PaddingValues, navController: NavController, text: String?) {
-    text?.let {
-        Text(it)
-    }
-
+fun MushroomList(mushrooms: List<Mushroom>, navController: NavController) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .padding(padding)
     ) {
-
         items(mushrooms) { mushroom ->
             ElevatedCard(
-                modifier = Modifier.padding(2.dp),
-                onClick = { navController.navigate("detail_screen" + mushroom.commonName) }) {
+                modifier = Modifier
+                    .padding(2.dp)
+                    .clickable { navController.navigate("detail_screen") }, // Asumiendo que cada seta tiene un ID único
+                elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp)
+            ) {
                 Column(
                     modifier = Modifier
                         .padding(vertical = 8.dp)
-                        .fillMaxSize()
+                        .fillMaxWidth()
                 ) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
@@ -134,10 +162,8 @@ fun mostrarSetas(padding: PaddingValues, navController: NavController, text: Str
                             )
                         }
                     }
-
                 }
             }
-
         }
     }
 }
