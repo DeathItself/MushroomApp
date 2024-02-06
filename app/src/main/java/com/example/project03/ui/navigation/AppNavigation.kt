@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.project03.ui.components.CameraX
+import com.example.project03.ui.components.CameraScreen
 import com.example.project03.ui.screens.addMushrooms.AddMushroomScreen
 import com.example.project03.ui.screens.home.HomeScreen
 import com.example.project03.ui.screens.maps.MapScreen
@@ -26,7 +26,7 @@ fun AppNavigation(){
 
 
         composable(route = AppScreens.CameraScreen.route){
-            CameraX()
+            CameraScreen(navController)
         }
     }
 }
