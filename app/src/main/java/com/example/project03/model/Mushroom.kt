@@ -1,7 +1,15 @@
 package com.example.project03.model
 
-data class Mushroom(
+
+class Mushroom(
     val commonName: String,
+    val description: String,
+    val habitat: String,
+    val isEdible: Boolean,
+    val photo: String,
     val scientificName: String,
-    val imageResourceId: Int
-)
+    val seasons: String
+){
+    constructor() : this("","","", false,"","","")
+}
+

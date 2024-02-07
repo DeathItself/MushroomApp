@@ -63,7 +63,7 @@ fun BottomNavigationBar(navController: NavController) {
                               0 -> navController.navigate(route = AppScreens.HomeScreen.route)
                               1 -> navController.navigate(route = AppScreens.MapScreen.route)
                               2 -> Unit
-                              3 -> Unit
+                              3 -> navController.navigate(route = AppScreens.MisSetasScreen.route)
                               4 -> mainViewModel.showBottomSheet = true
                           }
                     },

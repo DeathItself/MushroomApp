@@ -14,6 +14,9 @@ import androidx.compose.ui.graphics.Color
 import com.example.project03.ui.navigation.AppNavigation
 import com.example.project03.ui.theme.Project03Theme
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.gson.Gson
+import java.io.File
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,6 +45,7 @@ class MainActivity : ComponentActivity() {
             )
         }
     }
+
 }
 
 
