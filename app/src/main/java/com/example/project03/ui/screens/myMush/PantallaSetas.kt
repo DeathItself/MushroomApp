@@ -12,14 +12,13 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -27,6 +26,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -36,36 +36,24 @@ import com.example.project03.model.Mushroom
 import com.example.project03.ui.components.TopAppBarWithoutScaffold
 import com.example.project03.ui.navigation.BottomNavigationBar
 import com.example.project03.ui.navigation.ContentBottomSheet
-import com.example.project03.util.db.getMushrooms
+import com.example.project03.util.data.Data
 import com.example.project03.viewmodel.MainViewModel
-import com.google.firebase.firestore.FirebaseFirestore
 
 @Composable
 fun PantallaSetas(navController: NavController) {
-    // Contexto de la base de datos Firestore
-    val db = FirebaseFirestore.getInstance()
-
-    // Estados de la UI
-    var mushroomList by remember { mutableStateOf(listOf<Mushroom>()) }
-    var loading by remember { mutableStateOf(true) }
-
-    // Efecto lanzado para cargar los datos
-    LaunchedEffect(key1 = Unit) {
-        mushroomList = db.getMushrooms()
-        loading = false
-    }
-
-    // UI condicional basada en el estado de carga
-    if (loading) {
-//        LoadingState()
-    } else {
-        MushroomList(mushrooms = mushroomList, navController)
-    }
+    MushroomList(mushrooms = Data.DbCall(), navController)
 }
+
+
 
 @Composable
 fun LoadingState() {
-    CircularProgressIndicator() // Ejemplo de componente de carga, puede ser sustituido por cualquier otro
+    Text(
+        modifier = Modifier,
+        text = "Cargando",
+        style = MaterialTheme.typography.bodyMedium,
+        textAlign = TextAlign.Start,
+    ) // Ejemplo de componente de carga, puede ser sustituido por cualquier otro
 }
 //val mushrooms: MutableList<Mushroom> = mutableListOf()
 
@@ -89,7 +77,7 @@ fun MushroomList() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MostrarDatosScreen(navController: NavController, text: String?) {
+fun MostrarDatosScreen(navController: NavController) {
     val mainViewModel: MainViewModel = viewModel()
     var isHome by remember { mutableStateOf(false) }
     Scaffold(
@@ -100,7 +88,7 @@ fun MostrarDatosScreen(navController: NavController, text: String?) {
             BottomNavigationBar(navController)
         })
     { padding ->
-        Column (Modifier.padding(padding)) {
+        Column(Modifier.padding(padding)) {
             PantallaSetas(navController)
         }
         //submenu
@@ -128,9 +116,14 @@ fun MushroomList(mushrooms: List<Mushroom>, navController: NavController) {
             ElevatedCard(
                 modifier = Modifier
                     .padding(2.dp)
-                    .clickable { navController.navigate("detail_screen") }, // Asumiendo que cada seta tiene un ID único
+                    .clickable {
+                        navController.navigate(
+                            "detail_screen/${mushroom.commonName}"
+                        )
+                    },
                 elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp)
             ) {
+                
                 Column(
                     modifier = Modifier
                         .padding(vertical = 8.dp)
