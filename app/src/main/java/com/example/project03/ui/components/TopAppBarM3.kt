@@ -12,27 +12,30 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavController
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopAppBarWithoutScaffold(isHome: Boolean) {
+fun TopAppBarWithoutScaffold(isHome: Boolean, navController: NavController) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     if (isHome) {
         SmallTopAppBarM3(scrollBehavior = scrollBehavior, isHome = isHome)
     } else {
-        LargeTopAppBarM3(scrollBehavior = scrollBehavior, isHome = isHome)
+        LargeTopAppBarM3(scrollBehavior = scrollBehavior, isHome = isHome,
+            navController = navController)
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LargeTopAppBarM3(
-    scrollBehavior: TopAppBarScrollBehavior, isHome: Boolean
+    scrollBehavior: TopAppBarScrollBehavior, isHome: Boolean, navController: NavController
 ) {
     LargeTopAppBar(title = { Text(text = "MushTool") }, navigationIcon = {
         if (!isHome) {
             run {
-                IconButton(onClick = { /* acción de regreso */ }) {
+                IconButton(onClick = { navController.popBackStack()}) {
                     Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Regresar")
                 }
             }

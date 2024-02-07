@@ -42,7 +42,7 @@ fun MapScreen(navController: NavController){
 
     Scaffold(
         topBar = {
-            TopAppBarWithoutScaffold(isHome)
+            TopAppBarWithoutScaffold(isHome,navController)
         },
         bottomBar = {
             BottomNavigationBar(navController)

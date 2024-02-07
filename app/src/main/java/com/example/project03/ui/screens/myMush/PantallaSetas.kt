@@ -82,7 +82,7 @@ fun MostrarDatosScreen(navController: NavController) {
     var isHome by remember { mutableStateOf(false) }
     Scaffold(
         topBar = {
-            TopAppBarWithoutScaffold(isHome)
+            TopAppBarWithoutScaffold(isHome,navController)
         },
         bottomBar = {
             BottomNavigationBar(navController)

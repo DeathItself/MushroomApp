@@ -67,7 +67,7 @@ fun MushroomDetailsScreen(navController: NavController, s: String) {
     var isHome by remember { mutableStateOf(false) }
     Scaffold (
         topBar = {
-            TopAppBarWithoutScaffold(isHome)
+            TopAppBarWithoutScaffold(isHome,navController)
         },
         bottomBar = {
             BottomNavigationBar(navController)

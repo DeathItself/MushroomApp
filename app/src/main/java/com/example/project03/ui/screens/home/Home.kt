@@ -14,16 +14,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.project03.ui.components.BannerCard
+import com.example.project03.ui.components.CarouselCard
 import com.example.project03.ui.components.TopAppBarWithoutScaffold
 import com.example.project03.ui.navigation.BottomNavigationBar
-import com.example.project03.viewmodel.MainViewModel
-import com.example.project03.ui.components.CarouselCard
 import com.example.project03.ui.navigation.ContentBottomSheet
+import com.example.project03.viewmodel.MainViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 //@Preview(showBackground = true, showSystemUi = true)
@@ -33,7 +32,7 @@ fun HomeScreen(navController: NavController) {
     var isHome by remember { mutableStateOf(true) }
     Scaffold(
         topBar = {
-            TopAppBarWithoutScaffold(isHome)
+            TopAppBarWithoutScaffold(isHome,navController)
         },
         bottomBar = {
             BottomNavigationBar(navController)
