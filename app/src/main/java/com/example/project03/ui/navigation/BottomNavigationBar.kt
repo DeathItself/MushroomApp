@@ -15,12 +15,13 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.project03.R
 import com.example.project03.model.BottomNavigation
 import com.example.project03.viewmodel.MainViewModel
+import androidx.compose.ui.res.stringResource
 
 
 @Composable
@@ -64,7 +65,7 @@ fun BottomNavigationBar(navController: NavController) {
                             0 -> navController.navigate(route = AppScreens.HomeScreen.route)
                             1 -> navController.navigate(route = AppScreens.MapScreen.route)
                             2 -> navController.navigate(route = AppScreens.AddMushroomScreen.route)
-                            3 -> Unit
+                            3 -> navController.navigate(route = AppScreens.MisSetasScreen.route)
                             4 -> mainViewModel.showBottomSheet = true
                         }
                     },

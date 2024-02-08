@@ -12,8 +12,6 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.example.project03.ui.navigation.AppNavigation
-import com.example.project03.ui.screens.home.HomeScreen
-import com.example.project03.ui.screens.maps.LocationPermission
 import com.example.project03.ui.theme.Project03Theme
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
@@ -44,6 +42,7 @@ class MainActivity : ComponentActivity() {
             )
         }
     }
+
 }
 
 
