@@ -1,17 +1,17 @@
 package com.example.project03.model
 
+import com.google.firebase.firestore.PropertyName
 
-class Mushroom(
-    val commonName: String,
-    val description: String,
-    val habitat: String,
-    val isEdible: Boolean,
-    val photo: String,
-    val scientificName: String,
-    val seasons: String,
-    val latitude: Double,
-    val longitude: Double
-){
-    constructor() : this("","","", false,"","","",0.0,0.0)
-}
+data class Mushroom(
+    var commonName: String = "",
+    var description: String = "",
+    var habitat: String = "",
+    @get:PropertyName("isEdible") @set:PropertyName("isEdible") var isEdible: Boolean? = null,
+    var photo: String = "",
+    var scientificName: String = "",
+    var seasons: String = "",
+    var latitude: Double = 0.0,
+    var longitude: Double = 0.0
+)
+
 
