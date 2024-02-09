@@ -9,11 +9,19 @@ class Mushroom(
     val photo: String,
     val scientificName: String,
     val seasons: String,
-//    val LocationDetails : LocationDetails
+    val latitude: Double,
+    val longitude: Double
 ){
     constructor() : this(
-        "","","", false,"","","",
-//        LocationDetails(0.0,0.0)
+        "",
+        "",
+        "",
+        false,
+        "",
+        "",
+        "",
+        0.0,
+        0.0
     )
 }
 
