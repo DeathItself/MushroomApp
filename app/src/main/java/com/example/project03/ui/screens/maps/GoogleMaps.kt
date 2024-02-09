@@ -77,7 +77,7 @@ fun ContentGoogleMaps(padding: PaddingValues){
     ){
         GoogleMap(
             cameraPositionState = cameraPositionState,
-            properties = MapProperties(mapType = MapType.HYBRID)
+            properties = MapProperties(mapType = MapType.SATELLITE)
         ) {
             Marker(
                 state = MarkerState(position = spain),

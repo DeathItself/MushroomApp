@@ -8,8 +8,10 @@ class Mushroom(
     val isEdible: Boolean,
     val photo: String,
     val scientificName: String,
-    val seasons: String
+    val seasons: String,
+    val latitude: Double,
+    val longitude: Double
 ){
-    constructor() : this("","","", false,"","","")
+    constructor() : this("","","", false,"","","",0.0,0.0)
 }
 
