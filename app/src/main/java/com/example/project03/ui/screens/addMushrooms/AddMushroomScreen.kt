@@ -33,7 +33,7 @@ fun AddMushroomScreen(navController: NavController){
     var isHome by remember { mutableStateOf(true) }
     Scaffold(
         topBar = {
-            TopAppBarWithoutScaffold(isHome)
+            TopAppBarWithoutScaffold(isHome, navController)
         },
         bottomBar = {
             BottomNavigationBar(navController)
