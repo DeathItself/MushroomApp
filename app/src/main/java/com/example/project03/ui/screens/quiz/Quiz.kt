@@ -1,6 +1,7 @@
 package com.example.project03.ui.screens.quiz
 
 import android.annotation.SuppressLint
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,6 +19,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -138,6 +140,7 @@ fun QuizApp(navController: NavController) {
                     }
                 }
             }
+            val context = LocalContext.current
             Button(onClick = {
                 // Comprobar si la respuesta seleccionada es correcta y actualizar la pregunta
                 if (options[selectedIndex.value] == currentQuestion.value.correctAnswer) {
@@ -145,7 +148,10 @@ fun QuizApp(navController: NavController) {
                     score.value += 1
                     triggerNewQuestion.value = true
                     selectedIndex.value = -1
-                }else score.value = 0
+                }else{
+                    score.value = 0
+                    Toast.makeText(context, "Respuesta incorrecta", Toast.LENGTH_SHORT).show()
+                }
 
             }) {
                 Text("Siguiente pregunta")
