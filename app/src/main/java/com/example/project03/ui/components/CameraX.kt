@@ -4,15 +4,19 @@ import android.Manifest
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Matrix
 import android.view.ViewGroup
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
 import androidx.camera.view.LifecycleCameraController
 import androidx.camera.view.PreviewView
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -21,11 +25,14 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
@@ -54,24 +61,31 @@ fun CameraScreen(){
     }
 
     val executor = ContextCompat.getMainExecutor(context)
-    val capturedImage = remember { mutableStateOf<ImageBitmap?>(null) }
+    val capturedImage = remember { mutableStateOf<Bitmap?>(null) }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        floatingActionButton = { CameraTrigger(cameraController, executor, capturedImage, context) },
+        floatingActionButton = {CameraTrigger(cameraController, executor, capturedImage, context) },
         floatingActionButtonPosition = FabPosition.Center
     ){padding ->
         if(permissionState.status.isGranted){
             if (capturedImage.value != null) {
+                val rotatedBitmap = rotateBitmap(capturedImage.value!!, 90f)
+                val imageBitmap = rotatedBitmap.toImageBitmap(LocalContext.current)
                 Image(
-                    bitmap = capturedImage.value!!,
+                    bitmap = imageBitmap,
                     contentDescription = null,
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(padding)
+                        .padding(24.dp)
                 )
             } else {
-                Camera(cameraController, lifecycle, modifier = Modifier.padding(padding))
+                Camera(
+                    cameraController,
+                    lifecycle,
+                    modifier = Modifier
+                        .padding(padding)
+                )
             }
         }else{
             Text(text = "Permiso Denegado")
@@ -105,32 +119,36 @@ fun Camera(
 fun CameraTrigger(
     cameraController: LifecycleCameraController,
     executor: Executor,
-    capturedImage: MutableState<ImageBitmap?>,
+    capturedImage: MutableState<Bitmap?>,
     context: Context
 ){
     val file = File.createTempFile("imagetest", ".jpg")
     val outputDirectory = ImageCapture.OutputFileOptions.Builder(file).build()
-    Button(onClick = {
-        cameraController.takePicture(outputDirectory, executor, object: ImageCapture.OnImageSavedCallback{
-            override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
-                val bitmap = BitmapFactory.decodeFile(file.absolutePath)
-                val imagePath = saveImageToInternalStorage(context, bitmap)
-                if (imagePath != null) {
-                    println("Imagen guardada en: $imagePath")
-                } else {
-                    println("Error al guardar la imagen")
+    Button(
+        onClick = {
+            cameraController.takePicture(outputDirectory, executor, object: ImageCapture.OnImageSavedCallback{
+                override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
+                    val bitmap = BitmapFactory.decodeFile(file.absolutePath)
+                    val imagePath = saveImageToInternalStorage(context, bitmap)
+                    if (imagePath != null) {
+                        println("Imagen guardada en: $imagePath")
+                    } else {
+                        println("Error al guardar la imagen")
+                    }
+                    capturedImage.value = bitmap
                 }
-                val imageBitmap: ImageBitmap = bitmap.asImageBitmap()
-                capturedImage.value = imageBitmap
-            }
 
-            override fun onError(exception: ImageCaptureException) {
-                println()
-            }
-        })
-    }) {
+                override fun onError(exception: ImageCaptureException) {
+                    println()
+                }
+            })
+        },
+        colors = ButtonDefaults.buttonColors(
+            containerColor = Color.White
+        )
+
+    ) {
         Text(text = "Camera")
-
     }
 }
 
@@ -154,4 +172,14 @@ fun saveImageToInternalStorage(context: Context, bitmap: Bitmap): String? {
     } finally {
         outputStream?.close()
     }
+}
+
+
+fun rotateBitmap(bitmap: Bitmap, degrees: Float): Bitmap {
+    val matrix = Matrix().apply { postRotate(degrees) }
+    return Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
+}
+
+fun Bitmap.toImageBitmap(context: Context): ImageBitmap {
+    return asImageBitmap()
 }
