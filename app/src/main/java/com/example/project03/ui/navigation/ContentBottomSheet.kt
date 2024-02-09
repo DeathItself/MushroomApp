@@ -45,7 +45,7 @@ fun ContentBottomSheet(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .height(48.dp)
-                    .clickable { navController.navigate("item_menu/"+item.title) }
+                    .clickable { navController.navigate("item_menu/"+item.titleRes) }
             ){
                 // Usar stringResource para obtener el string del ID del recurso
                 val titleString = stringResource(id = item.titleRes)
