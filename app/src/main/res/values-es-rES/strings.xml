@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Project03</string>
     <string name="BottomNavHome">Inicio</string>
@@ -10,5 +11,5 @@
     <string name="BottomSheetMenuComunity">Comunidad</string>
     <string name="topAppBarReturn">Volver</string>
     <string name="carrouselMyMush">Mis setas</string>
-    <string name="bannerMushOfTheDay">Seta del dia</string>
+    <string name="bannerMushOfTheDay">Seta del día</string>
 </resources>
