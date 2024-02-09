@@ -81,7 +81,7 @@ fun MushroomDetailsScreen(navController: NavController, s: String) {
             ModalBottomSheet(
                 onDismissRequest = { mainViewModel.showBottomSheet = false }
             ) {
-                ContentBottomSheet(mainViewModel)
+                ContentBottomSheet(mainViewModel,navController)
             }
         }
     }

@@ -1,5 +1,6 @@
 package com.example.project03.ui.navigation
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -14,11 +15,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.project03.viewmodel.MainViewModel
 
 @Composable
 fun ContentBottomSheet(
-    mainViewModel: MainViewModel
+    mainViewModel: MainViewModel,
+    navController: NavController
 ) {
     val itemsMenu = listOf(
         ItemsBottomSheet.ItemMenu01,
@@ -39,6 +42,7 @@ fun ContentBottomSheet(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .height(48.dp)
+                    .clickable { navController.navigate("item_menu/"+item.title) }
             ){
                 Icon(item.icon, item.title)
                 Spacer(
