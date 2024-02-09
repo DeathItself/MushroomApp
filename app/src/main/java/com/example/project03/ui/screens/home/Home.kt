@@ -45,7 +45,7 @@ fun HomeScreen(navController: NavController) {
             ModalBottomSheet(
                 onDismissRequest = { mainViewModel.showBottomSheet = false }
             ) {
-                ContentBottomSheet(mainViewModel)
+                ContentBottomSheet(mainViewModel,navController)
             }
         }
     }

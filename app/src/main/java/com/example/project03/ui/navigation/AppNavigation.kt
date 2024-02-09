@@ -12,6 +12,7 @@ import com.example.project03.ui.screens.home.HomeScreen
 import com.example.project03.ui.screens.maps.MapScreen
 import com.example.project03.ui.screens.myMush.MostrarDatosScreen
 import com.example.project03.ui.screens.myMush.MushroomDetailsScreen
+import com.example.project03.ui.screens.quiz.QuizApp
 
 import com.example.project03.ui.screens.permission.LocationPermission
 
@@ -50,6 +51,9 @@ fun AppNavigation() {
             val commonName = backStackEntry.arguments?.getString("commonName")
             MushroomDetailsScreen(
                 navController, commonName ?: "")
+        }
+        composable(route = AppScreens.QuizScreen.route){
+            QuizApp(navController)
         }
     }
 }

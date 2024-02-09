@@ -2,6 +2,7 @@ package com.example.project03.ui.screens.maps
 
 import android.location.Location
 import androidx.compose.foundation.layout.Box
+import android.Manifest
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,7 +14,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -26,7 +29,8 @@ import com.example.project03.ui.navigation.AppScreens
 import com.example.project03.ui.navigation.BottomNavigationBar
 import com.example.project03.ui.navigation.ContentBottomSheet
 import com.example.project03.viewmodel.MainViewModel
-import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
@@ -35,9 +39,6 @@ import com.google.maps.android.compose.MapType
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
-
-private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
-private var lastKnownLocation: Location? = null
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -59,12 +60,12 @@ fun MapScreen(navController: NavController){
             ModalBottomSheet(
                 onDismissRequest = { mainViewModel.showBottomSheet = false }
             ) {
-                ContentBottomSheet(mainViewModel)
+                ContentBottomSheet(mainViewModel,navController)
             }
         }
     }
-
 }
+
 
 var permissionGranted: Boolean= false
 @Composable
@@ -82,7 +83,7 @@ fun ContentGoogleMaps(padding: PaddingValues, navController: NavController){
         GoogleMap(
             cameraPositionState = cameraPositionState,
             properties = MapProperties(
-                mapType = MapType.HYBRID,
+                mapType = MapType.SATELLITE,
                 isMyLocationEnabled = permissionGranted,
                 ),
         ) {

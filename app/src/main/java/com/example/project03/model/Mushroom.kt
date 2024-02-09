@@ -12,16 +12,6 @@ class Mushroom(
     val latitude: Double,
     val longitude: Double
 ){
-    constructor() : this(
-        "",
-        "",
-        "",
-        false,
-        "",
-        "",
-        "",
-        0.0,
-        0.0
-    )
+    constructor() : this("","","", false,"","","",0.0,0.0)
 }
 
