@@ -14,7 +14,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.project03.viewmodel.MainViewModel
@@ -45,10 +44,10 @@ fun ContentBottomSheet(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .height(48.dp)
-                    .clickable { navController.navigate("item_menu/"+item.titleRes) }
+                    .clickable { navController.navigate("item_menu/"+item.title) }
             ){
                 // Usar stringResource para obtener el string del ID del recurso
-                val titleString = stringResource(id = item.titleRes)
+                val titleString = item.title
                 Icon(item.icon, contentDescription = titleString)
                 Spacer(
                     modifier = Modifier

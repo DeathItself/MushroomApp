@@ -15,6 +15,7 @@ import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -32,6 +33,9 @@ import com.example.project03.ui.navigation.BottomNavigationBar
 import com.example.project03.ui.navigation.ContentBottomSheet
 import com.example.project03.util.data.Data
 import com.example.project03.viewmodel.MainViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.withContext
 
 
 @Composable
@@ -59,6 +63,7 @@ fun generateImageQuestion(mushrooms: List<Mushroom>): Question {
     )
 }
 
+
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnrememberedMutableState")
 @Composable
@@ -72,14 +77,15 @@ fun QuizApp(navController: NavController) {
     val isHome = false
     val triggerNewQuestion = remember { mutableStateOf(false) }
     val selectedIndex = remember { mutableStateOf(-1) } // -1 indica que no hay selección
-
+    val startTime = remember { mutableStateOf(20000) }
+    val elapsedTime = remember { mutableStateOf(0) }
 
     // Observa cambios en el trigger para generar una nueva pregunta
-        if (triggerNewQuestion.value) {
-            // Actualizar la pregunta actual
-            currentQuestion.value = generateImageQuestion(mushrooms)
-            triggerNewQuestion.value = false // Restablecer el disparador
-        }
+    if (triggerNewQuestion.value) {
+        // Actualizar la pregunta actual
+        currentQuestion.value = generateImageQuestion(mushrooms)
+        triggerNewQuestion.value = false // Restablecer el disparador
+    }
     Scaffold(
         topBar = {
             TopAppBarWithoutScaffold(isHome, navController)
@@ -91,11 +97,13 @@ fun QuizApp(navController: NavController) {
         Column(
             Modifier
                 .padding(padding)
-                .fillMaxWidth()) {
+                .fillMaxWidth()
+        ) {
+
             val question = currentQuestion.value
             Text(
                 modifier = Modifier
-                    .padding(10.dp)
+                    .padding(5.dp)
                     .align(Alignment.CenterHorizontally),
                 text = "QUIZ",
                 style = MaterialTheme.typography.displayMedium,
@@ -107,15 +115,33 @@ fun QuizApp(navController: NavController) {
                 text = "Puntuación: ${score.value}",
                 style = MaterialTheme.typography.bodyMedium,
             )
+            var remainingTime = startTime.value - elapsedTime.value
+            LaunchedEffect(Unit) {
+                withContext(Dispatchers.IO) {
+                    while (remainingTime != 0) {
+                        delay(1000)
+                        elapsedTime.value += 1000
+                    }
+                }
+            }
+            Text(
+                modifier = Modifier
+                    .padding(top = 10.dp)
+                    .align(Alignment.CenterHorizontally),
+                text = "Tiempo restante: ${remainingTime / 1000}s",
+                style = MaterialTheme.typography.bodyMedium,
+            )
+
             Column(
                 Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 0.dp)) {
+                    .padding(vertical = 0.dp)
+            ) {
                 when (question.type) {
                     QuestionType.Image -> {
                         AsyncImage(
                             modifier = Modifier
-                                .size(250.dp)
+                                .size(150.dp)
                                 .align(Alignment.CenterHorizontally),
                             model = question.image,
                             contentDescription = null,
@@ -126,31 +152,43 @@ fun QuizApp(navController: NavController) {
                                 RadioButton(
                                     selected = selectedIndex.value == index, // Verifica si este RadioButton está seleccionado
                                     onClick = {
-                                        selectedIndex.value = index // Actualiza el estado con el índice de la opción seleccionada
+                                        selectedIndex.value =
+                                            index // Actualiza el estado con el índice de la opción seleccionada
                                     }
                                 )
                                 Text(option)
                             }
                         }
-
                     }
-
                     else -> {
                         Text(text = "Tipo de pregunta no compatible")
                     }
                 }
             }
             val context = LocalContext.current
+            if ( remainingTime == 0 ){
+                triggerNewQuestion.value = true
+                elapsedTime.value = 0
+            }
             Button(onClick = {
                 // Comprobar si la respuesta seleccionada es correcta y actualizar la pregunta
-                if (options[selectedIndex.value] == currentQuestion.value.correctAnswer) {
+                if (options[selectedIndex.value] == currentQuestion.value.correctAnswer && remainingTime > 0) {
                     // Incrementar puntuación o mostrar mensaje de correcto, si es necesario
-                    score.value += 1
+                    val bonusPoints = remainingTime / 1000
+                    score.value += bonusPoints
                     triggerNewQuestion.value = true
                     selectedIndex.value = -1
-                }else{
+                    elapsedTime.value = 0
+                    Toast.makeText(
+                        context,
+                        "Correcto! Has obtenido + $bonusPoints puntos por tiempo restante",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
                     score.value = 0
+                    elapsedTime.value = 0
                     Toast.makeText(context, "Respuesta incorrecta", Toast.LENGTH_SHORT).show()
+                    triggerNewQuestion.value=true
                 }
 
             }) {
