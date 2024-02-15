@@ -64,22 +64,21 @@ fun generateImageQuestion(mushrooms: List<Mushroom>): Question {
 @Composable
 fun QuizApp(navController: NavController) {
     val mainViewModel: MainViewModel = viewModel()
-    val mushrooms = Data.DbCall()
+    val mushrooms = Data.wikiDBList()
     val currentQuestion = mutableStateOf(generateImageQuestion(mushrooms))
     val score = remember { mutableStateOf(0) }
     val options = currentQuestion.value.options
-    var radioIndex: Int
     val isHome = false
     val triggerNewQuestion = remember { mutableStateOf(false) }
     val selectedIndex = remember { mutableStateOf(-1) } // -1 indica que no hay selección
 
 
     // Observa cambios en el trigger para generar una nueva pregunta
-        if (triggerNewQuestion.value) {
-            // Actualizar la pregunta actual
-            currentQuestion.value = generateImageQuestion(mushrooms)
-            triggerNewQuestion.value = false // Restablecer el disparador
-        }
+    if (triggerNewQuestion.value) {
+        // Actualizar la pregunta actual
+        currentQuestion.value = generateImageQuestion(mushrooms)
+        triggerNewQuestion.value = false // Restablecer el disparador
+    }
     Scaffold(
         topBar = {
             TopAppBarWithoutScaffold(isHome, navController)
@@ -91,7 +90,8 @@ fun QuizApp(navController: NavController) {
         Column(
             Modifier
                 .padding(padding)
-                .fillMaxWidth()) {
+                .fillMaxWidth()
+        ) {
             val question = currentQuestion.value
             Text(
                 modifier = Modifier
@@ -110,7 +110,8 @@ fun QuizApp(navController: NavController) {
             Column(
                 Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 0.dp)) {
+                    .padding(vertical = 0.dp)
+            ) {
                 when (question.type) {
                     QuestionType.Image -> {
                         AsyncImage(
@@ -126,7 +127,8 @@ fun QuizApp(navController: NavController) {
                                 RadioButton(
                                     selected = selectedIndex.value == index, // Verifica si este RadioButton está seleccionado
                                     onClick = {
-                                        selectedIndex.value = index // Actualiza el estado con el índice de la opción seleccionada
+                                        selectedIndex.value =
+                                            index // Actualiza el estado con el índice de la opción seleccionada
                                     }
                                 )
                                 Text(option)
@@ -148,7 +150,7 @@ fun QuizApp(navController: NavController) {
                     score.value += 1
                     triggerNewQuestion.value = true
                     selectedIndex.value = -1
-                }else{
+                } else {
                     score.value = 0
                     Toast.makeText(context, "Respuesta incorrecta", Toast.LENGTH_SHORT).show()
                 }

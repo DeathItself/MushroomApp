@@ -15,13 +15,12 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.project03.R
 import com.example.project03.model.BottomNavigation
 import com.example.project03.viewmodel.MainViewModel
-import androidx.compose.ui.res.stringResource
 
 
 @Composable
@@ -52,6 +51,7 @@ fun BottomNavigationBar(navController: NavController) {
             icon = Icons.Rounded.Menu
         )
     )
+
     NavigationBar {
         val mainViewModel: MainViewModel = viewModel()
         Row(
@@ -70,7 +70,6 @@ fun BottomNavigationBar(navController: NavController) {
                         }
                     },
                     icon = {
-
                         Icon(
                             imageVector = item.icon,
                             contentDescription = item.title,
@@ -85,8 +84,6 @@ fun BottomNavigationBar(navController: NavController) {
                         )
                     }
                 )
-
-
             }
         }
     }

@@ -12,10 +12,6 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontStyle
@@ -32,19 +28,19 @@ import com.example.project03.viewmodel.MainViewModel
 
 
 @Composable
-fun RecibirDatosSeta( padding: PaddingValues, s: String) {
+fun RecibirDatosSeta(padding: PaddingValues, s: String) {
 
-     val mushObj = Data.DbCall().find { it.commonName == s }
+    val mushObj = Data.wikiDBList().find { it.commonName == s }
 
 
 
 
 
     Column(
-        modifier = androidx.compose.ui.Modifier
+        modifier = Modifier
             .padding(padding)
             .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         if (mushObj != null) {
             val isEdibleText = when (mushObj.isEdible) {
@@ -59,8 +55,10 @@ fun RecibirDatosSeta( padding: PaddingValues, s: String) {
             )
             Spacer(modifier = Modifier.height(16.dp))
             Text(text = mushObj.scientificName, fontStyle = FontStyle.Italic)
-            Column(modifier = Modifier.padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally) {
+            Column(
+                modifier = Modifier.padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
                 Text(
                     text = mushObj.description,
                     fontWeight = FontWeight.Bold,
@@ -83,15 +81,15 @@ fun RecibirDatosSeta( padding: PaddingValues, s: String) {
 @Composable
 fun MushroomDetailsScreen(navController: NavController, s: String) {
     val mainViewModel: MainViewModel = viewModel()
-    var isHome by remember { mutableStateOf(false) }
-    Scaffold (
+    val isHome = false
+    Scaffold(
         topBar = {
-            TopAppBarWithoutScaffold(isHome,navController)
+            TopAppBarWithoutScaffold(isHome, navController)
         },
         bottomBar = {
             BottomNavigationBar(navController)
         })
-    {padding ->
+    { padding ->
         if (s != null) {
             RecibirDatosSeta(padding = padding, s)
         }
@@ -100,7 +98,7 @@ fun MushroomDetailsScreen(navController: NavController, s: String) {
             ModalBottomSheet(
                 onDismissRequest = { mainViewModel.showBottomSheet = false }
             ) {
-                ContentBottomSheet(mainViewModel,navController)
+                ContentBottomSheet(mainViewModel, navController)
             }
         }
     }

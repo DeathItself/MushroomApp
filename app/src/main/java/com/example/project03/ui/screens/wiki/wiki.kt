@@ -1,4 +1,4 @@
-package com.example.project03.ui.screens.myMush
+package com.example.project03.ui.screens.wiki
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
-import com.example.project03.model.MyMushroom
+import com.example.project03.model.Mushroom
 import com.example.project03.ui.components.TopAppBarWithoutScaffold
 import com.example.project03.ui.navigation.BottomNavigationBar
 import com.example.project03.ui.navigation.ContentBottomSheet
@@ -36,19 +36,21 @@ import com.example.project03.util.data.Data
 import com.example.project03.viewmodel.MainViewModel
 
 @Composable
-fun PantallaSetas(navController: NavController) {
-    MyMushroomList(mushrooms = Data.myMushDBList(), navController)
+fun WikiScreen(navController: NavController) {
+    MushroomList(mushrooms = Data.wikiDBList(), navController)
 }
-
 
 @Composable
 fun LoadingState() {
-    Text(
-        modifier = Modifier,
-        text = "Cargando",
-        style = MaterialTheme.typography.bodyLarge,
-        textAlign = TextAlign.Center,
-    ) // Ejemplo de componente de carga, puede ser sustituido por cualquier otro
+    Column {
+        Spacer(modifier = Modifier.size(16.dp))
+        Text(
+            modifier = Modifier.fillMaxWidth(),
+            text = "Cargando",
+            style = MaterialTheme.typography.bodyLarge,
+            textAlign = TextAlign.Center
+        ) // Ejemplo de componente de carga, puede ser sustituido por cualquier otro
+    }
 }
 
 @Composable
@@ -59,7 +61,7 @@ fun EmptyState() {
             modifier = Modifier.fillMaxWidth(),
             text = "No hay setas",
             style = MaterialTheme.typography.bodyLarge,
-            textAlign = TextAlign.Center,
+            textAlign = TextAlign.Center
         ) // Ejemplo de componente de carga, puede ser sustituido por cualquier otro
     }
 }
@@ -85,7 +87,7 @@ fun MushroomList() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MostrarMisSetasScreen(navController: NavController) {
+fun MostrarSetasScreen(navController: NavController) {
     val mainViewModel: MainViewModel = viewModel()
     val isHome = false
     Scaffold(
@@ -97,7 +99,7 @@ fun MostrarMisSetasScreen(navController: NavController) {
         })
     { padding ->
         Column(Modifier.padding(padding)) {
-            PantallaSetas(navController)
+            WikiScreen(navController)
         }
         //submenu
         if (mainViewModel.showBottomSheet) {
@@ -108,23 +110,15 @@ fun MostrarMisSetasScreen(navController: NavController) {
             }
         }
     }
-
-
 }
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyMushroomList(mushrooms: List<MyMushroom>, navController: NavController) {
+fun MushroomList(mushrooms: List<Mushroom>, navController: NavController) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        if (mushrooms.isEmpty()) {
-            item {
-                EmptyState()
-            }
-        }
         items(mushrooms) { mushroom ->
             ElevatedCard(
                 modifier = Modifier
@@ -136,36 +130,39 @@ fun MyMushroomList(mushrooms: List<MyMushroom>, navController: NavController) {
                     },
                 elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp)
             ) {
-
-                Column(
-                    modifier = Modifier
-                        .padding(vertical = 8.dp)
-                        .fillMaxWidth()
-                ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.padding(horizontal = 26.dp)
+                if (mushrooms.isEmpty()) {
+                    EmptyState()
+                } else {
+                    Column(
+                        modifier = Modifier
+                            .padding(vertical = 8.dp)
+                            .fillMaxWidth()
                     ) {
-                        AsyncImage(
-                            model = mushroom.photo,
-                            contentDescription = null,
-                            modifier = Modifier.size(64.dp)
-                        )
-                        Spacer(modifier = Modifier.width(16.dp))
-                        Column {
-                            Text(
-                                text = mushroom.commonName,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 20.sp,
-                                modifier = Modifier.padding(bottom = 4.dp)
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.padding(horizontal = 26.dp)
+                        ) {
+                            AsyncImage(
+                                model = mushroom.photo,
+                                contentDescription = null,
+                                modifier = Modifier.size(64.dp)
                             )
-                            Text(
-                                text = mushroom.scientificName,
-                                fontSize = 16.sp,
-                                modifier = Modifier
-                                    .padding(bottom = 4.dp)
-                                    .padding(end = 10.dp)
-                            )
+                            Spacer(modifier = Modifier.width(16.dp))
+                            Column {
+                                Text(
+                                    text = mushroom.commonName,
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 20.sp,
+                                    modifier = Modifier.padding(bottom = 4.dp)
+                                )
+                                Text(
+                                    text = mushroom.scientificName,
+                                    fontSize = 16.sp,
+                                    modifier = Modifier
+                                        .padding(bottom = 4.dp)
+                                        .padding(end = 10.dp)
+                                )
+                            }
                         }
                     }
                 }

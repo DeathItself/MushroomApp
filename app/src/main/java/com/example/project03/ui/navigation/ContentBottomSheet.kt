@@ -28,7 +28,8 @@ fun ContentBottomSheet(
     val itemsMenu = listOf(
         ItemsBottomSheet.ItemMenu01,
         ItemsBottomSheet.ItemMenu02,
-        ItemsBottomSheet.ItemMenu03
+        ItemsBottomSheet.ItemMenu03,
+        ItemsBottomSheet.ItemMenu04
     )
 
     Column (
@@ -45,7 +46,7 @@ fun ContentBottomSheet(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .height(48.dp)
-                    .clickable { navController.navigate("item_menu/"+item.titleRes) }
+                    .clickable { navController.navigate("item_menu/"+item.title) }
             ){
                 // Usar stringResource para obtener el string del ID del recurso
                 val titleString = stringResource(id = item.titleRes)
