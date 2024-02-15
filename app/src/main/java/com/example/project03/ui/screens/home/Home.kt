@@ -38,7 +38,7 @@ fun HomeScreen(navController: NavController) {
             BottomNavigationBar(navController)
         }
     ) {padding ->
-        ContentHomeScreen(padding = padding)
+        ContentHomeScreen(padding = padding,navController = navController)
 
         //submenu
         if (mainViewModel.showBottomSheet) {
@@ -51,7 +51,7 @@ fun HomeScreen(navController: NavController) {
     }
 }
 @Composable
-fun ContentHomeScreen(padding: PaddingValues){
+fun ContentHomeScreen(padding: PaddingValues,navController: NavController){
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -60,6 +60,6 @@ fun ContentHomeScreen(padding: PaddingValues){
     ) {
         Spacer(modifier = Modifier.padding(5.dp))
         BannerCard()
-        CarouselCard()
+        CarouselCard(navController = navController)
     }
 }
