@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -36,10 +37,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.navigation.NavController
+import coil.compose.rememberAsyncImagePainter
+import com.example.project03.model.ImagePath
 import com.example.project03.ui.navigation.AppScreens
 
 @Composable
 fun AddCard(navController: NavController){
+    //PONER EL PATH VIEW MODEL, REVISAR EL CAHTGPT
+    val imagePath = ImagePath.imagePath
     ElevatedCard(
         modifier = Modifier,
         shape = RoundedCornerShape(12.dp),
@@ -71,11 +76,20 @@ fun AddCard(navController: NavController){
                     containerColor = Color.Transparent,
                 ),
                 shape = RoundedCornerShape(12.dp)
+
             ) {
-                Image(
-                    painter = painterResource(id = R.drawable.placeholder),
-                    contentDescription = "Añadir imagen seta"
-                )
+                if(imagePath.isNotEmpty()){
+                    Image(
+                        modifier = Modifier.size(width = 300.dp, height = 100.dp),
+                        painter = rememberAsyncImagePainter(imagePath),
+                        contentDescription = "Añadir imagen seta"
+                    )
+                }else{
+                    Image(
+                        painter = painterResource(id = R.drawable.placeholder),
+                        contentDescription = "Añadir imagen seta"
+                    )
+                }
             }
         }
 

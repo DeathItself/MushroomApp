@@ -30,9 +30,8 @@ fun AppNavigation() {
             AddMushroomScreen(navController)
         }
 
-
         composable(route = AppScreens.CameraScreen.route){
-            CameraScreen()
+            CameraScreen(navController)
         }
 
         composable(route = AppScreens.LocationScreen.route){
