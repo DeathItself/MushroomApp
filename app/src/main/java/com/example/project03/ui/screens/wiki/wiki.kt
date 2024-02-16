@@ -41,19 +41,6 @@ fun WikiScreen(navController: NavController) {
 }
 
 @Composable
-fun LoadingState() {
-    Column {
-        Spacer(modifier = Modifier.size(16.dp))
-        Text(
-            modifier = Modifier.fillMaxWidth(),
-            text = "Cargando",
-            style = MaterialTheme.typography.bodyLarge,
-            textAlign = TextAlign.Center
-        ) // Ejemplo de componente de carga, puede ser sustituido por cualquier otro
-    }
-}
-
-@Composable
 fun EmptyState() {
     Column {
         Spacer(modifier = Modifier.size(16.dp))
@@ -65,25 +52,6 @@ fun EmptyState() {
         ) // Ejemplo de componente de carga, puede ser sustituido por cualquier otro
     }
 }
-//val mushrooms: MutableList<Mushroom> = mutableListOf()
-
-/*@Composable
-fun MushroomList() {
-    val db = Firebase.firestore
-    val mushroomRef = db.collection("setas")
-
-    mushroomRef.get().addOnSuccessListener { documents ->
-        for (document in documents) {
-            val mushroomData = document.toObject(Mushroom::class.java)
-            if (mushroomData != null) {
-                mushrooms.add(mushroomData)
-
-            }
-        }
-    }.addOnFailureListener { exception ->
-        println("Error getting mushrooms from Firebase: ${exception.message}")
-    }
-}*/
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

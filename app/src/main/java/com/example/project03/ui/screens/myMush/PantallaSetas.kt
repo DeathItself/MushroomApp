@@ -32,23 +32,13 @@ import com.example.project03.model.MyMushroom
 import com.example.project03.ui.components.TopAppBarWithoutScaffold
 import com.example.project03.ui.navigation.BottomNavigationBar
 import com.example.project03.ui.navigation.ContentBottomSheet
+
 import com.example.project03.util.data.Data
 import com.example.project03.viewmodel.MainViewModel
 
 @Composable
 fun PantallaSetas(navController: NavController) {
     MyMushroomList(mushrooms = Data.myMushDBList(), navController)
-}
-
-
-@Composable
-fun LoadingState() {
-    Text(
-        modifier = Modifier,
-        text = "Cargando",
-        style = MaterialTheme.typography.bodyLarge,
-        textAlign = TextAlign.Center,
-    ) // Ejemplo de componente de carga, puede ser sustituido por cualquier otro
 }
 
 @Composable
@@ -63,47 +53,23 @@ fun EmptyState() {
         ) // Ejemplo de componente de carga, puede ser sustituido por cualquier otro
     }
 }
-//val mushrooms: MutableList<Mushroom> = mutableListOf()
-
-/*@Composable
-fun MushroomList() {
-    val db = Firebase.firestore
-    val mushroomRef = db.collection("setas")
-
-    mushroomRef.get().addOnSuccessListener { documents ->
-        for (document in documents) {
-            val mushroomData = document.toObject(Mushroom::class.java)
-            if (mushroomData != null) {
-                mushrooms.add(mushroomData)
-
-            }
-        }
-    }.addOnFailureListener { exception ->
-        println("Error getting mushrooms from Firebase: ${exception.message}")
-    }
-}*/
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MostrarMisSetasScreen(navController: NavController) {
     val mainViewModel: MainViewModel = viewModel()
     val isHome = false
-    Scaffold(
-        topBar = {
-            TopAppBarWithoutScaffold(isHome, navController)
-        },
-        bottomBar = {
-            BottomNavigationBar(navController)
-        })
-    { padding ->
+    Scaffold(topBar = {
+        TopAppBarWithoutScaffold(isHome, navController)
+    }, bottomBar = {
+        BottomNavigationBar(navController)
+    }) { padding ->
         Column(Modifier.padding(padding)) {
             PantallaSetas(navController)
         }
         //submenu
         if (mainViewModel.showBottomSheet) {
-            ModalBottomSheet(
-                onDismissRequest = { mainViewModel.showBottomSheet = false }
-            ) {
+            ModalBottomSheet(onDismissRequest = { mainViewModel.showBottomSheet = false }) {
                 ContentBottomSheet(mainViewModel, navController)
             }
         }
@@ -117,8 +83,7 @@ fun MostrarMisSetasScreen(navController: NavController) {
 @Composable
 fun MyMushroomList(mushrooms: List<MyMushroom>, navController: NavController) {
     LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
+        modifier = Modifier.fillMaxSize()
     ) {
         if (mushrooms.isEmpty()) {
             item {
@@ -133,8 +98,7 @@ fun MyMushroomList(mushrooms: List<MyMushroom>, navController: NavController) {
                         navController.navigate(
                             "detail_screen/${mushroom.commonName}"
                         )
-                    },
-                elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp)
+                    }, elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp)
             ) {
 
                 Column(

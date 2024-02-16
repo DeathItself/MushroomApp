@@ -3,7 +3,7 @@
     <string name="app_name">Project03</string>
     <string name="BottomNavHome">Inicio</string>
     <string name="BottomNavMap">Mapa</string>
-    <string name="BottomNavAdd">Añadir Seta</string>
+    <string name="BottomNavAdd">Añadir</string>
     <string name="BottomNavMyMush">Mis Setas</string>
     <string name="BottomNavMenu">Menu</string>
     <string name="BottomSheetMenuLearn">Aprender</string>

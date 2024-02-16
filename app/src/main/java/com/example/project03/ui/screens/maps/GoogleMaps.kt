@@ -50,20 +50,15 @@ import com.google.maps.android.compose.rememberCameraPositionState
 fun MapScreen(navController: NavController) {
     val mainViewModel: MainViewModel = viewModel()
     val isHome = true
-    Scaffold(
-        topBar = {
-            TopAppBarWithoutScaffold(isHome, navController)
-        },
-        bottomBar = {
-            BottomNavigationBar(navController)
-        }
-    ) { padding ->
+    Scaffold(topBar = {
+        TopAppBarWithoutScaffold(isHome, navController)
+    }, bottomBar = {
+        BottomNavigationBar(navController)
+    }) { padding ->
         ContentGoogleMaps(padding = padding, navController)
 
         if (mainViewModel.showBottomSheet) {
-            ModalBottomSheet(
-                onDismissRequest = { mainViewModel.showBottomSheet = false }
-            ) {
+            ModalBottomSheet(onDismissRequest = { mainViewModel.showBottomSheet = false }) {
                 ContentBottomSheet(mainViewModel, navController)
             }
         }
@@ -91,12 +86,10 @@ fun ContentGoogleMaps(padding: PaddingValues, navController: NavController) {
             .padding(padding)
     ) {
         if (showBottomSheet && selectedMushroom != null) {
-            ModalBottomSheet(
-                onDismissRequest = { showBottomSheet = false }
-            ) {
+            ModalBottomSheet(onDismissRequest = { showBottomSheet = false }) {
                 // Aquí puedes definir cómo quieres mostrar la información de la seta seleccionada
                 // Por ejemplo, podrías tener un composable que tome un objeto Mushroom y muestre su información
-                ContentBottomSheet(mushroom = selectedMushroom!!)
+                MapContentBottomSheet(mushroom = selectedMushroom!!)
             }
         }
 
@@ -128,7 +121,7 @@ fun ContentGoogleMaps(padding: PaddingValues, navController: NavController) {
 }
 
 @Composable
-fun ContentBottomSheet(mushroom: MyMushroom) {
+fun MapContentBottomSheet(mushroom: MyMushroom) {
     // Implementa la UI para mostrar la información de la seta aquí
     // Por ejemplo, podrías mostrar el nombre, descripción, etc.
     Column(
@@ -157,14 +150,12 @@ fun ContentBottomSheet(mushroom: MyMushroom) {
 fun MushDetailsMap(mushroom: MyMushroom, isEdibleText: String) {
     Text(text = mushroom.commonName, fontWeight = FontWeight.Bold)
     AsyncImage(
-        modifier = Modifier.size(200.dp),
-        model = mushroom.photo, contentDescription = null
+        modifier = Modifier.size(200.dp), model = mushroom.photo, contentDescription = null
     )
     Spacer(modifier = Modifier.height(16.dp))
     Text(text = mushroom.scientificName, fontStyle = FontStyle.Italic)
     Column(
-        modifier = Modifier.padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+        modifier = Modifier.padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
             text = mushroom.description,
@@ -190,8 +181,7 @@ fun ButtonGps(navController: NavController) {
             },
         ) {
             Icon(
-                imageVector = Icons.Filled.GpsFixed,
-                contentDescription = "Menu"
+                imageVector = Icons.Filled.GpsFixed, contentDescription = "Menu"
             )
         }
 

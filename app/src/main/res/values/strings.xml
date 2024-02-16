@@ -2,7 +2,6 @@
     <string name="app_name">Project03</string>
     <string name="BottomNavHome">Inicio</string>
     <string name="BottomNavMap">Mapa</string>
-    <string name="BottomNavAdd">Añadir Seta</string>
     <string name="BottomNavMyMush">Mis Setas</string>
     <string name="BottomNavMenu">Menu</string>
     <string name="BottomSheetMenuLearn">Aprender</string>
@@ -12,4 +11,5 @@
     <string name="carrouselMyMush">Mis setas</string>
     <string name="bannerMushOfTheDay">Seta del dia</string>
     <string name="BottomSheetMenuWiki">Wiki</string>
+    <string name="BottomNavAdd">Añadir</string>
 </resources>

@@ -1,6 +1,6 @@
 package com.example.project03.ui.components
 
-import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -34,24 +34,20 @@ import coil.size.Scale
 import com.example.project03.R
 import com.example.project03.ui.navigation.AppScreens
 import com.example.project03.util.data.Data
-import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalPagerApi::class)
 @Composable
 fun CarouselCard(navController: NavController) {
     val mushroomList = Data.myMushDBList()
     Modifier.padding(8.dp)
     val pagerState = rememberPagerState(initialPage = 1)
     val addMushImage = R.drawable.add_squared
-
     if (mushroomList.isEmpty()) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(horizontal = 20.dp)
-
                 .aspectRatio(1.4f)
         ) {
 
@@ -60,25 +56,26 @@ fun CarouselCard(navController: NavController) {
                 Modifier.padding(8.dp),
                 style = MaterialTheme.typography.headlineMedium
             )
-            ElevatedCard(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 8.dp),
+            ElevatedCard(modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp),
                 shape = RoundedCornerShape(12.dp),
                 elevation = CardDefaults.cardElevation(999.dp),
                 colors = CardDefaults.elevatedCardColors(Color.Transparent),
-                onClick = {navController.navigate(route = AppScreens.AddMushroomScreen.route)  }
-            ) {
+                onClick = { navController.navigate(route = AppScreens.AddMushroomScreen.route) }) {
 
                 Column(
                     modifier = Modifier.fillMaxSize(),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
-                    Box(Modifier.align(Alignment.CenterHorizontally,
-                        )) {
+                    Box(
+                        Modifier.align(
+                            Alignment.CenterHorizontally,
+                        )
+                    ) {
                         Text(
                             modifier = Modifier,
-                            text = "Añade una seta",
+                            text = "No hay setas añadidas",
                             style = MaterialTheme.typography.bodySmall,
                             fontSize = 20.sp,
                             color = MaterialTheme.colorScheme.inverseSurface,
@@ -102,7 +99,7 @@ fun CarouselCard(navController: NavController) {
                     ) {
                         Text(
                             modifier = Modifier.padding(8.dp),
-                            text = "No hay setas añadidas",
+                            text = "Añade una seta",
                             style = MaterialTheme.typography.bodySmall,
                             fontSize = 20.sp,
                             color = MaterialTheme.colorScheme.inverseSurface,
@@ -118,7 +115,7 @@ fun CarouselCard(navController: NavController) {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(horizontal = 20.dp)
-                .aspectRatio(1.8f)
+                .aspectRatio(1.5f)
         ) {
 
             Text(
@@ -138,21 +135,22 @@ fun CarouselCard(navController: NavController) {
                         .fillMaxWidth()
                         .padding(horizontal = 8.dp),
                     shape = RoundedCornerShape(12.dp),
-                    elevation = CardDefaults.cardElevation(8.dp),
+                    elevation = CardDefaults.cardElevation(999.dp),
                     colors = CardDefaults.elevatedCardColors(Color.Transparent)
 
                 ) {
-
                     Box(contentAlignment = Alignment.BottomCenter) {
-                        AsyncImage(
-                            model = ImageRequest.Builder(LocalContext.current)
-                                .data(mushroomList.toList()[page].photo).crossfade(true)
-                                .scale(Scale.FILL).build(),
+                        AsyncImage(model = ImageRequest.Builder(LocalContext.current)
+                            .data(mushroomList.toList()[page].photo).crossfade(true)
+                            .scale(Scale.FILL).build(),
                             contentDescription = "photo of a mushroom",
-                            contentScale = ContentScale.Fit,
+                            contentScale = ContentScale.FillBounds,
+
                             placeholder = painterResource(id = R.drawable.placeholder),
-                            error = painterResource(id = R.drawable.error)
-                        )
+                            error = painterResource(id = R.drawable.error),
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .clickable { navController.navigate(route = AppScreens.SetasDetailsScreen.route + "/${mushroomList.toList()[page].commonName}") })
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -162,7 +160,7 @@ fun CarouselCard(navController: NavController) {
                             Text(
                                 modifier = Modifier
                                     .shadow(
-                                        elevation = 10.dp, shape = RoundedCornerShape(12.dp)
+                                        elevation = 99.dp, shape = RoundedCornerShape(12.dp)
                                     )
                                     .padding(8.dp),
                                 text = mushroomList.toList()[page].commonName,

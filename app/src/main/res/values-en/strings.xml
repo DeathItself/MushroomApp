@@ -3,7 +3,7 @@
     <string name="app_name">Project03</string>
     <string name="BottomNavHome">Home</string>
     <string name="BottomNavMap">Map</string>
-    <string name="BottomNavAdd">Add Mushroom</string>
+    <string name="BottomNavAdd">Add Mush</string>
     <string name="BottomNavMyMush">My Mushrooms</string>
     <string name="BottomNavMenu">Menu</string>
     <string name="BottomSheetMenuLearn">Learn</string>
