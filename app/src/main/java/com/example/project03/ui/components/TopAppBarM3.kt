@@ -22,10 +22,16 @@ import androidx.navigation.NavController
 fun TopAppBarWithoutScaffold(isHome: Boolean, navController: NavController) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     if (isHome) {
-        SmallTopAppBarM3(scrollBehavior = scrollBehavior, isHome = isHome)
+        SmallTopAppBarM3(
+            scrollBehavior = scrollBehavior,
+            isHome = isHome,
+            navController = navController
+        )
     } else {
-        LargeTopAppBarM3(scrollBehavior = scrollBehavior, isHome = isHome,
-            navController = navController)
+        LargeTopAppBarM3(
+            scrollBehavior = scrollBehavior, isHome = isHome,
+            navController = navController
+        )
     }
 }
 
@@ -37,7 +43,7 @@ fun LargeTopAppBarM3(
     LargeTopAppBar(title = { Text(text = "MushTool") }, navigationIcon = {
         if (!isHome) {
             run {
-                IconButton(onClick = { navController.popBackStack()}) {
+                IconButton(onClick = { navController.popBackStack() }) {
                     Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Regresar")
                 }
             }
@@ -52,12 +58,12 @@ fun LargeTopAppBarM3(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SmallTopAppBarM3(
-    scrollBehavior: TopAppBarScrollBehavior, isHome: Boolean
+    scrollBehavior: TopAppBarScrollBehavior, isHome: Boolean, navController: NavController
 ) {
     TopAppBar(title = { Text(text = "MushTool") }, navigationIcon = {
         if (!isHome) {
             run {
-                IconButton(onClick = { /* acción de regreso */ }) {
+                IconButton(onClick = { navController.popBackStack() }) {
                     Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Regresar")
                 }
             }

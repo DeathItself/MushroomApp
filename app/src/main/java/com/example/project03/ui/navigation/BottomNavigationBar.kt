@@ -1,7 +1,5 @@
 package com.example.project03.ui.navigation
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Row
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.AddCircle
 import androidx.compose.material.icons.rounded.Home
@@ -14,80 +12,73 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.project03.R
-import com.example.project03.model.BottomNavigation
 import com.example.project03.viewmodel.MainViewModel
-import androidx.compose.ui.res.stringResource
 
+data class BottomNavigationItem(
+    val route: String,
+    val title: String,
+    val icon: ImageVector,
+)
 
 @Composable
 fun BottomNavigationBar(navController: NavController) {
     val items = listOf(
-        BottomNavigation(
+        BottomNavigationItem(
+            route = AppScreens.HomeScreen.route,
             title = stringResource(R.string.BottomNavHome),
             icon = Icons.Rounded.Home
-        ),
-
-        BottomNavigation(
-            title = stringResource( R.string.BottomNavMap),
+        ), BottomNavigationItem(
+            route = AppScreens.MapScreen.route,
+            title = stringResource(R.string.BottomNavMap),
             icon = Icons.Rounded.Map
-        ),
-
-        BottomNavigation(
+        ), BottomNavigationItem(
+            route = AppScreens.AddMushroomScreen.route,
             title = stringResource(R.string.BottomNavAdd),
-            icon = Icons.Rounded.AddCircle
-        ),
-
-        BottomNavigation(
+            icon = Icons.Rounded.AddCircle,
+        ), BottomNavigationItem(
+            route = AppScreens.MisSetasScreen.route,
             title = stringResource(R.string.BottomNavMyMush),
             icon = Icons.Rounded.ShoppingBasket
-        ),
-
-        BottomNavigation(
+        ), BottomNavigationItem(
+            route = "menu",
             title = stringResource(R.string.BottomNavMenu),
             icon = Icons.Rounded.Menu
         )
     )
+
     NavigationBar {
+        val currentRoute = navController.currentDestination?.route
         val mainViewModel: MainViewModel = viewModel()
-        Row(
-            modifier = Modifier.background(MaterialTheme.colorScheme.inverseOnSurface)
-        ) {
-            items.forEachIndexed { index, item ->
-                NavigationBarItem(
-                    selected = index == 0,
-                    onClick = {
-                        when (index) {
-                            0 -> navController.navigate(route = AppScreens.HomeScreen.route)
-                            1 -> navController.navigate(route = AppScreens.MapScreen.route)
-                            2 -> navController.navigate(route = AppScreens.AddMushroomScreen.route)
-                            3 -> navController.navigate(route = AppScreens.MisSetasScreen.route)
-                            4 -> mainViewModel.showBottomSheet = true
-                        }
-                    },
-                    icon = {
 
-                        Icon(
-                            imageVector = item.icon,
-                            contentDescription = item.title,
-                            tint = MaterialTheme.colorScheme.onBackground
-                        )
-
-                    },
-                    label = {
-                        Text(
-                            text = item.title,
-                            color = MaterialTheme.colorScheme.onBackground
-                        )
+        items.forEach { item ->
+            NavigationBarItem(selected = currentRoute == item.route, onClick = {
+                if (item.route == "menu") {
+                    mainViewModel.showBottomSheet = true
+                } else {
+                    navController.navigate(item.route) {
+                        // Modify this to suit your navigation setup
+                        // For example, to clear back stack:
+                        popUpTo(navController.graph.startDestinationId)
+                        launchSingleTop = true
                     }
+                }
+            }, icon = {
+                Icon(
+                    imageVector = item.icon,
+                    contentDescription = item.title,
+                    tint = if (currentRoute == item.route) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
                 )
-
-
-            }
+            }, label = {
+                Text(
+                    text = item.title,
+                    color = if (currentRoute == item.route) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            })
         }
     }
 }

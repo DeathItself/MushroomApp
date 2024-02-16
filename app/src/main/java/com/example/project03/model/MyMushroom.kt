@@ -2,7 +2,8 @@ package com.example.project03.model
 
 import com.google.firebase.firestore.PropertyName
 
-data class Mushroom(
+
+data class MyMushroom(
     var commonName: String = "",
     var description: String = "",
     var dificulty: String = "",
@@ -14,5 +15,3 @@ data class Mushroom(
     var latitude: Double = 0.0,
     var longitude: Double = 0.0
 )
-
-
