@@ -39,7 +39,7 @@ import kotlinx.coroutines.withContext
 
 
 @Composable
-fun generateImageQuestion(mushrooms: List<Mushroom>): Question {
+fun generateImageQuestion(mushrooms: List<Mushroom>, score: Int): Question {
     if (mushrooms.isEmpty()) return Question(
         image = "",
         type = QuestionType.Text,
@@ -47,7 +47,17 @@ fun generateImageQuestion(mushrooms: List<Mushroom>): Question {
         options = emptyList(),
         correctAnswer = ""
     )
-    val selectedMushroom = mushrooms.random()
+    // Filtrar setas según la dificultad y puntuación del usuario
+    val filteredMushrooms = if (score < 30) {
+        mushrooms.filter { it.dificulty == "Low" }
+    } else if (score < 80) {
+        mushrooms.filter { it.dificulty == "Low" || it.dificulty == "Medium" }
+    } else {
+        mushrooms.filter { it.dificulty == "Hard" }
+    }
+
+    // Seleccionar un hongo aleatorio del conjunto filtrado
+    val selectedMushroom = filteredMushrooms.shuffled().random()
     val mushroomName = selectedMushroom.commonName
     val mushroomPic = selectedMushroom.photo
     // Asegurarse de que las opciones incluyan el nombre correcto y sean únicas
@@ -70,8 +80,8 @@ fun generateImageQuestion(mushrooms: List<Mushroom>): Question {
 fun QuizApp(navController: NavController) {
     val mainViewModel: MainViewModel = viewModel()
     val mushrooms = Data.DbCall()
-    val currentQuestion = mutableStateOf(generateImageQuestion(mushrooms))
     val score = remember { mutableStateOf(0) }
+    val currentQuestion = mutableStateOf(generateImageQuestion(mushrooms, score.value))
     val options = currentQuestion.value.options
     var radioIndex: Int
     val isHome = false
@@ -83,7 +93,7 @@ fun QuizApp(navController: NavController) {
     // Observa cambios en el trigger para generar una nueva pregunta
     if (triggerNewQuestion.value) {
         // Actualizar la pregunta actual
-        currentQuestion.value = generateImageQuestion(mushrooms)
+        currentQuestion.value = generateImageQuestion(mushrooms, score.value)
         triggerNewQuestion.value = false // Restablecer el disparador
     }
     Scaffold(
@@ -160,13 +170,14 @@ fun QuizApp(navController: NavController) {
                             }
                         }
                     }
+
                     else -> {
                         Text(text = "Tipo de pregunta no compatible")
                     }
                 }
             }
             val context = LocalContext.current
-            if ( remainingTime == 0 ){
+            if (remainingTime == 0) {
                 triggerNewQuestion.value = true
                 elapsedTime.value = 0
             }
@@ -188,7 +199,7 @@ fun QuizApp(navController: NavController) {
                     score.value = 0
                     elapsedTime.value = 0
                     Toast.makeText(context, "Respuesta incorrecta", Toast.LENGTH_SHORT).show()
-                    triggerNewQuestion.value=true
+                    triggerNewQuestion.value = true
                 }
 
             }) {

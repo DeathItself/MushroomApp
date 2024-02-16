@@ -5,6 +5,7 @@ import com.google.firebase.firestore.PropertyName
 data class Mushroom(
     var commonName: String = "",
     var description: String = "",
+    var dificulty: String = "",
     var habitat: String = "",
     @get:PropertyName("isEdible") @set:PropertyName("isEdible") var isEdible: Boolean? = null,
     var photo: String = "",
