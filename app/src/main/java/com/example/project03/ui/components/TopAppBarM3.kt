@@ -1,6 +1,7 @@
 package com.example.project03.ui.components
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Face
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -15,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.example.project03.R
 import androidx.navigation.NavController
+import com.example.project03.ui.navigation.AppScreens
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -49,8 +51,8 @@ fun LargeTopAppBarM3(
             }
         }
     }, scrollBehavior = scrollBehavior, actions = {
-        IconButton(onClick = { /*TODO*/ }) {
-            Icon(imageVector = Icons.Filled.Face, contentDescription = null)
+        IconButton(onClick = { navController.navigate(AppScreens.LoginScreen.route)}) {
+            Icon(imageVector = Icons.Filled.AccountCircle, contentDescription = null)
         }
     })
 }
@@ -69,8 +71,8 @@ fun SmallTopAppBarM3(
             }
         }
     }, scrollBehavior = scrollBehavior, actions = {
-        IconButton(onClick = { /*TODO*/ }) {
-            Icon(imageVector = Icons.Filled.Face, contentDescription = null)
+        IconButton(onClick = { navController.navigate(AppScreens.LoginScreen.route)}) {
+            Icon(imageVector = Icons.Filled.AccountCircle, contentDescription = null)
         }
     })
 }

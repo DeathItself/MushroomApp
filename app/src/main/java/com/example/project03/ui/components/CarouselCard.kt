@@ -1,6 +1,7 @@
 package com.example.project03.ui.components
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -20,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -67,6 +69,7 @@ fun CarouselCard(navController: NavController) {
                 Column(
                     modifier = Modifier.fillMaxSize(),
                     horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
                 ) {
                     Box(
                         Modifier.align(
@@ -83,11 +86,11 @@ fun CarouselCard(navController: NavController) {
                         )
                     }
                     AsyncImage(
-
                         modifier = Modifier.size(130.dp),
                         model = addMushImage,
                         contentDescription = "photo of a mushroom",
                         contentScale = ContentScale.Fit,
+                        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.inverseSurface),
                         placeholder = painterResource(id = R.drawable.placeholder),
                         error = painterResource(id = R.drawable.error),
                     )
