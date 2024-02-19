@@ -11,7 +11,6 @@ import androidx.navigation.navArgument
 import com.example.project03.ui.components.CameraScreen
 import com.example.project03.ui.screens.addMushrooms.AddMushroomScreen
 import com.example.project03.ui.screens.authentication.LoginScreen
-import com.example.project03.ui.screens.authentication.RegisterScreen
 import com.example.project03.ui.screens.home.HomeScreen
 import com.example.project03.ui.screens.maps.MapScreen
 import com.example.project03.ui.screens.myMush.MostrarMisSetasScreen
@@ -66,10 +65,6 @@ fun AppNavigation() {
 
         composable(route = AppScreens.LoginScreen.route){
             LoginScreen(navController)
-        }
-
-        composable(route = AppScreens.RegisterScreen.route){
-            RegisterScreen(navController)
         }
     }
 }

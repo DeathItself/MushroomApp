@@ -96,7 +96,7 @@ fun ContentGoogleMaps(padding: PaddingValues, navController: NavController) {
         GoogleMap(
             cameraPositionState = cameraPositionState,
             properties = MapProperties(
-                mapType = MapType.SATELLITE,
+                mapType = MapType.HYBRID,
                 isMyLocationEnabled = permissionGranted,
             ),
 
