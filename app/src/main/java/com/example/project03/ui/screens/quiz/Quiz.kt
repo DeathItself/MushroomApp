@@ -95,14 +95,11 @@ fun QuizApp(navController: NavController) {
         currentQuestion.value = generateImageQuestion(mushrooms, score.value)
         triggerNewQuestion.value = false // Restablecer el disparador
     }
-    Scaffold(
-        topBar = {
-            TopAppBarWithoutScaffold(isHome, navController)
-        },
-        bottomBar = {
-            BottomNavigationBar(navController)
-        }
-    ) { padding ->
+    Scaffold(topBar = {
+        TopAppBarWithoutScaffold(isHome, navController)
+    }, bottomBar = {
+        BottomNavigationBar(navController)
+    }) { padding ->
         Column(
             Modifier
                 .padding(padding)
@@ -158,13 +155,11 @@ fun QuizApp(navController: NavController) {
                         // Muestra las opciones como RadioButtons
                         options.forEachIndexed { index, option ->
                             Row(verticalAlignment = Alignment.CenterVertically) {
-                                RadioButton(
-                                    selected = selectedIndex.value == index, // Verifica si este RadioButton está seleccionado
+                                RadioButton(selected = selectedIndex.value == index, // Verifica si este RadioButton está seleccionado
                                     onClick = {
                                         selectedIndex.value =
                                             index // Actualiza el estado con el índice de la opción seleccionada
-                                    }
-                                )
+                                    })
                                 Text(option)
                             }
                         }
@@ -180,35 +175,43 @@ fun QuizApp(navController: NavController) {
                 triggerNewQuestion.value = true
                 elapsedTime.value = 0
             }
-            Button(onClick = {
-                // Comprobar si la respuesta seleccionada es correcta y actualizar la pregunta
+            Button(modifier = Modifier.align(Alignment.CenterHorizontally)
+                .padding(16.dp),
+                onClick = {
+                // Primero, verifica si se ha seleccionado alguna opción
+                if (selectedIndex.value == -1) {
+                    // Si no hay selección, muestra un Toast y retorna
+                    Toast.makeText(context, "Por favor, selecciona una opción", Toast.LENGTH_SHORT).show()
+                    return@Button
+                }
+
+                // Lógica para manejar la respuesta seleccionada
                 if (options[selectedIndex.value] == currentQuestion.value.correctAnswer && remainingTime > 0) {
-                    // Incrementar puntuación o mostrar mensaje de correcto, si es necesario
+                    // Respuesta correcta, incrementa la puntuación y prepara la siguiente pregunta
                     val bonusPoints = remainingTime / 1000
                     score.value += bonusPoints
                     triggerNewQuestion.value = true
-                    selectedIndex.value = -1
+                    selectedIndex.value = -1 // Resetea la selección para la siguiente pregunta
                     elapsedTime.value = 0
                     Toast.makeText(
                         context,
-                        "Correcto! Has obtenido + $bonusPoints puntos por tiempo restante",
+                        "Correcto! Has obtenido +$bonusPoints puntos por tiempo restante",
                         Toast.LENGTH_SHORT
                     ).show()
                 } else {
+                    // Respuesta incorrecta, resetea la puntuación y prepara la siguiente pregunta
                     score.value = 0
                     elapsedTime.value = 0
                     Toast.makeText(context, "Respuesta incorrecta", Toast.LENGTH_SHORT).show()
                     triggerNewQuestion.value = true
                 }
-
             }) {
                 Text("Siguiente pregunta")
             }
+
         }
         if (mainViewModel.showBottomSheet) {
-            ModalBottomSheet(
-                onDismissRequest = { mainViewModel.showBottomSheet = false }
-            ) {
+            ModalBottomSheet(onDismissRequest = { mainViewModel.showBottomSheet = false }) {
                 ContentBottomSheet(mainViewModel, navController)
             }
         }
