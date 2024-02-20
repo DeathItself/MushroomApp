@@ -4,25 +4,24 @@ import android.Manifest
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
-import android.media.ExifInterface
 import android.view.ViewGroup
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
-import androidx.camera.core.Preview
-import androidx.camera.core.resolutionselector.AspectRatioStrategy
-import androidx.camera.core.resolutionselector.ResolutionSelector
 import androidx.camera.view.LifecycleCameraController
 import androidx.camera.view.PreviewView
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Camera
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -31,12 +30,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
+import androidx.exifinterface.media.ExifInterface
 import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.NavController
 import com.example.project03.model.ImagePath
@@ -99,27 +98,29 @@ fun Camera(
     cameraController: LifecycleCameraController,
     lifecycle: LifecycleOwner,
 ){
-    val aspectRatio = 4f / 3f
-    AndroidView(
-        factory = {context ->
-            val previewView = PreviewView(context).apply {
-                layoutParams = ViewGroup.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.MATCH_PARENT
-
+    val aspectRatio = 3f / 4f
+    Column(verticalArrangement = Arrangement.Center, modifier = Modifier.fillMaxSize()) {
+        AndroidView(
+            factory = { context ->
+                val previewView = PreviewView(context).apply {
+                    layoutParams = ViewGroup.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.MATCH_PARENT
+                    )
+                }
+                cameraController.bindToLifecycle(lifecycle)
+                previewView.controller = cameraController
+                previewView
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .aspectRatio(
+                    aspectRatio,
+                    matchHeightConstraintsFirst = true
                 )
-            }
-            cameraController.bindToLifecycle(lifecycle)
-            previewView.controller = cameraController
-            previewView
-        },
-        modifier = Modifier
-            .fillMaxSize()
-            .aspectRatio(
-                aspectRatio,
-                matchHeightConstraintsFirst = true
-            )
-    )
+                .padding(aspectRatio.dp)
+        )
+    }
 }
 
 @Composable
@@ -151,7 +152,7 @@ fun CameraTrigger(
             })
         },
         colors = ButtonDefaults.buttonColors(
-            containerColor = Color.White
+            containerColor = MaterialTheme.colorScheme.inverseSurface
         )
 
     ) {

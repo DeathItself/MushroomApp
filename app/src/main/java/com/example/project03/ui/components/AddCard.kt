@@ -104,7 +104,7 @@ fun AddCard(navController: NavController) {
             ) {
                 if (imagePath.isNotEmpty()) {
                     Image(
-                        modifier = Modifier.size(width = 300.dp, height = 100.dp),
+                        modifier = Modifier.size(width = 250.dp, height = 250.dp),
                         painter = rememberAsyncImagePainter(imagePath),
                         contentDescription = "Añadir imagen seta"
                     )
@@ -122,7 +122,7 @@ fun AddCard(navController: NavController) {
             modifier = Modifier
                 .padding(horizontal = 12.dp, vertical = 8.dp)
                 .fillMaxWidth(),
-            horizontalAlignment = Alignment.Start
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             nameMushroom = categoryList(mushroom)
 

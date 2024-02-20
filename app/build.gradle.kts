@@ -65,6 +65,7 @@ dependencies {
     implementation("com.google.firebase:firebase-firestore:24.10.2")
     implementation("com.google.android.gms:play-services-location:21.1.0")
     implementation("com.google.firebase:firebase-storage-ktx:20.3.0")
+    implementation("androidx.exifinterface:exifinterface:1.3.7")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     androidTestImplementation(platform("androidx.compose:compose-bom:2024.02.00"))
