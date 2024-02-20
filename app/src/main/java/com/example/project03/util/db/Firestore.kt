@@ -2,6 +2,7 @@ package com.example.project03.util.db
 
 import com.example.project03.model.Mushroom
 import com.example.project03.model.MyMushroom
+import com.example.project03.model.Restaurants
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 
@@ -15,8 +16,6 @@ suspend fun FirebaseFirestore.getMushrooms(): List<Mushroom> {
         emptyList()
     }
 }
-
-
 suspend fun FirebaseFirestore.AddMushroom(mushroom: MyMushroom) {
     try {
         collection("my_mushrooms").document(mushroom.commonName).set(mushroom).await()
@@ -31,6 +30,16 @@ suspend fun FirebaseFirestore.getMyMushrooms(): List<MyMushroom> {
         documents.toObjects(MyMushroom::class.java)
     } catch (e: Exception) {
         println("Error getting mushrooms from Firebase: ${e.message}")
+        emptyList()
+    }
+}
+suspend fun FirebaseFirestore.getRestaurants(): List<Restaurants> {
+    return try {
+        val documents = collection("restaurantes").get()
+            .await()
+        documents.toObjects(Restaurants::class.java)
+    }catch (e: Exception) {
+        println("Error getting restaurants from Firebase: ${e.message}")
         emptyList()
     }
 }
