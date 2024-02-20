@@ -1,8 +1,9 @@
 package com.example.project03.ui.components
 
+import android.annotation.SuppressLint
+import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.runtime.Composable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -21,30 +22,48 @@ import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
-import com.example.project03.R
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
+import com.example.project03.R
 import com.example.project03.model.ImagePath
+import com.example.project03.model.Mushroom
 import com.example.project03.ui.navigation.AppScreens
+import com.example.project03.ui.screens.maps.permissionGranted
+import com.example.project03.util.data.Data
+import com.google.android.gms.location.LocationServices
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 @Composable
-fun AddCard(navController: NavController){
+fun AddCard(navController: NavController) {
     //PONER EL PATH VIEW MODEL, REVISAR EL CAHTGPT
+    val mushroom = Data.wikiDBList()
     val imagePath = ImagePath.imagePath
+    var nameMushroom = ""
+    var description = ""
+    val context = LocalContext.current
+    var latitude by remember { mutableDoubleStateOf(0.0) }
+    var longitude by remember { mutableDoubleStateOf(0.0) }
     ElevatedCard(
         modifier = Modifier,
         shape = RoundedCornerShape(12.dp),
@@ -56,7 +75,7 @@ fun AddCard(navController: NavController){
         ),
         elevation = CardDefaults.cardElevation(1.dp),
 
-    ) {
+        ) {
         Column(
             modifier = Modifier
                 .padding(horizontal = 12.dp, vertical = 8.dp)
@@ -64,27 +83,30 @@ fun AddCard(navController: NavController){
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Seta Encontrada!",
-                style = MaterialTheme.typography.headlineMedium
+                text = "Seta Encontrada!", style = MaterialTheme.typography.headlineMedium
             )
 
             Spacer(modifier = Modifier.height(8.dp))
 
             Button(
-                onClick = { navController.navigate(route = AppScreens.CameraScreen.route) },
-                colors = ButtonDefaults.buttonColors(
+                onClick = {
+                    if (permissionGranted) {
+                        navController.navigate(route = AppScreens.CameraScreen.route)
+                    } else {
+                        navController.navigate(route = AppScreens.CamLocationScreen.route)
+                    }
+                }, colors = ButtonDefaults.buttonColors(
                     containerColor = Color.Transparent,
-                ),
-                shape = RoundedCornerShape(12.dp)
+                ), shape = RoundedCornerShape(12.dp)
 
             ) {
-                if(imagePath.isNotEmpty()){
+                if (imagePath.isNotEmpty()) {
                     Image(
                         modifier = Modifier.size(width = 300.dp, height = 100.dp),
                         painter = rememberAsyncImagePainter(imagePath),
                         contentDescription = "Añadir imagen seta"
                     )
-                }else{
+                } else {
                     Image(
                         painter = painterResource(id = R.drawable.placeholder),
                         contentDescription = "Añadir imagen seta"
@@ -100,31 +122,41 @@ fun AddCard(navController: NavController){
                 .fillMaxWidth(),
             horizontalAlignment = Alignment.Start
         ) {
-            CategoryList()
+            nameMushroom = categoryList(mushroom)
 
             Spacer(modifier = Modifier.height(10.dp))
-
-            TextField()
+            description = textField()
+            LaunchedEffect(key1 = true) {
+                val (lat, lon) = getMyLocation(context)
+                if (lat != null) {
+                    latitude = lat
+                }
+                if (lon != null) {
+                    longitude = lon
+                }
+            }
         }
 
-        Row (
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp),
             horizontalArrangement = Arrangement.Center
-        ){
+        ) {
             Button(
                 onClick = {
-                    /* Do something! */
-                },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(126, 116, 116),
-                    contentColor = Color.Black
+                    // Aqui se guarda la informacion recogida en CategoryList, TextField y la imagen en la base de datos
+                    CoroutineScope(Dispatchers.IO).launch {
+                        Data.addMushroom(
+                            nameMushroom, description, imagePath, mushroom, latitude, longitude
+                        )
+                    }
+                }, colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(126, 116, 116), contentColor = Color.Black
                 )
             ) {
                 Text(
-                    "Guardar",
-                    color = Color.White
+                    "Guardar", color = Color.White
                 )
             }
         }
@@ -132,9 +164,21 @@ fun AddCard(navController: NavController){
 
 }
 
+@SuppressLint("MissingPermission")
+suspend fun getMyLocation(context: Context): Pair<Double?, Double?> {
+    val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
+    return try {
+        val location = fusedLocationClient.lastLocation.await()
+        Pair(location.latitude, location.longitude)
+    } catch (e: Exception) {
+        e.printStackTrace()
+        Pair(null, null) // Retorna un valor por defecto o maneja el error adecuadamente
+    }
+}
+
 //@Preview
 @Composable
-fun TextField(){
+fun textField(): String {
     var text by rememberSaveable(stateSaver = TextFieldValue.Saver) {
         mutableStateOf(TextFieldValue("", TextRange(0, 7)))
     }
@@ -162,13 +206,14 @@ fun TextField(){
 
         )
     )
+    return text.text
 }
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CategoryList(){
-    val options = listOf("Option 1", "Option 2", "Option 3", "Option 4", "Option 5")
+fun categoryList(mushroom: List<Mushroom>): String {
+    val options = mushroom.indices.map { mushroom[it].commonName } + "Otro"
     var expanded by remember { mutableStateOf(false) }
     var selectedOptionText by remember { mutableStateOf(options[0]) }
 
@@ -182,7 +227,7 @@ fun CategoryList(){
             readOnly = true,
             value = selectedOptionText,
             onValueChange = {},
-            label = { Text("Label") },
+            label = { Text("Tipo de seta") },
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
             colors = ExposedDropdownMenuDefaults.textFieldColors(
                 focusedTextColor = Color.Black,
@@ -203,16 +248,13 @@ fun CategoryList(){
             onDismissRequest = { expanded = false },
         ) {
             options.forEach { selectionOption ->
-                DropdownMenuItem(
-                    modifier = Modifier,
-                    text = { Text(selectionOption) },
-                    onClick = {
-                        selectedOptionText = selectionOption
-                        expanded = false
-                    },
-                    contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
+                DropdownMenuItem(modifier = Modifier, text = { Text(selectionOption) }, onClick = {
+                    selectedOptionText = selectionOption
+                    expanded = false
+                }, contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
                 )
             }
         }
     }
+    return selectedOptionText
 }
