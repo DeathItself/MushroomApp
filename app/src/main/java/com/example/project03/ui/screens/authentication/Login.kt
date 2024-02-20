@@ -22,9 +22,16 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.project03.ui.components.TextFields
 import com.example.project03.ui.components.UIBottom
+import com.example.project03.ui.navigation.AppScreens
+import com.example.project03.viewmodel.loginScreenViewModel
 
 @Composable
-fun LoginScreen(navController: NavController){
+fun LoginScreen(
+    navController: NavController,
+    viewModel: loginScreenViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+){
+    viewModel.checkLoggedIn(navController)
+
     val showLoginForm = rememberSaveable{
         mutableStateOf(true)
     }
@@ -40,13 +47,25 @@ fun LoginScreen(navController: NavController){
                 Text(
                     text = "Inicia sesión",
                     style = MaterialTheme.typography.titleMedium,
-                    fontSize = 25.sp,
+                    fontSize = 33.sp,
                 )
+                
+                Spacer(modifier = Modifier.height(15.dp))
 
                 UseForm(
                     isCreateAccount = false
                 ){
-                        email, password ->
+                    email, password ->
+                    viewModel.signInWithEmailAndPassword(email, password){
+                        navController.navigate(AppScreens.HomeScreen.route)
+                    }
+
+                }
+                SubmitBottom(
+                    textId = "Unirse",
+                    enabled = showLoginForm.value
+                ){
+                    showLoginForm.value = false
                 }
             }else{
                 Text(
@@ -58,19 +77,18 @@ fun LoginScreen(navController: NavController){
                 UseForm(
                     isCreateAccount = true
                 ){
-                        email, password ->
+                    email, password ->
+                    viewModel.createUserWithEmailAndPassword(email, password){
+                        navController.navigate(AppScreens.HomeScreen.route)
+                    }
+                }
+                SubmitBottom(
+                    textId = "Iniciar sesión",
+                    enabled = !showLoginForm.value
+                ){
+                    showLoginForm.value = true
                 }
             }
-
-            Spacer(modifier = Modifier.height(10.dp))
-
-            HorizontalDivider(
-                modifier = Modifier.width(330.dp),
-                thickness = 1.dp,
-                color = Color.Gray
-            )
-
-            Spacer(modifier = Modifier.height(20.dp))
 
             /*
             val text1 =
@@ -92,7 +110,6 @@ fun UseForm(
     val email = rememberSaveable{
         mutableStateOf("")
     }
-
     val password = rememberSaveable{
         mutableStateOf("")
     }
@@ -101,21 +118,46 @@ fun UseForm(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         EmailField(emailState = email)
+        Spacer(modifier = Modifier.height(10.dp))
+
         PasswordField(passwordState = password)
+        Spacer(modifier = Modifier.height(10.dp))
+
         SubmitBottom(
-            textId = if(isCreateAccount) "Iniciar sesión" else "Unirse"
+            textId = if(isCreateAccount) "Unirse" else "Iniciar sesión",
+            enabled = true
         ){
             onDone(email.value.trim(), password.value.trim())
         }
+
+        Spacer(modifier = Modifier.height(20.dp))
+        val text = if(isCreateAccount) "¿Ya tienes cuenta? Inicia sesión" else "Eres nuevo? Únete a nosotros!"
+        HorizontalDivider(
+            modifier = Modifier.width(330.dp),
+            thickness = 1.dp,
+            color = Color.Gray
+        )
+        
+        Spacer(modifier = Modifier.height(10.dp))
+        
+        Text(text)
+
+        Spacer(modifier = Modifier.height(5.dp))
+        
     }
 }
 
 @Composable
 fun SubmitBottom(
     textId: String,
+    enabled: Boolean,
     onclick: () -> Unit
 ) {
-    UIBottom(textId, onclick)
+    UIBottom(
+        textId = textId,
+        enabled = enabled,
+        onclick = onclick
+    )
 }
 
 @Composable

@@ -23,7 +23,7 @@ fun TextFields(
         modifier = Modifier,
         value = valueState.value,
         onValueChange = {
-            valueState.value
+            valueState.value = it
         },
         label = { Text(label) },
         enabled = true,
@@ -39,14 +39,15 @@ fun TextFields(
 @Composable
 fun UIBottom(
     textId: String,
+    enabled: Boolean,
     onclick: () -> Unit
 ){
     OutlinedButton(
         onClick = {
-           onclick
+           onclick()
         },
         modifier = Modifier,
-        enabled = true,
+        enabled = enabled,
         shape = RoundedCornerShape(12.dp),
         colors = ButtonDefaults.outlinedButtonColors(
             containerColor = MaterialTheme.colorScheme.secondaryContainer,
