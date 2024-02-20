@@ -17,6 +17,7 @@ import com.example.project03.ui.screens.myMush.MostrarMisSetasScreen
 import com.example.project03.ui.screens.myMush.MushroomDetailsScreen
 import com.example.project03.ui.screens.permission.LocationPermission
 import com.example.project03.ui.screens.quiz.QuizApp
+import com.example.project03.ui.screens.users.UserScreen
 import com.example.project03.ui.screens.wiki.MostrarSetasScreen
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -65,6 +66,9 @@ fun AppNavigation() {
 
         composable(route = AppScreens.LoginScreen.route){
             LoginScreen(navController)
+        }
+        composable(route = AppScreens.UserScreen.route){
+            UserScreen(navController)
         }
     }
 }

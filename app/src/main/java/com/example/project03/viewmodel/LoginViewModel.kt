@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
+import com.example.project03.model.User
 import com.example.project03.ui.navigation.AppScreens
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -54,7 +55,8 @@ class loginScreenViewModel: ViewModel(){
                 .addOnCompleteListener{ task ->
                     if(task.isSuccessful){
                         val displayName = task.result.user?.email?.split("@")?.get(0)
-                        createUser(displayName)
+                        val userEmail = task.result.user?.email
+                        createUser(displayName, userEmail)
                         home()
                     }
 
@@ -67,12 +69,17 @@ class loginScreenViewModel: ViewModel(){
         }
     }
 
-    private fun createUser(displayName: String?) {
-        val userId = auth.currentUser?.uid
-        val user = mutableMapOf<String, Any>()
+    private fun createUser(
+        displayName: String?,
+        email: String?
+    ) {
 
-        user["user_id"] = userId.toString()
-        user["username"] = displayName.toString()
+        val userId = auth.currentUser?.uid
+        val user = User(
+            id = userId.toString(),
+            username = displayName.toString(),
+            email = email.toString()
+        ).toMap()
 
         FirebaseFirestore.getInstance().collection("users")
             .add(user)

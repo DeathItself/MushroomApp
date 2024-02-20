@@ -4,6 +4,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Face
+import androidx.compose.material.icons.rounded.ArrowBackIosNew
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -51,7 +52,7 @@ fun LargeTopAppBarM3(
             }
         }
     }, scrollBehavior = scrollBehavior, actions = {
-        IconButton(onClick = { }) {
+        IconButton(onClick = { navController.navigate(AppScreens.UserScreen.route)}) {
             Icon(imageVector = Icons.Filled.AccountCircle, contentDescription = null)
         }
     })
@@ -66,12 +67,12 @@ fun SmallTopAppBarM3(
         if (!isHome) {
             run {
                 IconButton(onClick = { navController.popBackStack() }) {
-                    Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Regresar")
+                    Icon(imageVector = Icons.Rounded.ArrowBackIosNew, contentDescription = "Regresar")
                 }
             }
         }
     }, scrollBehavior = scrollBehavior, actions = {
-        IconButton(onClick = { }) {
+        IconButton(onClick = { navController.navigate(AppScreens.UserScreen.route)}) {
             Icon(imageVector = Icons.Filled.AccountCircle, contentDescription = null)
         }
     })
