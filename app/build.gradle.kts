@@ -64,6 +64,8 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.7.7")
     implementation("com.google.firebase:firebase-firestore:24.10.2")
     implementation("com.google.android.gms:play-services-location:21.1.0")
+    implementation("com.google.firebase:firebase-storage-ktx:20.3.0")
+    implementation("androidx.exifinterface:exifinterface:1.3.7")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     androidTestImplementation(platform("androidx.compose:compose-bom:2024.02.00"))
@@ -84,12 +86,13 @@ dependencies {
     implementation("androidx.navigation:navigation-runtime-ktx:2.7.7")
     implementation ("org.jetbrains.kotlin:kotlin-reflect:1.9.22")
 
-
+    //CAMERAX
     val camerax_version = "1.3.1"
     implementation("androidx.camera:camera-camera2:${camerax_version}")
     implementation("androidx.camera:camera-lifecycle:${camerax_version}")
     implementation("androidx.camera:camera-view:${camerax_version}")
     implementation("androidx.camera:camera-extensions:${camerax_version}")
+    implementation("androidx.camera:camera-core:${camerax_version}")
 
     //FIREBASE
     implementation(platform("com.google.firebase:firebase-bom:32.3.1"))

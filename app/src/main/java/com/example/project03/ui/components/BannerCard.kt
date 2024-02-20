@@ -112,4 +112,3 @@ fun BannerCard(navController: NavController) {
         }
     }
 }
-

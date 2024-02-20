@@ -8,12 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -28,32 +23,29 @@ import com.example.project03.viewmodel.MainViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddMushroomScreen(navController: NavController){
+fun AddMushroomScreen(navController: NavController) {
     val mainViewModel: MainViewModel = viewModel()
-    var isHome by remember { mutableStateOf(true) }
-    Scaffold(
-        topBar = {
-            TopAppBarWithoutScaffold(isHome, navController)
-        },
-        bottomBar = {
-            BottomNavigationBar(navController)
-        }
-    ) {padding ->
+    val isHome = true
+    Scaffold(topBar = {
+        TopAppBarWithoutScaffold(isHome, navController)
+    }, bottomBar = {
+        BottomNavigationBar(navController)
+    }) { padding ->
         ContentAddMushroom(padding, navController)
 
         //submenu
         if (mainViewModel.showBottomSheet) {
-            ModalBottomSheet(
-                onDismissRequest = { mainViewModel.showBottomSheet = false }
-            ) {
-                ContentBottomSheet(mainViewModel,navController)
+            ModalBottomSheet(onDismissRequest = { mainViewModel.showBottomSheet = false }) {
+                ContentBottomSheet(mainViewModel, navController)
             }
         }
     }
 }
 
 @Composable
-fun ContentAddMushroom(padding: PaddingValues, navController: NavController){
+fun ContentAddMushroom(
+    padding: PaddingValues, navController: NavController
+) {
     Column(
         modifier = Modifier
             .padding(padding)

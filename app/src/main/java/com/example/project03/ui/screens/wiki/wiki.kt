@@ -30,6 +30,7 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.project03.model.Mushroom
 import com.example.project03.ui.components.TopAppBarWithoutScaffold
+import com.example.project03.ui.navigation.AppScreens
 import com.example.project03.ui.navigation.BottomNavigationBar
 import com.example.project03.ui.navigation.ContentBottomSheet
 import com.example.project03.util.data.Data
@@ -58,22 +59,17 @@ fun EmptyState() {
 fun MostrarSetasScreen(navController: NavController) {
     val mainViewModel: MainViewModel = viewModel()
     val isHome = false
-    Scaffold(
-        topBar = {
-            TopAppBarWithoutScaffold(isHome, navController)
-        },
-        bottomBar = {
-            BottomNavigationBar(navController)
-        })
-    { padding ->
+    Scaffold(topBar = {
+        TopAppBarWithoutScaffold(isHome, navController)
+    }, bottomBar = {
+        BottomNavigationBar(navController)
+    }) { padding ->
         Column(Modifier.padding(padding)) {
             WikiScreen(navController)
         }
         //submenu
         if (mainViewModel.showBottomSheet) {
-            ModalBottomSheet(
-                onDismissRequest = { mainViewModel.showBottomSheet = false }
-            ) {
+            ModalBottomSheet(onDismissRequest = { mainViewModel.showBottomSheet = false }) {
                 ContentBottomSheet(mainViewModel, navController)
             }
         }
@@ -84,8 +80,7 @@ fun MostrarSetasScreen(navController: NavController) {
 @Composable
 fun MushroomList(mushrooms: List<Mushroom>, navController: NavController) {
     LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
+        modifier = Modifier.fillMaxSize()
     ) {
         items(mushrooms) { mushroom ->
             ElevatedCard(
@@ -93,10 +88,9 @@ fun MushroomList(mushrooms: List<Mushroom>, navController: NavController) {
                     .padding(2.dp)
                     .clickable {
                         navController.navigate(
-                            "detail_screen/${mushroom.commonName}"
+                            AppScreens.SetasDetailsScreen.route + "/" + mushroom.commonName
                         )
-                    },
-                elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp)
+                    }, elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp)
             ) {
                 if (mushrooms.isEmpty()) {
                     EmptyState()

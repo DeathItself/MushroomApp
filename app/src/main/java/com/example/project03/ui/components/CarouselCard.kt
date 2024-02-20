@@ -153,7 +153,11 @@ fun CarouselCard(navController: NavController) {
                             error = painterResource(id = R.drawable.error),
                             modifier = Modifier
                                 .fillMaxSize()
-                                .clickable { navController.navigate(route = AppScreens.SetasDetailsScreen.route + "/${mushroomList.toList()[page].commonName}") })
+                                .clickable {
+                                    navController.navigate(
+                                        route = AppScreens.MisSetasDetailsScreen.route + "/${mushroomList.toList()[page].myMushID}"
+                                    )
+                                })
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
