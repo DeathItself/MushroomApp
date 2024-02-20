@@ -27,9 +27,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.project03.model.User
 import com.example.project03.ui.components.EditableUsernameField
 import com.example.project03.ui.components.LabeledIconRow
 import com.example.project03.ui.components.TopAppBarWithoutScaffold
+import com.example.project03.ui.navigation.AppScreens
 
 @Composable
 fun UserScreen(
@@ -51,7 +53,7 @@ fun ContentUserScreen(
     paddingValues: PaddingValues,
     navController: NavController
 ){
-    var user = "LoginViewModel.readUsersFromFirebase(FirebaseAuth.getInstance().currentUser!!.uid)"
+    var user = User("","","","")
     var username by remember { mutableStateOf("user.username") }
     var editedUsername by remember { mutableStateOf(username) }
     var isEditingUsername by remember { mutableStateOf(false) }
@@ -142,13 +144,13 @@ fun ContentUserScreen(
         verticalArrangement = Arrangement.Bottom,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        EditButton(navController)
+        EditButton(navController,user)
         DeleteAccountButton()
         SignOffButton()
     }
 }
 @Composable
-fun EditButton(navController: NavController, ) {
+fun EditButton(navController: NavController,user: User ) {
     Button(
         modifier = Modifier
             .fillMaxWidth()
@@ -164,7 +166,7 @@ fun EditButton(navController: NavController, ) {
             width = 1.dp,
             color = Color.Blue
         ),
-        onClick = { "navController.navigate(AppScreens.EditUser.route +"+"+)" }
+        onClick = { navController.navigate(AppScreens.EditUserScreen.route +"/"+user.id) }
     ) {
         Text(text = "Editar")
     }
