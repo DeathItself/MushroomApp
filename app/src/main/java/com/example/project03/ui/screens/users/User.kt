@@ -2,7 +2,6 @@ package com.example.project03.ui.screens.users
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -11,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.MaterialTheme
@@ -26,7 +24,6 @@ import androidx.compose.ui.AbsoluteAlignment
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -56,6 +53,11 @@ fun ContentUserScreen(
     var username by remember { mutableStateOf("Usuario") }
     var editedUsername by remember { mutableStateOf(username) }
     var isEditingUsername by remember { mutableStateOf(false) }
+
+
+    var email by remember { mutableStateOf("email@example.com") }
+    var editedEmail by remember { mutableStateOf(email) }
+    var isEditingEmail by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -102,6 +104,30 @@ fun ContentUserScreen(
                 onClick = { isEditingUsername = true }
             )
         }
+
+        Spacer(modifier = Modifier.height(15.dp))
+
+        if(isEditingEmail){
+            EditableUsernameField(
+                username = editedEmail,
+                onUsernameChange = { editedEmail = it },
+                onSave = {
+                    email = editedEmail
+                    isEditingEmail = false
+                },
+                onCancel = { isEditingEmail = false }
+            )
+        }else{
+            Text(
+                modifier = Modifier.padding(start = 10.dp),
+                text = "Correo electrónico"
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            LabeledIconRow(
+                labelText = "$email",
+                onClick = { isEditingEmail = true }
+            )
+        }
     }
     
     Column(
@@ -119,23 +145,6 @@ fun ContentUserScreen(
     }
 }
 
-@Composable
-fun TextEmail(text: String) {
-    LabeledIconRow(labelText = text)
-}
-
-@Composable
-fun TextUser(
-    text: String
-) {
-    LabeledIconRow(labelText = text)
-}
-@Composable
-fun TextPassword(
-    text: String
-) {
-    LabeledIconRow(labelText = text)
-}
 @Composable
 fun DeleteAccountButton(){
     Button(
