@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import com.example.project03.R
 import com.example.project03.model.MyMushroom
 import com.example.project03.ui.components.TopAppBarWithoutScaffold
 import com.example.project03.ui.navigation.AppScreens
@@ -36,6 +37,7 @@ import com.example.project03.ui.navigation.BottomNavigationBar
 import com.example.project03.ui.navigation.ContentBottomSheet
 import com.example.project03.util.data.Data
 import com.example.project03.viewmodel.MainViewModel
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
@@ -75,7 +77,6 @@ fun ContentGoogleMaps(padding: PaddingValues, navController: NavController) {
     val initialPosition = LatLng(41.564, 2.019)
     var selectedMushroom by remember { mutableStateOf<MyMushroom?>(null) }
     var showBottomSheet by remember { mutableStateOf(false) }
-//    val posicionSeta = LatLng(mushroom[0].latitude, mushroom[0].longitude)
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(initialPosition, 15f)
     }
@@ -87,8 +88,6 @@ fun ContentGoogleMaps(padding: PaddingValues, navController: NavController) {
     ) {
         if (showBottomSheet && selectedMushroom != null) {
             ModalBottomSheet(onDismissRequest = { showBottomSheet = false }) {
-                // Aquí puedes definir cómo quieres mostrar la información de la seta seleccionada
-                // Por ejemplo, podrías tener un composable que tome un objeto Mushroom y muestre su información
                 MapContentBottomSheet(mushroom = selectedMushroom!!)
             }
         }
@@ -96,15 +95,18 @@ fun ContentGoogleMaps(padding: PaddingValues, navController: NavController) {
         GoogleMap(
             cameraPositionState = cameraPositionState,
             properties = MapProperties(
-                mapType = MapType.SATELLITE,
-                isMyLocationEnabled = permissionGranted,
+                mapType = MapType.HYBRID, isMyLocationEnabled = permissionGranted
             ),
 
             ) {
             // Itera por cada seta y coloca un marcador en su ubicación
             mushroom.forEach { mushroom ->
-                val position = LatLng(mushroom.latitude, mushroom.longitude)
+                val position = LatLng(mushroom.latitude!!, mushroom.longitude!!)
+                val badMarker = BitmapDescriptorFactory.fromResource(R.drawable.bad_mushroom_icon)
+                val goodMarker = BitmapDescriptorFactory.fromResource(R.drawable.good_mushroom_icon)
+                val marker = if (mushroom.isEdible == true) goodMarker else badMarker
                 Marker(
+                    icon = marker,
                     onClick = {
                         selectedMushroom = mushroom // Almacena la seta seleccionada
                         showBottomSheet = true // Muestra el ModalBottomSheet
@@ -112,7 +114,7 @@ fun ContentGoogleMaps(padding: PaddingValues, navController: NavController) {
                     },
                     state = MarkerState(position = position),
                     title = mushroom.commonName, // Usa el nombre común de la seta como título
-                    snippet = "Lat: ${mushroom.latitude}, Long: ${mushroom.longitude}" // Opcional: muestra latitud y longitud como snippet
+                    snippet = mushroom.scientificName
                 )
             }
         }
@@ -184,6 +186,5 @@ fun ButtonGps(navController: NavController) {
                 imageVector = Icons.Filled.GpsFixed, contentDescription = "Menu"
             )
         }
-
     }
 }

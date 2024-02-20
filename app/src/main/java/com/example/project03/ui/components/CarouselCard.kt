@@ -20,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -88,6 +89,7 @@ fun CarouselCard(navController: NavController) {
                         model = addMushImage,
                         contentDescription = "photo of a mushroom",
                         contentScale = ContentScale.Fit,
+                        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.inverseSurface),
                         placeholder = painterResource(id = R.drawable.placeholder),
                         error = painterResource(id = R.drawable.error),
                     )
@@ -150,7 +152,11 @@ fun CarouselCard(navController: NavController) {
                             error = painterResource(id = R.drawable.error),
                             modifier = Modifier
                                 .fillMaxSize()
-                                .clickable { navController.navigate(route = AppScreens.SetasDetailsScreen.route + "/${mushroomList.toList()[page].commonName}") })
+                                .clickable {
+                                    navController.navigate(
+                                        route = AppScreens.MisSetasDetailsScreen.route + "/${mushroomList.toList()[page].myMushID}"
+                                    )
+                                })
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()

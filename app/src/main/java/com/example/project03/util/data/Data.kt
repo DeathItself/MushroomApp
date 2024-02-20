@@ -10,10 +10,11 @@ import com.example.project03.model.Mushroom
 import com.example.project03.model.MyMushroom
 import com.example.project03.model.Restaurants
 import com.example.project03.ui.components.Loading.Companion.LoadingState
-import com.example.project03.util.db.AddMushroom
+import com.example.project03.util.db.addMushroom
 import com.example.project03.util.db.getMushrooms
 import com.example.project03.util.db.getMyMushrooms
 import com.example.project03.util.db.getRestaurants
+import com.example.project03.util.db.uploadImageAndGetUrl
 import com.google.firebase.firestore.FirebaseFirestore
 
 class Data {
@@ -52,13 +53,34 @@ class Data {
             return mushroomList
         }
 
-        @JvmStatic
-        @Composable
-        fun AddMushroom(mushroom: MyMushroom) {
+        suspend fun addMushroom(
+            nameMushroom: String,
+            description: String,
+            imagePath: String,
+            mushroom: List<Mushroom>,
+            latitude: Double,
+            longitude: Double
+        ): String {
             val db = FirebaseFirestore.getInstance()
-            LaunchedEffect(key1 = Unit) {
-                db.AddMushroom(mushroom)
-            }
+            val imageUrl = uploadImageAndGetUrl(imagePath)
+            val matchedMushroom = mushroom.find { it.commonName == nameMushroom } ?: Mushroom()
+
+            val myMush = MyMushroom(
+                nameMushroom,
+                description,
+                photo = imageUrl,
+                dificulty = matchedMushroom.dificulty,
+                habitat = matchedMushroom.habitat,
+                isEdible = matchedMushroom.isEdible,
+                latitude = latitude,
+                longitude = longitude,
+                scientificName = matchedMushroom.scientificName,
+                seasons = matchedMushroom.seasons,
+                timestamp = com.google.firebase.Timestamp.now()
+            )
+
+            db.addMushroom(myMush)
+            return "Mushroom added"
         }
 
         @JvmStatic

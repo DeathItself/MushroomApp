@@ -11,13 +11,16 @@ import androidx.navigation.navArgument
 import com.example.project03.ui.components.CameraScreen
 import com.example.project03.ui.restaurant.MostrarRestaurantes
 import com.example.project03.ui.screens.addMushrooms.AddMushroomScreen
+import com.example.project03.ui.screens.edit.EditMyMushroomScreen
 import com.example.project03.ui.screens.home.HomeScreen
 import com.example.project03.ui.screens.maps.MapScreen
 import com.example.project03.ui.screens.myMush.MostrarMisSetasScreen
-import com.example.project03.ui.screens.myMush.MushroomDetailsScreen
+import com.example.project03.ui.screens.myMush.MyMushroomDetailsScreen
+import com.example.project03.ui.screens.permission.CamLocationPermission
 import com.example.project03.ui.screens.permission.LocationPermission
 import com.example.project03.ui.screens.quiz.QuizApp
 import com.example.project03.ui.screens.wiki.MostrarSetasScreen
+import com.example.project03.ui.screens.wiki.MushroomDetailsScreen
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -31,17 +34,29 @@ fun AppNavigation() {
             MapScreen(navController)
         }
 
-        composable(route = AppScreens.AddMushroomScreen.route){
+        composable(route = AppScreens.AddMushroomScreen.route) {
             AddMushroomScreen(navController)
         }
 
-
-        composable(route = AppScreens.CameraScreen.route){
-            CameraScreen()
+        composable(
+            AppScreens.EditMyMushroomScreen.route + "/{myMushID}",
+            arguments = listOf(navArgument("myMushID") {
+                type = NavType.StringType
+            })
+        ) {
+            val myMushID = it.arguments?.getString("myMushID")
+            EditMyMushroomScreen(navController, myMushID ?: "")
         }
 
-        composable(route = AppScreens.LocationScreen.route){
+        composable(route = AppScreens.CameraScreen.route) {
+            CameraScreen(navController)
+        }
+
+        composable(route = AppScreens.LocationScreen.route) {
             LocationPermission(navController)
+        }
+        composable(route = AppScreens.CamLocationScreen.route) {
+            CamLocationPermission(navController)
         }
         composable(route = AppScreens.MisSetasScreen.route) {
             MostrarMisSetasScreen(navController)
@@ -54,12 +69,24 @@ fun AppNavigation() {
         ) { backStackEntry ->
             val commonName = backStackEntry.arguments?.getString("commonName")
             MushroomDetailsScreen(
-                navController, commonName ?: "")
+                navController, commonName ?: ""
+            )
         }
-        composable(route = AppScreens.QuizScreen.route){
+        composable(
+            route = AppScreens.MisSetasDetailsScreen.route + "/{myMushID}",
+            arguments = listOf(navArgument("myMushID") {
+                type = NavType.StringType
+            })
+        ) { backStackEntry ->
+            val myMushID = backStackEntry.arguments?.getString("myMushID")
+            MyMushroomDetailsScreen(
+                navController, myMushID ?: ""
+            )
+        }
+        composable(route = AppScreens.QuizScreen.route) {
             QuizApp(navController)
         }
-        composable(route = AppScreens.WikiScreen.route){
+        composable(route = AppScreens.WikiScreen.route) {
             MostrarSetasScreen(navController)
         }
         composable(route = AppScreens.RestaurantsScreen.route){
