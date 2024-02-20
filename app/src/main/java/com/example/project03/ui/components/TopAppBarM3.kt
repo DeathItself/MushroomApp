@@ -51,7 +51,7 @@ fun LargeTopAppBarM3(
             }
         }
     }, scrollBehavior = scrollBehavior, actions = {
-        IconButton(onClick = { navController.navigate(AppScreens.LoginScreen.route)}) {
+        IconButton(onClick = { }) {
             Icon(imageVector = Icons.Filled.AccountCircle, contentDescription = null)
         }
     })
@@ -71,7 +71,7 @@ fun SmallTopAppBarM3(
             }
         }
     }, scrollBehavior = scrollBehavior, actions = {
-        IconButton(onClick = { navController.navigate(AppScreens.LoginScreen.route)}) {
+        IconButton(onClick = { }) {
             Icon(imageVector = Icons.Filled.AccountCircle, contentDescription = null)
         }
     })

@@ -23,7 +23,7 @@ import com.example.project03.ui.screens.wiki.MostrarSetasScreen
 @Composable
 fun AppNavigation() {
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = AppScreens.HomeScreen.route) {
+    NavHost(navController = navController, startDestination = AppScreens.LoginScreen.route) {
         composable(route = AppScreens.HomeScreen.route) {
             HomeScreen(navController)
         }
