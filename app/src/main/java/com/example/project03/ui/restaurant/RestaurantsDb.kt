@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -30,14 +31,23 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.project03.model.Restaurants
 import com.example.project03.ui.components.TopAppBarWithoutScaffold
+import com.example.project03.ui.navigation.AppScreens
 import com.example.project03.ui.navigation.BottomNavigationBar
 import com.example.project03.ui.navigation.ContentBottomSheet
 import com.example.project03.util.data.Data
 import com.example.project03.viewmodel.MainViewModel
+import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.MapProperties
+import com.google.maps.android.compose.MapType
+import com.google.maps.android.compose.Marker
+import com.google.maps.android.compose.MarkerState
+import com.google.maps.android.compose.rememberCameraPositionState
 
 
 @Composable
-fun PantallaRestaurantes(navController: NavController){
+fun PantallaRestaurantes(navController: NavController) {
     RestaurantList(restaurants = Data.restaurantList(), navController)
 }
 
@@ -53,9 +63,10 @@ fun EmptyState() {
         )
     }
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MostrarRestaurantes(navController: NavController){
+fun MostrarRestaurantes(navController: NavController) {
     val mainViewModel: MainViewModel = viewModel()
     val isHome = false
     Scaffold(topBar = {
@@ -90,8 +101,11 @@ fun RestaurantList(restaurants: List<Restaurants>, navController: NavController)
                 modifier = Modifier
                     .padding(2.dp)
                     .clickable {
-                        navController.navigate("maps?lat=${restaurant.latitude}&lon=${restaurant.longitud}")
-                    }, elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp)
+                               navController.navigate(
+                                   AppScreens.RestaurantInfo.route + "/" + restaurant.nom
+                               )
+                    },
+                elevation = CardDefaults.elevatedCardElevation(defaultElevation = 2.dp)
             ) {
                 Column(
                     modifier = Modifier
@@ -119,6 +133,36 @@ fun RestaurantList(restaurants: List<Restaurants>, navController: NavController)
                     }
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun Mapa(restaurants: Restaurants?) {
+    // Minimapa
+    val cameraPositionState = rememberCameraPositionState {
+        if (restaurants != null) {
+            position = CameraPosition.fromLatLngZoom(
+                LatLng(restaurants.latitude, restaurants.longitud), 15f
+            )
+        }
+    }
+    GoogleMap(
+        modifier = Modifier
+            .height(150.dp)
+            .fillMaxWidth()
+            .padding(horizontal = 26.dp),
+        cameraPositionState = cameraPositionState,
+        properties = MapProperties(
+            mapType = MapType.HYBRID
+        )
+    ) {
+
+        if (restaurants != null) {
+            Marker(
+                state = MarkerState(position = LatLng(restaurants.latitude, restaurants.longitud)),
+                title = restaurants.nom,
+            )
         }
     }
 }

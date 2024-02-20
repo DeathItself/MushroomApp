@@ -10,6 +10,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.project03.ui.components.CameraScreen
 import com.example.project03.ui.restaurant.MostrarRestaurantes
+import com.example.project03.ui.restaurant.RecibirRestaurante
 import com.example.project03.ui.screens.addMushrooms.AddMushroomScreen
 import com.example.project03.ui.screens.edit.EditMyMushroomScreen
 import com.example.project03.ui.screens.home.HomeScreen
@@ -89,8 +90,19 @@ fun AppNavigation() {
         composable(route = AppScreens.WikiScreen.route) {
             MostrarSetasScreen(navController)
         }
-        composable(route = AppScreens.RestaurantsScreen.route){
+        composable(route = AppScreens.RestaurantsScreen.route) {
             MostrarRestaurantes(navController)
+        }
+        composable(
+            route = AppScreens.RestaurantInfo.route + "/{nom}",
+            arguments = listOf(navArgument("nom") {
+                type = NavType.StringType
+            })
+        ) {backStackEntry ->
+            val nom = backStackEntry.arguments?.getString("nom")
+            RecibirRestaurante(
+                navController, nom ?: ""
+            )
         }
     }
 }

@@ -14,4 +14,5 @@ sealed class AppScreens(val route: String){
     object QuizScreen: AppScreens("item_menu/Learn")
     object WikiScreen: AppScreens("item_menu/Wiki")
     object RestaurantsScreen: AppScreens("item_menu/Eat")
+    object RestaurantInfo: AppScreens("restaurantInfo_screen")
 }
