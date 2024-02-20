@@ -54,12 +54,12 @@ fun ContentUserScreen(
     navController: NavController
 ){
     var user = User("","","","")
-    var username by remember { mutableStateOf("user.username") }
+    var username by remember { mutableStateOf(user.username) }
     var editedUsername by remember { mutableStateOf(username) }
     var isEditingUsername by remember { mutableStateOf(false) }
 
 
-    var email by remember { mutableStateOf("email@example.com") }
+    var email by remember { mutableStateOf(user.email) }
     var editedEmail by remember { mutableStateOf(email) }
     var isEditingEmail by remember { mutableStateOf(false) }
 
