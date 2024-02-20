@@ -73,13 +73,12 @@ fun generateImageQuestion(mushrooms: List<Mushroom>, score: Int): Question {
     )
 }
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnrememberedMutableState")
 @Composable
 fun QuizApp(navController: NavController) {
     val mainViewModel: MainViewModel = viewModel()
-    val mushrooms = Data.DbCall()
+    val mushrooms = Data.wikiDBList()
     val score = remember { mutableStateOf(0) }
     val currentQuestion = mutableStateOf(generateImageQuestion(mushrooms, score.value))
     val options = currentQuestion.value.options
