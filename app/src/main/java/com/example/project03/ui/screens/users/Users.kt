@@ -41,7 +41,7 @@ fun UserScreen(
             TopAppBarWithoutScaffold(isHome, navController)
         }
     ){padding ->
-        ContentUserScreen(padding)
+        ContentUserScreen(padding, navController)
     }
 }
 
@@ -49,8 +49,10 @@ fun UserScreen(
 @Composable
 fun ContentUserScreen(
     paddingValues: PaddingValues,
+    navController: NavController
 ){
-    var username by remember { mutableStateOf("Usuario") }
+    var user = "LoginViewModel.readUsersFromFirebase(FirebaseAuth.getInstance().currentUser!!.uid)"
+    var username by remember { mutableStateOf("user.username") }
     var editedUsername by remember { mutableStateOf(username) }
     var isEditingUsername by remember { mutableStateOf(false) }
 
@@ -140,8 +142,31 @@ fun ContentUserScreen(
         verticalArrangement = Arrangement.Bottom,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        EditButton(navController)
         DeleteAccountButton()
         SignOffButton()
+    }
+}
+@Composable
+fun EditButton(navController: NavController, ) {
+    Button(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 40.dp)
+        ,
+        colors = ButtonColors(
+            containerColor = MaterialTheme.colorScheme.surface,
+            contentColor = Color.Blue,
+            disabledContainerColor = MaterialTheme.colorScheme.errorContainer,
+            disabledContentColor = Color.White
+        ),
+        border = BorderStroke(
+            width = 1.dp,
+            color = Color.Blue
+        ),
+        onClick = { "navController.navigate(AppScreens.EditUser.route +"+"+)" }
+    ) {
+        Text(text = "Editar")
     }
 }
 

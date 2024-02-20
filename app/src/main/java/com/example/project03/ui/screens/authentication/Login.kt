@@ -30,7 +30,7 @@ fun LoginScreen(
     navController: NavController,
     viewModel: loginScreenViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
 ){
-    viewModel.checkLoggedIn(navController)
+//    viewModel.checkLoggedIn(navController)
 
     val showLoginForm = rememberSaveable{
         mutableStateOf(true)

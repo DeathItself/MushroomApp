@@ -12,6 +12,7 @@ import com.example.project03.ui.components.CameraScreen
 import com.example.project03.ui.screens.addMushrooms.AddMushroomScreen
 import com.example.project03.ui.screens.authentication.LoginScreen
 import com.example.project03.ui.screens.edit.EditMyMushroomScreen
+import com.example.project03.ui.screens.edit.EditUserScreen
 import com.example.project03.ui.screens.home.HomeScreen
 import com.example.project03.ui.screens.maps.MapScreen
 import com.example.project03.ui.screens.myMush.MostrarMisSetasScreen
@@ -96,6 +97,14 @@ fun AppNavigation() {
         }
         composable(route = AppScreens.UserScreen.route){
             UserScreen(navController)
+        }
+        composable(route = AppScreens.EditUserScreen.route+"/{userId}",
+            arguments = listOf(navArgument("userId") {
+                type = NavType.StringType
+            })
+        ){
+            val userId = it.arguments?.getString("userId")
+            EditUserScreen(navController, userId ?: "")
         }
     }
 }

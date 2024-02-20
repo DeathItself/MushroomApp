@@ -95,6 +95,24 @@ class loginScreenViewModel: ViewModel(){
 
 
     //logica para hacer el CRUD firebase
+//  Read users from firebase and update the User object
+    suspend fun readUsersFromFirebase(userId: String, user: User, navController: NavController): User{
+        val db = FirebaseFirestore.getInstance()
+        var isLoading = true
+        db.collection("users").document(userId).get().addOnSuccessListener { documentSnapshot ->
+            user.username = documentSnapshot.getString("username").toString()
+            user.email = documentSnapshot.getString("email").toString()
+            user.password = documentSnapshot.getString("password").toString()
+            user.id = documentSnapshot.getString("user_id").toString()
+            isLoading = false
+        }
+        if (isLoading){
+            Log.d("Mushtool", "Cargando datos")
+        }else{
+            Log.d("Mushtool", "Datos cargados")
+        }
+        return user
+    }
 
 
 }
