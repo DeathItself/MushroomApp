@@ -51,12 +51,13 @@ class loginScreenViewModel: ViewModel(){
     ){
         if (_loading.value == false){
             _loading.value = true
+            val userPassword = password
             auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener{ task ->
                     if(task.isSuccessful){
                         val displayName = task.result.user?.email?.split("@")?.get(0)
                         val userEmail = task.result.user?.email
-                        createUser(displayName, userEmail)
+                        createUser(displayName, userEmail, userPassword)
                         home()
                     }
 
@@ -71,14 +72,16 @@ class loginScreenViewModel: ViewModel(){
 
     private fun createUser(
         displayName: String?,
-        email: String?
+        email: String?,
+        password: String?
     ) {
 
         val userId = auth.currentUser?.uid
         val user = User(
             id = userId.toString(),
             username = displayName.toString(),
-            email = email.toString()
+            email = email.toString(),
+            password = password.toString()
         ).toMap()
 
         FirebaseFirestore.getInstance().collection("users")
@@ -89,4 +92,9 @@ class loginScreenViewModel: ViewModel(){
                 Log.d("Mushtool", "Ocurrió un error ${it}")
             }
     }
+
+
+    //logica para hacer el CRUD firebase
+
+
 }

@@ -4,12 +4,14 @@ data class User(
     val id: String?,
     val username: String,
     val email: String,
+    val password: String
 ){
     fun toMap(): MutableMap<String, String?> {
         return mutableMapOf(
             "user_id" to this.id,
             "username" to  this.username,
-            "email" to this.email
+            "email" to this.email,
+            "password" to this.password
         )
     }
 }
