@@ -150,7 +150,7 @@ fun EditMyMushroomForm(
         }
 //        dev info about the mushroom
         Text(
-            text = "Mush DevInfo:\n" + "${myMushroom.myMushID}, " + "${myMushroom.latitude}, " + "${myMushroom.longitude}," + "${myMushroom.timestamp}"
+            text = "Mush DevInfo:\n" + "${myMushroom.myMushID}, " + "${myMushroom.latitude}, " + "${myMushroom.longitude}," + "${myMushroom.timestamp.toDate()}"
         )
     }
 }

@@ -107,10 +107,11 @@ fun RecibirDatosSeta(padding: PaddingValues, myMushID: String, navController: Na
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 16.dp),
-                    horizontalArrangement = Arrangement.SpaceEvenly
+                        .padding(horizontal=16.dp, vertical=8.dp),
+                    horizontalArrangement = Arrangement.Center
                 ) {
                     Button(
+                        modifier = Modifier.padding(horizontal = 8.dp),
                         onClick = {
                             // Navega a la pantalla de edición con los datos de la seta
                             navController.navigate(AppScreens.EditMyMushroomScreen.route + "/" + mushObj.myMushID)

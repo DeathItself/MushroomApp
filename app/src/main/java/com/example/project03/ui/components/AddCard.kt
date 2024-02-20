@@ -2,6 +2,7 @@ package com.example.project03.ui.components
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -53,6 +54,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 
 @Composable
 fun AddCard(navController: NavController) {
@@ -147,9 +149,20 @@ fun AddCard(navController: NavController) {
                 onClick = {
                     // Aqui se guarda la informacion recogida en CategoryList, TextField y la imagen en la base de datos
                     CoroutineScope(Dispatchers.IO).launch {
-                        Data.addMushroom(
+                        val result = Data.addMushroom(
                             nameMushroom, description, imagePath, mushroom, latitude, longitude
                         )
+                        withContext(Dispatchers.Main) {
+                            if (result == "Mushroom added") {
+                                Toast.makeText(
+                                    context, "Seta guardada con éxito", Toast.LENGTH_LONG
+                                ).show()
+                            } else {
+                                Toast.makeText(
+                                    context, "Error al guardar la seta", Toast.LENGTH_LONG
+                                ).show()
+                            }
+                        }
                     }
                 }, colors = ButtonDefaults.buttonColors(
                     containerColor = Color(126, 116, 116), contentColor = Color.Black
