@@ -42,9 +42,11 @@ fun RecibirDatosUser(
     paddingValues: PaddingValues,
     navController: NavController
 ){
+
     val viewModel: loginScreenViewModel = viewModel()
-    val myUserId = viewModel.user.id
+    val myUserId = viewModel.userObject.id
     val loginViewModel: loginScreenViewModel = viewModel()
+    print(viewModel.userObject)
     Column(
         modifier = Modifier
             .padding(paddingValues)
@@ -53,11 +55,11 @@ fun RecibirDatosUser(
         horizontalAlignment = AbsoluteAlignment.Left
     ){
         LabeledIconRow(
-            labelText = viewModel.user.username
+            labelText = viewModel.userObject.username
         )
 
         LabeledIconRow(
-            labelText = viewModel.user.email
+            labelText = viewModel.userObject.email
         )
     }
 
@@ -141,7 +143,7 @@ fun SignOffButton(navController: NavController, loginViewModel: loginScreenViewM
             color = Color.Red
         ),
         onClick = {
-            loginViewModel.signOut()
+            loginViewModel.signOut(navController)
         }
     ) {
         Text(text = "Cerrar sesión")

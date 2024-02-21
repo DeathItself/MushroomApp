@@ -32,7 +32,7 @@ fun LoginScreen(
 
 ){
     val viewModel: loginScreenViewModel = viewModel()
-    var user = viewModel.user
+    var user = viewModel.userObject
 
     val showLoginForm = rememberSaveable{
         mutableStateOf(true)

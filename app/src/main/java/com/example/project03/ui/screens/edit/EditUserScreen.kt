@@ -51,10 +51,10 @@ fun EditMyUser(
     navController: NavController
 ){
     val viewModel: loginScreenViewModel = viewModel()
-    val userId = viewModel.user.id
+    val userId = viewModel.userObject().id
     val coroutineScope = rememberCoroutineScope()
     val db = FirebaseFirestore.getInstance()
-    var user by remember { mutableStateOf(viewModel.user) }
+    var user by remember { mutableStateOf(viewModel.userObject) }
     var isLoading by remember { mutableStateOf(true) }
 
     if (userId.isNotEmpty()) {
@@ -76,7 +76,7 @@ fun EditMyUser(
             user = user,
             onSave = { updateUser ->
                 coroutineScope.launch {
-                    db.collection("users").document(userId).set(updateUser.toMap())
+                    db.collection("users").document(userId).set(updateUser)
                     navController.popBackStack()
                 }
             } ,
@@ -103,20 +103,20 @@ fun EditMyUserForm(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = AbsoluteAlignment.Left
     ) {
-        var username by remember { mutableStateOf(viewModel.user.username) }
-        var email by remember { mutableStateOf(viewModel.user.email) }
+        var username by remember { mutableStateOf(viewModel.userObject.username) }
+        var email by remember { mutableStateOf(viewModel.userObject.email) }
         //password
 
         OutlinedTextField(
             value = username,
             onValueChange = {username = it},
-            label = {viewModel.user.username}
+            label = {viewModel.userObject.username}
         )
 
         OutlinedTextField(
             value = email,
             onValueChange = {email = it},
-            label = {viewModel.user.email}
+            label = {viewModel.userObject.email}
         )
 
         //password

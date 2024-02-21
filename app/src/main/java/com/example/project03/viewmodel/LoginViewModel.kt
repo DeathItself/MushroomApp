@@ -18,15 +18,37 @@ import kotlinx.coroutines.launch
 class loginScreenViewModel: ViewModel(){
     private val auth: FirebaseAuth = Firebase.auth
     private val _loading = MutableLiveData(false)
+    fun userObject(): User{
+        var userId = auth.currentUser?.uid.toString()
+        var username  = auth.currentUser?.email?.split("@")?.get(0).toString()
+        var email = auth.currentUser?.email.toString()
+        var password = ""
+        var user = User(
+            id = userId,
+            username = username,
+            email = email,
+            password = password
+        )
+        //    log the user on console
+
+        println("User: $user")
+
+        return user
+    }
+    var userObject = userObject()
 
     @Composable
-    fun checkLoggedIn(navController: NavController): String{
+    fun checkLoggedIn(navController: NavController){
         val currentUser = FirebaseAuth.getInstance().currentUser
-        var userId = ""
+
         val viewModel: loginScreenViewModel = viewModel()
         if (currentUser != null) {
             // Aquí, por ejemplo, podrías cargar los datos del usuario de Firestore antes de navegar
             loadUserData(currentUser.uid) { user ->
+                viewModel.userObject.id = user.id
+                viewModel.userObject.username = user.username
+                viewModel.userObject.email= user.email
+                viewModel.userObject.password= user.password
 
                 // Navegar a la pantalla principal con los datos del usuario
                 // Asegúrate de pasar los datos del usuario como argumento o usar un ViewModel compartido
@@ -39,12 +61,11 @@ class loginScreenViewModel: ViewModel(){
                 }
             }
         }
-        return userId
     }
-    fun loadUserData(userId: String, onUserDataLoaded: (User) -> Unit) {
+    private fun loadUserData(userId: String, onUserDataLoaded: (User) -> Unit) {
         val db = FirebaseFirestore.getInstance()
         db.collection("users").document(userId).get().addOnSuccessListener { document ->
-            val user = document.toObject(User::class.java)
+            var user = document.toObject(User::class.java)
             user?.let {
                 onUserDataLoaded(it)
             }
@@ -55,13 +76,14 @@ class loginScreenViewModel: ViewModel(){
 
     fun signInWithEmailAndPassword(email: String, password: String, home: () -> Unit) = viewModelScope.launch{
         try {
+
             auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful){
                         home()
-
+                        Log.d("Mushtool", "signInWithEmailAndPassword: ${userObject.username}")
                     }else{
-                        Log.d("Mushtool", "signInWithEmailAndPassword: ${task.result.toString()}")
+                        Log.d("Mushtool", "signInWithEmailAndPassword: ${task.result}")
                     }
                 }
         }catch (ex:Exception){
@@ -82,7 +104,9 @@ class loginScreenViewModel: ViewModel(){
                     if(task.isSuccessful){
                         val username = task.result.user?.email?.split("@")?.get(0)
                         val userEmail = task.result.user?.email
-                        createUser(username, userEmail, userPassword)
+                        if (username != null && userEmail != null){
+                            createUser(username, userEmail, userPassword)
+                        }
                         home()
                     }
                     else{
@@ -93,20 +117,20 @@ class loginScreenViewModel: ViewModel(){
 
         }
     }
-var user = User()
+
 
     private fun createUser(
-        username: String?,
-        email: String?,
-        password: String?
+        username: String,
+        email: String,
+        password: String
     ) {
 
         val userId = auth.currentUser?.uid
-        user = User(
-            id = userId?:"",
-            username = username ?: "",
-            email = email ?: "",
-            password = password ?: ""
+        var user = User(
+            id = userId!!,
+            username = username,
+            email = email,
+            password = password
         )
 
         FirebaseFirestore.getInstance().collection("users")
@@ -118,22 +142,23 @@ var user = User()
             }
     }
 
-    @Composable
+/*    @Composable
     fun toObject(user: User) {
         val viewModel: loginScreenViewModel = viewModel()
         viewModel.user.id = user.id
         viewModel.user.username = user.username
         viewModel.user.email= user.email
         viewModel.user.password= user.password
-    }
+    }*/
 
-    fun signOut(){
+    fun signOut(navController: NavController){
         auth.signOut()
+        navController.navigate(AppScreens.LoginScreen.route)
     }
 
     fun deleteUser(){
         val user = auth.currentUser
-//        user?.delete()
+        user?.delete()
     }
 
     fun editUser(
@@ -141,6 +166,17 @@ var user = User()
     ){
         val user = auth.currentUser
         user?.updateEmail(email)
+    }
+
+    private fun getCurrentUserDB(password: String):User{
+        val currentUser = auth.currentUser
+        if (currentUser != null){
+            userObject.email= currentUser.email.toString()
+            userObject.id = currentUser.uid
+            userObject.username = currentUser.email?.split("@")?.get(0).toString()
+            userObject.password = password
+        }
+        return userObject
     }
 }
 
