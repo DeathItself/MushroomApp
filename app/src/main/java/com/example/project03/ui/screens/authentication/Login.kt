@@ -13,6 +13,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,6 +26,7 @@ import com.example.project03.ui.components.TextFields
 import com.example.project03.ui.components.UIBottom
 import com.example.project03.ui.navigation.AppScreens
 import com.example.project03.viewmodel.loginScreenViewModel
+import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreen(
@@ -32,8 +34,7 @@ fun LoginScreen(
 
 ){
     val viewModel: loginScreenViewModel = viewModel()
-    var user = viewModel.userObject
-
+    val coroutineScope = rememberCoroutineScope()
     val showLoginForm = rememberSaveable{
         mutableStateOf(true)
     }
@@ -54,15 +55,16 @@ fun LoginScreen(
                 
                 Spacer(modifier = Modifier.height(15.dp))
 
+                /*
                 UseForm(
                     isCreateAccount = false
                 ){
                     email, password ->
-                    viewModel.signInWithEmailAndPassword(email, password){
-                        navController.navigate(AppScreens.HomeScreen.route)
-                        println(user.toString())
+                    coroutineScope.launch {
+                        viewModel.signInWithEmailAndPassword(email, password){
+                            navController.navigate(AppScreens.HomeScreen.route)
+                        }
                     }
-
                 }
                 viewModel.checkLoggedIn(navController)
                 SubmitBottom(
@@ -71,6 +73,8 @@ fun LoginScreen(
                 ){
                     showLoginForm.value = false
                 }
+                */
+
             }else{
                 Text(
                     text = "Resgistrate",
@@ -81,10 +85,13 @@ fun LoginScreen(
                 UseForm(
                     isCreateAccount = true
                 ){
-                    email, password ->
-                    viewModel.createUserWithEmailAndPassword(email, password){
-                        navController.navigate(AppScreens.LoginScreen.route)
+                    username, email, password ->
+                    coroutineScope.launch {
+                        viewModel.createUserWithEmailAndPassword(username,email, password){
+                            navController.navigate(AppScreens.LoginScreen.route)
+                        }
                     }
+
                 }
 
                 SubmitBottom(
@@ -110,12 +117,15 @@ fun LoginScreen(
 @Composable
 fun UseForm(
     isCreateAccount: Boolean,
-    onDone: (String, String) -> Unit = {email, password ->}
+    onDone: (String, String, String) -> Unit = {username,email, password ->}
 ) {
     val email = rememberSaveable{
         mutableStateOf("")
     }
     val password = rememberSaveable{
+        mutableStateOf("")
+    }
+    val username = rememberSaveable{
         mutableStateOf("")
     }
 
@@ -132,7 +142,7 @@ fun UseForm(
             textId = if(isCreateAccount) "Unirse" else "Iniciar sesión",
             enabled = true
         ){
-            onDone(email.value.trim(), password.value.trim())
+            onDone(email.value.split("@").get(0), email.value.trim(), password.value.trim())
         }
 
         Spacer(modifier = Modifier.height(20.dp))

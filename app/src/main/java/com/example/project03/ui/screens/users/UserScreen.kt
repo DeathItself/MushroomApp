@@ -4,8 +4,10 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
@@ -18,7 +20,11 @@ import androidx.compose.ui.AbsoluteAlignment
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.project03.ui.components.LabeledIconRow
@@ -52,10 +58,25 @@ fun RecibirDatosUser(
             .padding(paddingValues)
             .fillMaxSize(),
         verticalArrangement = Arrangement.Top,
-        horizontalAlignment = AbsoluteAlignment.Left
+        horizontalAlignment = Alignment.CenterHorizontally
     ){
+        Text(
+            modifier = Modifier.padding(10.dp),
+            text = "Nombre de usuario",
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold,
+        )
         LabeledIconRow(
             labelText = viewModel.userObject.username
+        )
+
+        Spacer(modifier = Modifier.height(10.dp))
+
+        Text(
+            modifier = Modifier.padding(10.dp),
+            text = "Correo electrónico",
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold,
         )
 
         LabeledIconRow(
@@ -86,7 +107,7 @@ fun EditButton(
     Button(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(bottom = 40.dp),
+            .padding(bottom = 20.dp),
         colors = buttonColors(
             containerColor = MaterialTheme.colorScheme.surface,
             contentColor = MaterialTheme.colorScheme.primary

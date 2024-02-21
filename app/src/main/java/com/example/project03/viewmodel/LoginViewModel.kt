@@ -14,10 +14,11 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import okhttp3.internal.wait
 
 class loginScreenViewModel: ViewModel(){
     private val auth: FirebaseAuth = Firebase.auth
-    private val _loading = MutableLiveData(false)
     fun userObject(): User{
         var userId = auth.currentUser?.uid.toString()
         var username  = auth.currentUser?.email?.split("@")?.get(0).toString()
@@ -74,82 +75,52 @@ class loginScreenViewModel: ViewModel(){
         }
     }
 
-    fun signInWithEmailAndPassword(email: String, password: String, home: () -> Unit) = viewModelScope.launch{
+    suspend fun signInWithEmailAndPassword(email: String, password: String, home: () -> Unit) = viewModelScope.launch{
         try {
-
-            auth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful){
-                        home()
-                        Log.d("Mushtool", "signInWithEmailAndPassword: ${userObject.username}")
-                    }else{
-                        Log.d("Mushtool", "signInWithEmailAndPassword: ${task.result}")
-                    }
-                }
+            val result = auth.signInWithEmailAndPassword(email, password).await()
+            if(result.user != null){
+                home()
+            }
         }catch (ex:Exception){
-            Log.d("Mushtool", "signInWithEmailAndPassword: ${ex.message}")
+            Log.e("Mushtool", "signInWithEmailAndPassword: ${ex.message}")
         }
     }
 
-    fun createUserWithEmailAndPassword(
+    suspend fun createUserWithEmailAndPassword(
+        username: String,
         email: String,
         password: String,
         home: () -> Unit
     ){
-        if (_loading.value == false){
-            _loading.value = true
-            val userPassword = password
-            auth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener{ task ->
-                    if(task.isSuccessful){
-                        val username = task.result.user?.email?.split("@")?.get(0)
-                        val userEmail = task.result.user?.email
-                        if (username != null && userEmail != null){
-                            createUser(username, userEmail, userPassword)
-                        }
-                        home()
-                    }
-                    else{
-                        Log.d("Mushtool", "createUserWithEmailAndPassword: ${task.result.toString()}")
-                    }
-                    _loading.value = false
-                }
-
+        try {
+            val result = auth.createUserWithEmailAndPassword(email, password).await()
+            if(result.user != null){
+                createUser(result.user!!.uid, username, email, password)
+                home()
+            }
+        }catch (ex:Exception){
+            Log.e("Mushtool", "createUserWithEmailAndPassword: ${ex.message}", ex)
         }
+
     }
 
 
-    private fun createUser(
+    private suspend fun createUser(
+        id: String,
         username: String,
         email: String,
         password: String
     ) {
-
-        val userId = auth.currentUser?.uid
         var user = User(
-            id = userId!!,
+            id = id,
             username = username,
             email = email,
             password = password
         )
 
         FirebaseFirestore.getInstance().collection("users")
-            .add(user)
-            .addOnSuccessListener {
-                Log.d("Mushtool", "Creando ${it.id}")
-            }.addOnFailureListener{
-                Log.d("Mushtool", "Ocurrió un error $it")
-            }
+            .add(user).await()
     }
-
-/*    @Composable
-    fun toObject(user: User) {
-        val viewModel: loginScreenViewModel = viewModel()
-        viewModel.user.id = user.id
-        viewModel.user.username = user.username
-        viewModel.user.email= user.email
-        viewModel.user.password= user.password
-    }*/
 
     fun signOut(navController: NavController){
         auth.signOut()
