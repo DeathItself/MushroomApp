@@ -8,10 +8,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import com.example.project03.model.Mushroom
 import com.example.project03.model.MyMushroom
+import com.example.project03.model.Restaurants
 import com.example.project03.ui.components.Loading.Companion.LoadingState
 import com.example.project03.util.db.addMushroom
 import com.example.project03.util.db.getMushrooms
 import com.example.project03.util.db.getMyMushrooms
+import com.example.project03.util.db.getRestaurants
 import com.example.project03.util.db.uploadImageAndGetUrl
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -83,6 +85,23 @@ class Data {
 
             db.addMushroom(myMush, userId!!)
             return "Mushroom added"
+        }
+
+        @JvmStatic
+        @Composable
+        fun restaurantList(): List<Restaurants> {
+            val db = FirebaseFirestore.getInstance()
+            var restarauntsList by remember { mutableStateOf(listOf<Restaurants>()) }
+            var isLoading by remember { mutableStateOf(true) } // Asume carga inicialmente
+            // Efecto lanzado para cargar los datos
+            LaunchedEffect(key1 = Unit) {
+                restarauntsList = db.getRestaurants()
+                isLoading = false // Marca la carga como finalizada después de obtener los datos
+            }
+            if (isLoading) {
+                LoadingState()
+            }
+            return restarauntsList
         }
     }
 }

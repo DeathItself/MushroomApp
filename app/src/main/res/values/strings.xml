@@ -12,4 +12,5 @@
     <string name="bannerMushOfTheDay">Seta del dia</string>
     <string name="BottomSheetMenuWiki">Wiki</string>
     <string name="BottomNavAdd">Añadir</string>
+    <string name="BottomSheetMenuRestaurants">Restaurantes</string>
 </resources>

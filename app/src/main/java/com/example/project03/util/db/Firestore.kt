@@ -3,6 +3,7 @@ package com.example.project03.util.db
 import android.net.Uri
 import com.example.project03.model.Mushroom
 import com.example.project03.model.MyMushroom
+import com.example.project03.model.Restaurants
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.tasks.await
@@ -84,4 +85,14 @@ suspend fun uploadImageAndGetUrl(imagePath: String): String {
     }
 
     return downloadUrl
+}
+suspend fun FirebaseFirestore.getRestaurants(): List<Restaurants> {
+    return try {
+        val documents = collection("restaurantes").get()
+            .await()
+        documents.toObjects(Restaurants::class.java)
+    }catch (e: Exception) {
+        println("Error getting restaurants from Firebase: ${e.message}")
+        emptyList()
+    }
 }

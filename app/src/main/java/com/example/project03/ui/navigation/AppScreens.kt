@@ -13,6 +13,8 @@ sealed class AppScreens(val route: String){
     object EditMyMushroomScreen: AppScreens("edit_mush_screen")
     object QuizScreen: AppScreens("item_menu/Learn")
     object WikiScreen: AppScreens("item_menu/Wiki")
+    object RestaurantsScreen: AppScreens("item_menu/Eat")
+    object RestaurantInfo: AppScreens("restaurantInfo_screen")
     object LoginScreen: AppScreens("login_screen")
     object MyUserScreen: AppScreens("user_screen")
     object EditMyUserScreen: AppScreens("edit_user_screen")

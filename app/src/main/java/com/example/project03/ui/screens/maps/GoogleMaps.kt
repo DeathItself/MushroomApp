@@ -31,6 +31,7 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.project03.R
 import com.example.project03.model.MyMushroom
+import com.example.project03.model.Restaurants
 import com.example.project03.ui.components.TopAppBarWithoutScaffold
 import com.example.project03.ui.navigation.AppScreens
 import com.example.project03.ui.navigation.BottomNavigationBar
@@ -74,9 +75,12 @@ var permissionGranted: Boolean = false
 @Composable
 fun ContentGoogleMaps(padding: PaddingValues, navController: NavController) {
     val mushroom: List<MyMushroom> = Data.myMushDBList()
+    val restaurant: List<Restaurants> = Data.restaurantList()
+    var selectedRestaurant by remember { mutableStateOf<Restaurants?>(null) }
     val initialPosition = LatLng(41.564, 2.019)
     var selectedMushroom by remember { mutableStateOf<MyMushroom?>(null) }
     var showBottomSheet by remember { mutableStateOf(false) }
+    var showBottomSheet2 by remember { mutableStateOf(false) }
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(initialPosition, 15f)
     }
@@ -90,6 +94,10 @@ fun ContentGoogleMaps(padding: PaddingValues, navController: NavController) {
             ModalBottomSheet(onDismissRequest = { showBottomSheet = false }) {
                 MapContentBottomSheet(mushroom = selectedMushroom!!)
             }
+        }else if (showBottomSheet2 && selectedRestaurant != null){
+            ModalBottomSheet(onDismissRequest = {showBottomSheet2 = false }) {
+                MapContentBottomSheet2( restaurants = selectedRestaurant!!)
+            }
         }
 
         GoogleMap(
@@ -102,8 +110,8 @@ fun ContentGoogleMaps(padding: PaddingValues, navController: NavController) {
             // Itera por cada seta y coloca un marcador en su ubicación
             mushroom.forEach { mushroom ->
                 val position = LatLng(mushroom.latitude!!, mushroom.longitude!!)
-                val badMarker = BitmapDescriptorFactory.fromResource(R.drawable.bad_mushroom_icon)
-                val goodMarker = BitmapDescriptorFactory.fromResource(R.drawable.good_mushroom_icon)
+                val badMarker = BitmapDescriptorFactory.fromResource(R.drawable.bad_mush_map_pin_overlay)
+                val goodMarker = BitmapDescriptorFactory.fromResource(R.drawable.good_mush_map_pin_overlay)
                 val marker = if (mushroom.isEdible == true) goodMarker else badMarker
                 Marker(
                     icon = marker,
@@ -115,6 +123,21 @@ fun ContentGoogleMaps(padding: PaddingValues, navController: NavController) {
                     state = MarkerState(position = position),
                     title = mushroom.commonName, // Usa el nombre común de la seta como título
                     snippet = mushroom.scientificName
+                )
+            }
+            restaurant.forEach { restaurants ->
+                val position = LatLng(restaurants.latitude!!, restaurants.longitud!!)
+                val marker =
+                    BitmapDescriptorFactory.fromResource(R.drawable.map_pin_eat_overlay)
+                Marker(
+                    icon = marker,
+                    onClick = {
+                        selectedRestaurant = restaurants
+                        showBottomSheet2 = true
+                        true
+                    },
+                    state = MarkerState(position = position),
+                    title = restaurants.nom
                 )
             }
         }
@@ -149,6 +172,28 @@ fun MapContentBottomSheet(mushroom: MyMushroom) {
 }
 
 @Composable
+fun MapContentBottomSheet2(restaurants: Restaurants) {
+    // Implementa la UI para mostrar la información de la seta aquí
+    // Por ejemplo, podrías mostrar el nombre, descripción, etc.
+    Column(
+        modifier = Modifier
+            .padding(vertical = 16.dp)
+            .padding(horizontal = 16.dp)
+    ) {
+
+        Column(
+            modifier = Modifier
+                .padding()
+                .fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            RestaurantMap(restaurants)
+        }
+    }
+}
+
+
+@Composable
 fun MushDetailsMap(mushroom: MyMushroom, isEdibleText: String) {
     Text(text = mushroom.commonName, fontWeight = FontWeight.Bold)
     AsyncImage(
@@ -172,6 +217,15 @@ fun MushDetailsMap(mushroom: MyMushroom, isEdibleText: String) {
     }
     Text(text = isEdibleText, fontWeight = FontWeight.Bold)
     Text(text = mushroom.seasons, fontWeight = FontWeight.Bold)
+}
+
+@Composable
+fun RestaurantMap(restaurants: Restaurants) {
+    Text(text = restaurants.nom, fontWeight = FontWeight.Bold)
+    AsyncImage(
+        modifier = Modifier.size(200.dp), model = restaurants.photo, contentDescription = null
+    )
+    Spacer(modifier = Modifier.height(16.dp))
 }
 
 @Composable
