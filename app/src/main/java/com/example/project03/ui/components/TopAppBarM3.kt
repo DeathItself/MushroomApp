@@ -2,9 +2,7 @@ package com.example.project03.ui.components
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Face
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -13,8 +11,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.res.stringResource
-import com.example.project03.R
 import androidx.navigation.NavController
 import com.example.project03.ui.navigation.AppScreens
 
@@ -45,7 +41,8 @@ fun SmallTopAppBarM3(
             }
         }
     }, scrollBehavior = scrollBehavior, actions = {
-        IconButton(onClick = { navController.navigate(AppScreens.UserScreen.route)}) {
+        //Posiblemente tenga que enviar la id???
+        IconButton(onClick = { navController.navigate(AppScreens.MyUserScreen.route + "user.myUserId")}) {
             Icon(imageVector = Icons.Filled.AccountCircle, contentDescription = null)
         }
     })

@@ -11,12 +11,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Create
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
@@ -83,7 +79,6 @@ fun UIBottom(
 fun LabeledIconRow(
     labelText: String,
     modifier: Modifier = Modifier,
-    onClick: () -> Unit = {}
 ) {
     Row(
         modifier = modifier
@@ -97,47 +92,6 @@ fun LabeledIconRow(
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(labelText)
-        IconButton(onClick = onClick) {
-            Icon(imageVector = Icons.Rounded.Create, contentDescription = "Editar")
-        }
     }
-
     Spacer(modifier = Modifier.height(10.dp))
-}
-
-@Composable
-fun EditableUsernameField(
-    username: String,
-    onUsernameChange: (String) -> Unit,
-    onSave: () -> Unit,
-    onCancel: () -> Unit
-) {
-    TextField(
-        value = username,
-        onValueChange = onUsernameChange,
-        modifier = Modifier.fillMaxWidth(),
-        label = { Text("Nuevo nombre de usuario") },
-        keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.Text
-        )
-    )
-
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.End,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Button(
-            onClick = onSave,
-            modifier = Modifier.padding(end = 8.dp)
-        ) {
-            Text("Guardar")
-        }
-
-        Button(
-            onClick = onCancel
-        ) {
-            Text("Cancelar")
-        }
-    }
 }

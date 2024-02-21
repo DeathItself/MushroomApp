@@ -4,11 +4,8 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
@@ -16,124 +13,56 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.AbsoluteAlignment
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.project03.model.User
-import com.example.project03.ui.components.EditableUsernameField
 import com.example.project03.ui.components.LabeledIconRow
 import com.example.project03.ui.components.TopAppBarWithoutScaffold
 import com.example.project03.ui.navigation.AppScreens
 
 @Composable
-fun UserScreen(
-    navController: NavController
-){
+fun MyUserDetailsScreen(navController: NavController, myUserId: String) {
     val isHome = false
     Scaffold(
         topBar = {
-            TopAppBarWithoutScaffold(isHome, navController)
-        }
-    ){padding ->
-        ContentUserScreen(padding, navController)
+        TopAppBarWithoutScaffold(isHome, navController)
+    }) { padding ->
+        RecibirDatosUser(padding, navController, myUserId)
     }
 }
 
-
 @Composable
-fun ContentUserScreen(
+fun RecibirDatosUser(
     paddingValues: PaddingValues,
-    navController: NavController
+    navController: NavController,
+    myUserId: String
 ){
-    var user = User("","","","")
-    var username by remember { mutableStateOf(user.username) }
-    var editedUsername by remember { mutableStateOf(username) }
-    var isEditingUsername by remember { mutableStateOf(false) }
-
-
-    var email by remember { mutableStateOf(user.email) }
-    var editedEmail by remember { mutableStateOf(email) }
-    var isEditingEmail by remember { mutableStateOf(false) }
+    val UserObj = ""
 
     Column(
         modifier = Modifier
-            .fillMaxSize()
             .padding(paddingValues)
-            .padding(
-                horizontal = 12.dp,
-            ),
+            .fillMaxSize(),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = AbsoluteAlignment.Left
+    ){
+        LabeledIconRow(
+            labelText = "username",
+        )
 
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Text(
-                text = "Mis Datos",
-                style = MaterialTheme.typography.titleMedium,
-                fontSize = 26.sp,
-            )
-        }
-        
-        Spacer(modifier = Modifier.height(15.dp))
+        LabeledIconRow(
+            labelText = "email",
+        )
 
-        if(isEditingUsername){
-            EditableUsernameField(
-                username = editedUsername,
-                onUsernameChange = { editedUsername = it },
-                onSave = {
-                    username = editedUsername
-                    isEditingUsername = false
-                },
-                onCancel = { isEditingUsername = false }
-            )
-        }else{
-            Text(
-                modifier = Modifier.padding(start = 10.dp),
-                text = "Nombre de usuario"
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            LabeledIconRow(
-                labelText = "$username",
-                onClick = { isEditingUsername = true }
-            )
-        }
+        LabeledIconRow(
+            labelText = "pasword",
+        )
 
-        Spacer(modifier = Modifier.height(15.dp))
-
-        if(isEditingEmail){
-            EditableUsernameField(
-                username = editedEmail,
-                onUsernameChange = { editedEmail = it },
-                onSave = {
-                    email = editedEmail
-                    isEditingEmail = false
-                },
-                onCancel = { isEditingEmail = false }
-            )
-        }else{
-            Text(
-                modifier = Modifier.padding(start = 10.dp),
-                text = "Correo electrónico"
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            LabeledIconRow(
-                labelText = "$email",
-                onClick = { isEditingEmail = true }
-            )
-        }
     }
-    
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -144,13 +73,17 @@ fun ContentUserScreen(
         verticalArrangement = Arrangement.Bottom,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        EditButton(navController,user)
+        EditButton(navController, UserObj)
         DeleteAccountButton()
         SignOffButton()
     }
 }
+
 @Composable
-fun EditButton(navController: NavController,user: User ) {
+fun EditButton(
+    navController: NavController,
+    userObj: String
+) {
     Button(
         modifier = Modifier
             .fillMaxWidth()
@@ -166,7 +99,7 @@ fun EditButton(navController: NavController,user: User ) {
             width = 1.dp,
             color = Color.Blue
         ),
-        onClick = { navController.navigate(AppScreens.EditUserScreen.route +"/"+user.id) }
+        onClick = { navController.navigate(AppScreens.EditMyUserScreen.route + "/" + userObj)}
     ) {
         Text(text = "Editar")
     }

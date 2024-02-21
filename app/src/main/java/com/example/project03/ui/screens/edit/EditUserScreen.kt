@@ -5,7 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
@@ -19,7 +19,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
+import androidx.compose.ui.AbsoluteAlignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -29,83 +29,97 @@ import com.example.project03.ui.components.TopAppBarWithoutScaffold
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.launch
 
-
 @Composable
-fun EditUserScreen(
+fun EditMyUserScreen(
     navController: NavController,
     userId: String
 ){
     val isHome = false
-
     Scaffold(
         topBar = {
             TopAppBarWithoutScaffold(isHome, navController)
-        }
-    ){padding ->
-        EditUser(navController = navController, userId = userId , padding = padding)
+        }) { padding ->
+        EditMyUser(padding, navController, userId)
     }
 }
+
 @Composable
-fun EditUser(navController: NavController, userId: String, padding: PaddingValues) {
+fun EditMyUser(
+    paddingValues: PaddingValues,
+    navController: NavController,
+    userId: String
+){
     val coroutineScope = rememberCoroutineScope()
     val db = FirebaseFirestore.getInstance()
     var user by remember { mutableStateOf(User("", "", "", "")) }
     var isLoading by remember { mutableStateOf(true) }
 
-    // Carga los datos del usuario por ID y actualiza el estado
-    LaunchedEffect(key1 = userId) {
+    LaunchedEffect(key1 = userId){
         db.collection("users").document(userId).get().addOnSuccessListener { documentSnapshot ->
-            user = documentSnapshot.toObject(User::class.java) ?: User("", "", "", "")
+            user = documentSnapshot.toObject(User::class.java)?:User("", "", "", "")
             isLoading = false
         }
     }
 
-    if (isLoading) {
-        Loading.LoadingState()// Muestra un indicador de carga mientras se cargan los datos
-    } else {
-        // Asegúrate de que la UI para editar el usuario se muestra después de cargar los datos
-        EditUserForm(user = user, onSave = { updatedUser ->
-            coroutineScope.launch {
-                db.collection("users").document(userId).set(updatedUser.toMap())
+    if (isLoading){
+        Loading.LoadingState()
+    }else{
+        EditMyUserForm(
+            user = user,
+            onSave = { updateUser ->
+                coroutineScope.launch {
+                    db.collection("users").document(userId).set(updateUser.toMap())
+                    navController.popBackStack()
+                }
+            } ,
+            onCancel = {
                 navController.popBackStack()
-            }
-        }, onCancel = {
-            navController.popBackStack()
-        }, padding)
+            },
+            paddingValues
+        )
     }
 }
 
 @Composable
-fun EditUserForm(
+fun EditMyUserForm(
     user: User,
     onSave: (User) -> Unit,
     onCancel: () -> Unit,
-    padding: PaddingValues
+    paddingValues: PaddingValues
 ) {
     Column(
         modifier = Modifier
-            .padding(padding)
-            .fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+            .padding(paddingValues)
+            .fillMaxSize(),
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = AbsoluteAlignment.Left
     ) {
         var username by remember { mutableStateOf(user.username) }
         var email by remember { mutableStateOf(user.email) }
+        //password
 
-        OutlinedTextField(value = username,
-            onValueChange = { username = it },
-            label = { Text("Nombre de Usuario") })
-        OutlinedTextField(value = email,
-            onValueChange = { email = it },
-            label = { Text("Correo Electrónico") })
+        OutlinedTextField(
+            value = username,
+            onValueChange = {username = it},
+            label = {Text("Nombre de usuario")}
+        )
 
-        Row {
-            Button(onClick = {
-                // Actualiza user con los nuevos valores
-                user.username = username
-                user.email = email
-                onSave(user)
-            }) {
+        OutlinedTextField(
+            value = email,
+            onValueChange = {email = it},
+            label = {Text("Nombre de email")}
+        )
+
+        //password
+
+        Row{
+            Button(
+                onClick = {
+                    user.username = username
+                    user.email = email
+                    onSave(user)
+                }
+            ){
                 Text("Guardar")
             }
 
@@ -116,4 +130,5 @@ fun EditUserForm(
             }
         }
     }
+
 }
