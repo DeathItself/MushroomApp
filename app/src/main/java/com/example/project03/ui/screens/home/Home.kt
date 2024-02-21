@@ -24,7 +24,6 @@ import com.example.project03.viewmodel.MainViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
-//@Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun HomeScreen(navController: NavController) {
     val mainViewModel: MainViewModel = viewModel()

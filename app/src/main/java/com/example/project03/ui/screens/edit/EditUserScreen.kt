@@ -22,43 +22,51 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.AbsoluteAlignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.project03.model.User
 import com.example.project03.ui.components.Loading
 import com.example.project03.ui.components.TopAppBarWithoutScaffold
+import com.example.project03.viewmodel.loginScreenViewModel
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.launch
 
 @Composable
 fun EditMyUserScreen(
     navController: NavController,
-    userId: String
+
 ){
     val isHome = false
     Scaffold(
         topBar = {
             TopAppBarWithoutScaffold(isHome, navController)
         }) { padding ->
-        EditMyUser(padding, navController, userId)
+        EditMyUser(padding, navController)
     }
 }
 
 @Composable
 fun EditMyUser(
     paddingValues: PaddingValues,
-    navController: NavController,
-    userId: String
+    navController: NavController
 ){
+    val viewModel: loginScreenViewModel = viewModel()
+    val userId = viewModel.user.id
     val coroutineScope = rememberCoroutineScope()
     val db = FirebaseFirestore.getInstance()
-    var user by remember { mutableStateOf(User("", "", "", "")) }
+    var user by remember { mutableStateOf(viewModel.user) }
     var isLoading by remember { mutableStateOf(true) }
 
-    LaunchedEffect(key1 = userId){
-        db.collection("users").document(userId).get().addOnSuccessListener { documentSnapshot ->
-            user = documentSnapshot.toObject(User::class.java)?:User("", "", "", "")
-            isLoading = false
+    if (userId.isNotEmpty()) {
+        LaunchedEffect(key1 = userId){
+            db.collection("users").document(userId).get().addOnSuccessListener { documentSnapshot ->
+                user = documentSnapshot.toObject(User::class.java)?:User("", "", "", "")
+                isLoading = false
+            }
         }
+    } else {
+        isLoading = false
+        Text("No se encontró el usuario")
     }
 
     if (isLoading){
@@ -87,6 +95,7 @@ fun EditMyUserForm(
     onCancel: () -> Unit,
     paddingValues: PaddingValues
 ) {
+    val viewModel: loginScreenViewModel = viewModel()
     Column(
         modifier = Modifier
             .padding(paddingValues)
@@ -94,20 +103,20 @@ fun EditMyUserForm(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = AbsoluteAlignment.Left
     ) {
-        var username by remember { mutableStateOf(user.username) }
-        var email by remember { mutableStateOf(user.email) }
+        var username by remember { mutableStateOf(viewModel.user.username) }
+        var email by remember { mutableStateOf(viewModel.user.email) }
         //password
 
         OutlinedTextField(
             value = username,
             onValueChange = {username = it},
-            label = {Text("Nombre de usuario")}
+            label = {viewModel.user.username}
         )
 
         OutlinedTextField(
             value = email,
             onValueChange = {email = it},
-            label = {Text("Nombre de email")}
+            label = {viewModel.user.email}
         )
 
         //password

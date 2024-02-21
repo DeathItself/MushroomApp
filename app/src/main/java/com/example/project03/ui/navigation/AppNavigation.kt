@@ -12,6 +12,7 @@ import com.example.project03.ui.components.CameraScreen
 import com.example.project03.ui.screens.addMushrooms.AddMushroomScreen
 import com.example.project03.ui.screens.authentication.LoginScreen
 import com.example.project03.ui.screens.edit.EditMyMushroomScreen
+import com.example.project03.ui.screens.edit.EditMyUserScreen
 import com.example.project03.ui.screens.home.HomeScreen
 import com.example.project03.ui.screens.maps.MapScreen
 import com.example.project03.ui.screens.myMush.MostrarMisSetasScreen
@@ -19,7 +20,6 @@ import com.example.project03.ui.screens.myMush.MyMushroomDetailsScreen
 import com.example.project03.ui.screens.permission.CamLocationPermission
 import com.example.project03.ui.screens.permission.LocationPermission
 import com.example.project03.ui.screens.quiz.QuizApp
-import com.example.project03.ui.screens.edit.EditMyUserScreen
 import com.example.project03.ui.screens.users.MyUserDetailsScreen
 import com.example.project03.ui.screens.wiki.MostrarSetasScreen
 import com.example.project03.ui.screens.wiki.MushroomDetailsScreen
@@ -90,25 +90,28 @@ fun AppNavigation() {
             MostrarSetasScreen(navController)
         }
 
-        composable(route = AppScreens.LoginScreen.route){
+        composable(route = AppScreens.LoginScreen.route) {
             LoginScreen(navController)
         }
-        composable(
-            route = AppScreens.MyUserScreen.route + "/{myUserId}",
-            arguments = listOf(navArgument("myUserId"){
-                type = NavType.StringType
-            })
-        ){backStackEntry ->
-            val myUserId = backStackEntry.arguments?.getString("myUserId")
-            MyUserDetailsScreen(navController, myUserId ?: "")
+        composable(route = AppScreens.MyUserScreen.route) {
+            MyUserDetailsScreen(navController)
         }
-        composable(route = AppScreens.EditMyUserScreen.route + "/{userId}",
-            arguments = listOf(navArgument("userId") {
-                type = NavType.StringType
-            })
-        ){
-            val userId = it.arguments?.getString("userId")
-            EditMyUserScreen(navController, userId ?: "")
+        composable(route = AppScreens.EditMyUserScreen.route) {
+            EditMyUserScreen(navController)
         }
     }
 }
+
+//class UserViewModel : ViewModel() {
+//    lateinit var userId: MutableLiveData<String>
+//    lateinit var username : MutableLiveData<String>
+//    lateinit var email : MutableLiveData<String>
+//    lateinit var password : MutableLiveData<String>
+//    val user = User(
+//        userId.value ?:"", username.value ?: "",
+//        email.value ?: "", password.value ?: "")
+////    log the user on console
+//    init {
+//        println("User: $user")
+//    }
+//}

@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.project03.ui.components.TextFields
 import com.example.project03.ui.components.UIBottom
@@ -28,9 +29,10 @@ import com.example.project03.viewmodel.loginScreenViewModel
 @Composable
 fun LoginScreen(
     navController: NavController,
-    viewModel: loginScreenViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+
 ){
-//    viewModel.checkLoggedIn(navController)
+    val viewModel: loginScreenViewModel = viewModel()
+    var user = viewModel.user
 
     val showLoginForm = rememberSaveable{
         mutableStateOf(true)
@@ -58,9 +60,11 @@ fun LoginScreen(
                     email, password ->
                     viewModel.signInWithEmailAndPassword(email, password){
                         navController.navigate(AppScreens.HomeScreen.route)
+                        println(user.toString())
                     }
 
                 }
+                viewModel.checkLoggedIn(navController)
                 SubmitBottom(
                     textId = "Unirse",
                     enabled = showLoginForm.value
@@ -79,9 +83,10 @@ fun LoginScreen(
                 ){
                     email, password ->
                     viewModel.createUserWithEmailAndPassword(email, password){
-                        navController.navigate(AppScreens.HomeScreen.route)
+                        navController.navigate(AppScreens.LoginScreen.route)
                     }
                 }
+
                 SubmitBottom(
                     textId = "Iniciar sesión",
                     enabled = !showLoginForm.value
