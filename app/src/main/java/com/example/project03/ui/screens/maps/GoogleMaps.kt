@@ -110,8 +110,8 @@ fun ContentGoogleMaps(padding: PaddingValues, navController: NavController) {
             // Itera por cada seta y coloca un marcador en su ubicación
             mushroom.forEach { mushroom ->
                 val position = LatLng(mushroom.latitude!!, mushroom.longitude!!)
-                val badMarker = BitmapDescriptorFactory.fromResource(R.drawable.bad_mushroom_icon)
-                val goodMarker = BitmapDescriptorFactory.fromResource(R.drawable.good_mushroom_icon)
+                val badMarker = BitmapDescriptorFactory.fromResource(R.drawable.bad_mush_map_pin_overlay)
+                val goodMarker = BitmapDescriptorFactory.fromResource(R.drawable.good_mush_map_pin_overlay)
                 val marker = if (mushroom.isEdible == true) goodMarker else badMarker
                 Marker(
                     icon = marker,
@@ -128,7 +128,7 @@ fun ContentGoogleMaps(padding: PaddingValues, navController: NavController) {
             restaurant.forEach { restaurants ->
                 val position = LatLng(restaurants.latitude!!, restaurants.longitud!!)
                 val marker =
-                    BitmapDescriptorFactory.fromResource(R.drawable.food_3119770)
+                    BitmapDescriptorFactory.fromResource(R.drawable.map_pin_eat_overlay)
                 Marker(
                     icon = marker,
                     onClick = {
