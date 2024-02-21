@@ -15,6 +15,7 @@ import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -32,10 +33,13 @@ import com.example.project03.ui.navigation.BottomNavigationBar
 import com.example.project03.ui.navigation.ContentBottomSheet
 import com.example.project03.util.data.Data
 import com.example.project03.viewmodel.MainViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.withContext
 
 
 @Composable
-fun generateImageQuestion(mushrooms: List<Mushroom>): Question {
+fun generateImageQuestion(mushrooms: List<Mushroom>, score: Int): Question {
     if (mushrooms.isEmpty()) return Question(
         image = "",
         type = QuestionType.Text,
@@ -43,7 +47,17 @@ fun generateImageQuestion(mushrooms: List<Mushroom>): Question {
         options = emptyList(),
         correctAnswer = ""
     )
-    val selectedMushroom = mushrooms.random()
+    // Filtrar setas según la dificultad y puntuación del usuario
+    val filteredMushrooms = if (score < 30) {
+        mushrooms.filter { it.dificulty == "Low" }
+    } else if (score < 80) {
+        mushrooms.filter { it.dificulty == "Low" || it.dificulty == "Medium" }
+    } else {
+        mushrooms.filter { it.dificulty == "Hard" }
+    }
+
+    // Seleccionar un hongo aleatorio del conjunto filtrado
+    val selectedMushroom = filteredMushrooms.shuffled().random()
     val mushroomName = selectedMushroom.commonName
     val mushroomPic = selectedMushroom.photo
     // Asegurarse de que las opciones incluyan el nombre correcto y sean únicas
@@ -64,38 +78,38 @@ fun generateImageQuestion(mushrooms: List<Mushroom>): Question {
 @Composable
 fun QuizApp(navController: NavController) {
     val mainViewModel: MainViewModel = viewModel()
-    val mushrooms = Data.DbCall()
-    val currentQuestion = mutableStateOf(generateImageQuestion(mushrooms))
+    val mushrooms = Data.wikiDBList()
     val score = remember { mutableStateOf(0) }
+    val currentQuestion = mutableStateOf(generateImageQuestion(mushrooms, score.value))
     val options = currentQuestion.value.options
     var radioIndex: Int
     val isHome = false
     val triggerNewQuestion = remember { mutableStateOf(false) }
     val selectedIndex = remember { mutableStateOf(-1) } // -1 indica que no hay selección
-
+    val startTime = remember { mutableStateOf(20000) }
+    val elapsedTime = remember { mutableStateOf(0) }
 
     // Observa cambios en el trigger para generar una nueva pregunta
-        if (triggerNewQuestion.value) {
-            // Actualizar la pregunta actual
-            currentQuestion.value = generateImageQuestion(mushrooms)
-            triggerNewQuestion.value = false // Restablecer el disparador
-        }
-    Scaffold(
-        topBar = {
-            TopAppBarWithoutScaffold(isHome, navController)
-        },
-        bottomBar = {
-            BottomNavigationBar(navController)
-        }
-    ) { padding ->
+    if (triggerNewQuestion.value) {
+        // Actualizar la pregunta actual
+        currentQuestion.value = generateImageQuestion(mushrooms, score.value)
+        triggerNewQuestion.value = false // Restablecer el disparador
+    }
+    Scaffold(topBar = {
+        TopAppBarWithoutScaffold(isHome, navController)
+    }, bottomBar = {
+        BottomNavigationBar(navController)
+    }) { padding ->
         Column(
             Modifier
                 .padding(padding)
-                .fillMaxWidth()) {
+                .fillMaxWidth()
+        ) {
+
             val question = currentQuestion.value
             Text(
                 modifier = Modifier
-                    .padding(10.dp)
+                    .padding(5.dp)
                     .align(Alignment.CenterHorizontally),
                 text = "QUIZ",
                 style = MaterialTheme.typography.displayMedium,
@@ -107,15 +121,33 @@ fun QuizApp(navController: NavController) {
                 text = "Puntuación: ${score.value}",
                 style = MaterialTheme.typography.bodyMedium,
             )
+            var remainingTime = startTime.value - elapsedTime.value
+            LaunchedEffect(Unit) {
+                withContext(Dispatchers.IO) {
+                    while (remainingTime != 0) {
+                        delay(1000)
+                        elapsedTime.value += 1000
+                    }
+                }
+            }
+            Text(
+                modifier = Modifier
+                    .padding(top = 10.dp)
+                    .align(Alignment.CenterHorizontally),
+                text = "Tiempo restante: ${remainingTime / 1000}s",
+                style = MaterialTheme.typography.bodyMedium,
+            )
+
             Column(
                 Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 0.dp)) {
+                    .padding(vertical = 0.dp)
+            ) {
                 when (question.type) {
                     QuestionType.Image -> {
                         AsyncImage(
                             modifier = Modifier
-                                .size(250.dp)
+                                .size(150.dp)
                                 .align(Alignment.CenterHorizontally),
                             model = question.image,
                             contentDescription = null,
@@ -123,16 +155,14 @@ fun QuizApp(navController: NavController) {
                         // Muestra las opciones como RadioButtons
                         options.forEachIndexed { index, option ->
                             Row(verticalAlignment = Alignment.CenterVertically) {
-                                RadioButton(
-                                    selected = selectedIndex.value == index, // Verifica si este RadioButton está seleccionado
+                                RadioButton(selected = selectedIndex.value == index, // Verifica si este RadioButton está seleccionado
                                     onClick = {
-                                        selectedIndex.value = index // Actualiza el estado con el índice de la opción seleccionada
-                                    }
-                                )
+                                        selectedIndex.value =
+                                            index // Actualiza el estado con el índice de la opción seleccionada
+                                    })
                                 Text(option)
                             }
                         }
-
                     }
 
                     else -> {
@@ -141,26 +171,47 @@ fun QuizApp(navController: NavController) {
                 }
             }
             val context = LocalContext.current
-            Button(onClick = {
-                // Comprobar si la respuesta seleccionada es correcta y actualizar la pregunta
-                if (options[selectedIndex.value] == currentQuestion.value.correctAnswer) {
-                    // Incrementar puntuación o mostrar mensaje de correcto, si es necesario
-                    score.value += 1
-                    triggerNewQuestion.value = true
-                    selectedIndex.value = -1
-                }else{
-                    score.value = 0
-                    Toast.makeText(context, "Respuesta incorrecta", Toast.LENGTH_SHORT).show()
+            if (remainingTime == 0) {
+                triggerNewQuestion.value = true
+                elapsedTime.value = 0
+            }
+            Button(modifier = Modifier.align(Alignment.CenterHorizontally)
+                .padding(16.dp),
+                onClick = {
+                // Primero, verifica si se ha seleccionado alguna opción
+                if (selectedIndex.value == -1) {
+                    // Si no hay selección, muestra un Toast y retorna
+                    Toast.makeText(context, "Por favor, selecciona una opción", Toast.LENGTH_SHORT).show()
+                    return@Button
                 }
 
+                // Lógica para manejar la respuesta seleccionada
+                if (options[selectedIndex.value] == currentQuestion.value.correctAnswer && remainingTime > 0) {
+                    // Respuesta correcta, incrementa la puntuación y prepara la siguiente pregunta
+                    val bonusPoints = remainingTime / 1000
+                    score.value += bonusPoints
+                    triggerNewQuestion.value = true
+                    selectedIndex.value = -1 // Resetea la selección para la siguiente pregunta
+                    elapsedTime.value = 0
+                    Toast.makeText(
+                        context,
+                        "Correcto! Has obtenido +$bonusPoints puntos por tiempo restante",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    // Respuesta incorrecta, resetea la puntuación y prepara la siguiente pregunta
+                    score.value = 0
+                    elapsedTime.value = 0
+                    Toast.makeText(context, "Respuesta incorrecta", Toast.LENGTH_SHORT).show()
+                    triggerNewQuestion.value = true
+                }
             }) {
                 Text("Siguiente pregunta")
             }
+
         }
         if (mainViewModel.showBottomSheet) {
-            ModalBottomSheet(
-                onDismissRequest = { mainViewModel.showBottomSheet = false }
-            ) {
+            ModalBottomSheet(onDismissRequest = { mainViewModel.showBottomSheet = false }) {
                 ContentBottomSheet(mainViewModel, navController)
             }
         }
