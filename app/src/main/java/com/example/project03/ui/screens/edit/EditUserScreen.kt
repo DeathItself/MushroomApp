@@ -20,7 +20,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.AbsoluteAlignment
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -32,7 +31,9 @@ import com.example.project03.model.User
 import com.example.project03.ui.components.Loading
 import com.example.project03.ui.components.TopAppBarWithoutScaffold
 import com.example.project03.viewmodel.loginScreenViewModel
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
 
 @Composable
@@ -55,34 +56,26 @@ fun EditMyUser(
     navController: NavController
 ){
     val viewModel: loginScreenViewModel = viewModel()
-    val userId = viewModel.userObject().id
+    val auth = Firebase.auth
+    var loading by remember { mutableStateOf(true) }
+    var user by remember { mutableStateOf<User?>(null) }
     val coroutineScope = rememberCoroutineScope()
     val db = FirebaseFirestore.getInstance()
-    var user by remember { mutableStateOf(viewModel.userObject) }
-    var isLoading by remember { mutableStateOf(true) }
 
-    if (userId.isNotEmpty()) {
-        LaunchedEffect(key1 = userId){
-            db.collection("users").document(userId).get().addOnSuccessListener { documentSnapshot ->
-                user = documentSnapshot.toObject(User::class.java)?:User("", "", "", "")
-                isLoading = false
-            }
-        }
-    } else {
-        isLoading = false
-        Text("No se encontró el usuario")
+    LaunchedEffect(true) {
+        user = viewModel.loadUserData(auth.currentUser!!.uid)
+        loading = false
     }
-
-    if (isLoading){
+    if (loading) {
         Loading.LoadingState()
-    }else{
-        val viewModel: loginScreenViewModel = viewModel()
+    } else {
+
         EditMyUserForm(
-            user = viewModel.userObject,
+            user = user!!,
             onSave = {
                 updateUser ->
                 coroutineScope.launch {
-                    db.collection("users").document(userId).set(updateUser)
+                    db.collection("users").document(user!!.id).set(updateUser)
                     navController.popBackStack()
                 }
             } ,
@@ -101,7 +94,6 @@ fun EditMyUserForm(
     onCancel: () -> Unit,
     paddingValues: PaddingValues
 ) {
-    val viewModel: loginScreenViewModel = viewModel()
     Column(
         modifier = Modifier
             .padding(paddingValues)
@@ -109,8 +101,8 @@ fun EditMyUserForm(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        var username by remember { mutableStateOf(viewModel.userObject.username) }
-        var email by remember { mutableStateOf(viewModel.userObject.email) }
+        var username by remember { mutableStateOf(user.username) }
+        var email by remember { mutableStateOf(user.email) }
         //password
 
         Text(
@@ -122,7 +114,7 @@ fun EditMyUserForm(
         OutlinedTextField(
             value = username,
             onValueChange = {username = it},
-            label = {viewModel.userObject.username}
+            label = {"username"}
         )
 
         Spacer(modifier = Modifier.height(10.dp))
@@ -136,7 +128,7 @@ fun EditMyUserForm(
         OutlinedTextField(
             value = email,
             onValueChange = {email = it},
-            label = {viewModel.userObject.email}
+            label = {"email"}
         )
 
         //password
@@ -145,9 +137,9 @@ fun EditMyUserForm(
         Row{
             Button(
                 onClick = {
-                    viewModel.userObject.username = username
-                    viewModel.userObject.email = email
-                    onSave(viewModel.userObject)
+                    user.username = username
+                    user.email = email
+                    onSave(user)
                 }
             ){
                 Text("Guardar")

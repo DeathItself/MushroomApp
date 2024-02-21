@@ -178,7 +178,7 @@ fun MyMushroomList(mushrooms: List<MyMushroom>, navController: NavController) {
                                     Icon(
                                         imageVector = Icons.Filled.Edit,
                                         contentDescription = "edit",
-                                        tint = Color.Blue,
+                                        tint = MaterialTheme.colorScheme.inverseSurface,
                                         modifier = Modifier.size(24.dp),
                                     )
                                 }
@@ -194,7 +194,7 @@ fun MyMushroomList(mushrooms: List<MyMushroom>, navController: NavController) {
                                     Icon(
                                         imageVector = Icons.Filled.DeleteForever,
                                         contentDescription = "delete",
-                                        tint = Color.Red
+                                        tint = MaterialTheme.colorScheme.inverseSurface,
                                     )
 
                                 }

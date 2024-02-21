@@ -23,12 +23,17 @@ import com.example.project03.ui.screens.quiz.QuizApp
 import com.example.project03.ui.screens.users.MyUserDetailsScreen
 import com.example.project03.ui.screens.wiki.MostrarSetasScreen
 import com.example.project03.ui.screens.wiki.MushroomDetailsScreen
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AppNavigation() {
+    val auth = Firebase.auth
+//    auth.signOut()
+    val user = auth.currentUser
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = AppScreens.LoginScreen.route) {
+    NavHost(navController = navController, startDestination = if (user!=null)AppScreens.HomeScreen.route else AppScreens.LoginScreen.route) {
         composable(route = AppScreens.HomeScreen.route) {
             HomeScreen(navController)
         }
