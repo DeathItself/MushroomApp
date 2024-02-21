@@ -18,15 +18,13 @@ suspend fun FirebaseFirestore.getMushrooms(): List<Mushroom> {
     }
 }
 
-suspend fun FirebaseFirestore.getMyMushrooms(): List<MyMushroom> {
+suspend fun FirebaseFirestore.getMyMushrooms(userId: String): List<MyMushroom> {
     return try {
         val excludedDocumentName = "Otro"
-        val documents = collection("my_mushrooms").get().await().documents.mapNotNull { document ->
-                if (document.id != excludedDocumentName) {
-                    document.toObject(MyMushroom::class.java)
-                } else {
-                    null
-                }
+        val documents = collection("my_mushrooms")
+            .whereEqualTo("userId", userId)
+            .get().await().documents.mapNotNull { document ->
+                document.toObject(MyMushroom::class.java)
             }
         documents
     } catch (e: Exception) {
@@ -35,7 +33,7 @@ suspend fun FirebaseFirestore.getMyMushrooms(): List<MyMushroom> {
     }
 }
 
-suspend fun FirebaseFirestore.addMushroom(mushroom: MyMushroom) {
+suspend fun FirebaseFirestore.addMushroom(mushroom: MyMushroom, userId: String) {
     try {
         // Get the current counter value
         val counterDocument = collection("counters").document("my_mushroom_counter").get().await()
@@ -48,7 +46,7 @@ suspend fun FirebaseFirestore.addMushroom(mushroom: MyMushroom) {
         // Update the counter in Firestore
         collection("counters").document("my_mushroom_counter").set(mapOf("counter" to counter))
             .await()
-
+        mushroom.userId = userId
         mushroom.myMushID = documentId
         // Add the new mushroom with the auto-incremented document ID
         collection("my_mushrooms").document(documentId).set(mushroom).await()

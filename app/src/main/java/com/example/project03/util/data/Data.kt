@@ -13,7 +13,9 @@ import com.example.project03.util.db.addMushroom
 import com.example.project03.util.db.getMushrooms
 import com.example.project03.util.db.getMyMushrooms
 import com.example.project03.util.db.uploadImageAndGetUrl
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.ktx.Firebase
 
 class Data {
     companion object {
@@ -40,9 +42,10 @@ class Data {
             val db = FirebaseFirestore.getInstance()
             var mushroomList by remember { mutableStateOf(listOf<MyMushroom>()) }
             var isLoading by remember { mutableStateOf(true) } // Asume carga inicialmente
+            val userId = Firebase.auth.currentUser?.uid
             // Efecto lanzado para cargar los datos
             LaunchedEffect(key1 = Unit) {
-                mushroomList = db.getMyMushrooms()
+                mushroomList = db.getMyMushrooms(userId!!)
                 isLoading = false // Marca la carga como finalizada después de obtener los datos
             }
             if (isLoading) {
@@ -57,7 +60,8 @@ class Data {
             imagePath: String,
             mushroom: List<Mushroom>,
             latitude: Double,
-            longitude: Double
+            longitude: Double,
+            userId: String?
         ): String {
             val db = FirebaseFirestore.getInstance()
             val imageUrl = uploadImageAndGetUrl(imagePath)
@@ -77,7 +81,7 @@ class Data {
                 timestamp = com.google.firebase.Timestamp.now()
             )
 
-            db.addMushroom(myMush)
+            db.addMushroom(myMush, userId!!)
             return "Mushroom added"
         }
     }

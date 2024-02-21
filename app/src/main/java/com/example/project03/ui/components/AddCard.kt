@@ -50,6 +50,8 @@ import com.example.project03.ui.navigation.AppScreens
 import com.example.project03.ui.screens.maps.permissionGranted
 import com.example.project03.util.data.Data
 import com.google.android.gms.location.LocationServices
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -58,7 +60,6 @@ import kotlinx.coroutines.withContext
 
 @Composable
 fun AddCard(navController: NavController) {
-    //PONER EL PATH VIEW MODEL, REVISAR EL CAHTGPT
     val mushroom = Data.wikiDBList()
     val imagePath = ImagePath.imagePath
     var nameMushroom = ""
@@ -66,6 +67,7 @@ fun AddCard(navController: NavController) {
     val context = LocalContext.current
     var latitude by remember { mutableDoubleStateOf(0.0) }
     var longitude by remember { mutableDoubleStateOf(0.0) }
+    val userId = Firebase.auth.currentUser?.uid
     ElevatedCard(
         modifier = Modifier,
         shape = RoundedCornerShape(12.dp),
@@ -150,7 +152,7 @@ fun AddCard(navController: NavController) {
                     // Aqui se guarda la informacion recogida en CategoryList, TextField y la imagen en la base de datos
                     CoroutineScope(Dispatchers.IO).launch {
                         val result = Data.addMushroom(
-                            nameMushroom, description, imagePath, mushroom, latitude, longitude
+                            nameMushroom, description, imagePath, mushroom, latitude, longitude, userId // Asegúrate de pasar el userId aquí
                         )
                         withContext(Dispatchers.Main) {
                             if (result == "Mushroom added") {
