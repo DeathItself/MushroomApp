@@ -6,18 +6,29 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -188,12 +199,33 @@ fun EmailField(
 fun PasswordField(
     passwordState: MutableState<String>,
     labelId: String = "Password"
-){
-    TextFields(
-        label = labelId,
-        valueState = passwordState
+) {
+    // Estado para manejar si la contraseña está visible o no
+    val passwordVisible = remember { mutableStateOf(false) }
+
+    OutlinedTextField(
+        value = passwordState.value,
+        onValueChange = { passwordState.value = it },
+        label = { Text(labelId) },
+        keyboardOptions = KeyboardOptions.Default.copy(
+            keyboardType = KeyboardType.Password
+        ),
+        // Cambiar la transformación visual basada en si la contraseña está visible o no
+        visualTransformation = if (passwordVisible.value) VisualTransformation.None else PasswordVisualTransformation(),
+        // Ícono para alternar la visibilidad de la contraseña
+        trailingIcon = {
+            val image = if (passwordVisible.value)
+                Icons.Filled.Visibility
+            else
+                Icons.Filled.VisibilityOff
+
+            IconButton(onClick = { passwordVisible.value = !passwordVisible.value }) {
+                Icon(image, "toggle password visibility")
+            }
+        }
     )
 }
+
 
 
 
