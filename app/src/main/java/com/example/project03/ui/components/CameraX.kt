@@ -166,7 +166,7 @@ fun saveImageToInternalStorage(bitmap: Bitmap, imagePath: String): String? {
     val file = File(directory, fileName)
 
     var outputStream: OutputStream? = null
-    try {
+    return try {
         outputStream = FileOutputStream(file)
         val correctedBitmap = correctImageOrientation(bitmap, imagePath)
         correctedBitmap.compress(
@@ -174,10 +174,10 @@ fun saveImageToInternalStorage(bitmap: Bitmap, imagePath: String): String? {
             100,
             outputStream
         )
-        return file.absolutePath
+        file.absolutePath
     } catch (e: Exception) {
         e.printStackTrace()
-        return null
+        null
     } finally {
         outputStream?.close()
     }

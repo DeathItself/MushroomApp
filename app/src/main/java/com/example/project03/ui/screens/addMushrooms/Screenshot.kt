@@ -12,7 +12,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.project03.model.ImagePath
-import com.example.project03.ui.components.BottomBarComprovation
+import com.example.project03.ui.components.BottomBarCheck
 
 
 @Composable
@@ -20,7 +20,7 @@ fun Screenshot (
     navController: NavController
 ){
     Scaffold(
-        bottomBar = { BottomBarComprovation(navController)}
+        bottomBar = { BottomBarCheck(navController) }
     ) {padding ->
         Column(
             modifier = Modifier

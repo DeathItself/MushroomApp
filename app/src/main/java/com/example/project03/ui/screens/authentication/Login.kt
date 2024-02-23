@@ -110,15 +110,6 @@ fun LoginScreen(
                     showLoginForm.value = true
                 }
             }
-
-            /*
-            val text1 =
-               if (showLoginForm.value) "Eres nuevo? Únete a nosotros!"
-               else "¿Ya tienes cuenta? Inicia sesión"
-
-            Text(text1)
-
-             */
         }
     }
 }

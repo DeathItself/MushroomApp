@@ -9,8 +9,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.project03.ui.components.CameraScreen
-import com.example.project03.ui.restaurant.MostrarRestaurantes
-import com.example.project03.ui.restaurant.RecibirRestaurante
+import com.example.project03.ui.screens.restaurant.MostrarRestaurantes
+import com.example.project03.ui.screens.restaurant.RecibirRestaurante
 import com.example.project03.ui.screens.addMushrooms.AddMushroomScreen
 import com.example.project03.ui.screens.authentication.LoginScreen
 import com.example.project03.ui.screens.edit.EditMyMushroomScreen

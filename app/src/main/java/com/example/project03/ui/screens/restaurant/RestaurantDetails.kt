@@ -1,4 +1,4 @@
-package com.example.project03.ui.restaurant
+package com.example.project03.ui.screens.restaurant
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues

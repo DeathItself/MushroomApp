@@ -1,4 +1,4 @@
-package com.example.project03.ui.restaurant
+package com.example.project03.ui.screens.restaurant
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -36,14 +35,6 @@ import com.example.project03.ui.navigation.BottomNavigationBar
 import com.example.project03.ui.navigation.ContentBottomSheet
 import com.example.project03.util.data.Data
 import com.example.project03.viewmodel.MainViewModel
-import com.google.android.gms.maps.model.CameraPosition
-import com.google.android.gms.maps.model.LatLng
-import com.google.maps.android.compose.GoogleMap
-import com.google.maps.android.compose.MapProperties
-import com.google.maps.android.compose.MapType
-import com.google.maps.android.compose.Marker
-import com.google.maps.android.compose.MarkerState
-import com.google.maps.android.compose.rememberCameraPositionState
 
 
 @Composable
@@ -133,36 +124,6 @@ fun RestaurantList(restaurants: List<Restaurants>, navController: NavController)
                     }
                 }
             }
-        }
-    }
-}
-
-@Composable
-fun Mapa(restaurants: Restaurants?) {
-    // Minimapa
-    val cameraPositionState = rememberCameraPositionState {
-        if (restaurants != null) {
-            position = CameraPosition.fromLatLngZoom(
-                LatLng(restaurants.latitude, restaurants.longitud), 15f
-            )
-        }
-    }
-    GoogleMap(
-        modifier = Modifier
-            .height(150.dp)
-            .fillMaxWidth()
-            .padding(horizontal = 26.dp),
-        cameraPositionState = cameraPositionState,
-        properties = MapProperties(
-            mapType = MapType.HYBRID
-        )
-    ) {
-
-        if (restaurants != null) {
-            Marker(
-                state = MarkerState(position = LatLng(restaurants.latitude, restaurants.longitud)),
-                title = restaurants.nom,
-            )
         }
     }
 }
