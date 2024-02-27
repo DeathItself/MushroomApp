@@ -2,11 +2,14 @@ package com.example.project03.ui.screens.home
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.rememberScrollableState
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
@@ -28,11 +31,12 @@ import com.example.project03.viewmodel.MainViewModel
 fun HomeScreen(navController: NavController) {
     val mainViewModel: MainViewModel = viewModel()
     val isHome = true
-    Scaffold(topBar = {
-        TopAppBarWithoutScaffold(isHome, navController)
-    }, bottomBar = {
-        BottomNavigationBar(navController)
-    }) { padding ->
+    Scaffold(
+        topBar = {
+            TopAppBarWithoutScaffold(isHome, navController)
+        }, bottomBar = {
+            BottomNavigationBar(navController)
+        }) { padding ->
         ContentHomeScreen(padding = padding, navController = navController)
 
         //submenu
@@ -47,14 +51,20 @@ fun HomeScreen(navController: NavController) {
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ContentHomeScreen(padding: PaddingValues, navController: NavController) {
-    Column(
+    LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .padding(padding)
-
+            .scrollable(
+                state = rememberScrollableState { delta -> delta },
+                orientation = Orientation.Vertical,
+                enabled = true
+            ) // Permite desplazarse hacia abajo
     ) {
-        BannerCard(navController = navController)
-        Spacer(modifier = Modifier.padding(5.dp))
-        CarouselCard(navController = navController)
+        item {
+            BannerCard(navController = navController)
+            Spacer(modifier = Modifier.padding(5.dp))
+            CarouselCard(navController = navController)
+        }
     }
 }
