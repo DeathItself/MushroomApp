@@ -8,12 +8,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import com.example.project03.model.Mushroom
 import com.example.project03.model.MyMushroom
+import com.example.project03.model.Ranking
 import com.example.project03.model.Restaurants
 import com.example.project03.ui.components.Loading.Companion.LoadingState
 import com.example.project03.util.db.addMushroom
+import com.example.project03.util.db.addRanking
 import com.example.project03.util.db.getMushrooms
 import com.example.project03.util.db.getMyMushrooms
+import com.example.project03.util.db.getRanking
 import com.example.project03.util.db.getRestaurants
+import com.example.project03.util.db.updateScore
 import com.example.project03.util.db.uploadImageAndGetUrl
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -56,6 +60,23 @@ class Data {
             return mushroomList
         }
 
+        @Composable
+        fun myRankList(): List<Ranking> {
+            val db = FirebaseFirestore.getInstance()
+            var rankList by remember { mutableStateOf(listOf<Ranking>()) }
+            var isLoading by remember { mutableStateOf(true) }
+            val userId = Firebase.auth.currentUser?.uid
+
+            LaunchedEffect(key1 = Unit) {
+                rankList = db.getRanking(userId!!)
+                isLoading = false
+            }
+            if (isLoading) {
+                LoadingState()
+            }
+            return rankList
+        }
+
         suspend fun addMushroom(
             nameMushroom: String,
             description: String,
@@ -85,6 +106,29 @@ class Data {
 
             db.addMushroom(myMush, userId!!)
             return "Mushroom added"
+        }
+
+        suspend fun addRank(
+            puntuacion: Double,
+            userId: String?,
+            ranking: List<Ranking>
+        ): String {
+            val db = FirebaseFirestore.getInstance()
+            val matchedUser = ranking.find { it.userId == userId }
+
+            if (matchedUser != null) {
+                // Actualizar la puntuación del usuario encontrado
+                matchedUser.puntuacion = puntuacion
+                db.updateScore(matchedUser)
+                return "Score updated"
+            } else {
+                // Crear un nuevo usuario con la puntuación
+                val newRanking = userId?.let { Ranking(puntuacion, it) }
+                if (newRanking != null) {
+                    db.addRanking(newRanking)
+                }
+                return "New user added"
+            }
         }
 
         @JvmStatic

@@ -1,8 +1,10 @@
 package com.example.project03.util.db
 
 import android.net.Uri
+import android.util.Log
 import com.example.project03.model.Mushroom
 import com.example.project03.model.MyMushroom
+import com.example.project03.model.Ranking
 import com.example.project03.model.Restaurants
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
@@ -56,6 +58,35 @@ suspend fun FirebaseFirestore.addMushroom(mushroom: MyMushroom, userId: String) 
     } catch (e: Exception) {
         println("Error adding mushroom to Firebase: ${e.message}")
     }
+}
+
+suspend fun FirebaseFirestore.getRanking(userId: String): List<Ranking> {
+    return try {
+        val excludedDocumentName = "prueba"
+        val documents = collection("puntuacion")
+            .whereEqualTo("userId", userId)
+            .get().await().documents.mapNotNull { document ->
+                document.toObject(Ranking::class.java)
+            }
+        documents
+    } catch (e: Exception) {
+        println("Error getting mushrooms from Firebase: ${e.message}")
+        emptyList()
+    }
+}
+
+suspend fun FirebaseFirestore.addRanking(ranking: Ranking){
+    collection("puntuacion").add(ranking)
+        .addOnSuccessListener { documentReference ->
+            Log.d("Ranking", "New ranking added with ID: ${documentReference.id}")
+        }
+        .addOnFailureListener { exception ->
+            Log.e("Ranking", "Error adding ranking: ${exception.message}")
+        }
+}
+
+suspend fun FirebaseFirestore.updateScore(ranking: Ranking) {
+    collection("puntuacion").document(ranking.userId).set(ranking)
 }
 
 suspend fun FirebaseFirestore.deleteMushroom(commonName: String, Description: String) {

@@ -9,8 +9,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.project03.ui.components.CameraScreen
-import com.example.project03.ui.screens.restaurant.MostrarRestaurantes
-import com.example.project03.ui.screens.restaurant.RecibirRestaurante
 import com.example.project03.ui.screens.addMushrooms.AddMushroomScreen
 import com.example.project03.ui.screens.authentication.LoginScreen
 import com.example.project03.ui.screens.edit.EditMyMushroomScreen
@@ -22,6 +20,8 @@ import com.example.project03.ui.screens.myMush.MyMushroomDetailsScreen
 import com.example.project03.ui.screens.permission.CamLocationPermission
 import com.example.project03.ui.screens.permission.LocationPermission
 import com.example.project03.ui.screens.quiz.QuizApp
+import com.example.project03.ui.screens.restaurant.MostrarRestaurantes
+import com.example.project03.ui.screens.restaurant.RecibirRestaurante
 import com.example.project03.ui.screens.users.MyUserDetailsScreen
 import com.example.project03.ui.screens.wiki.MostrarSetasScreen
 import com.example.project03.ui.screens.wiki.MushroomDetailsScreen
