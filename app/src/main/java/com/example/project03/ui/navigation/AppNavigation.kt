@@ -23,6 +23,7 @@ import com.example.project03.ui.screens.permission.CamLocationPermission
 import com.example.project03.ui.screens.permission.LocationPermission
 import com.example.project03.ui.screens.quiz.QuizApp
 import com.example.project03.ui.screens.users.MyUserDetailsScreen
+import com.example.project03.ui.screens.weather.WeatherScreen
 import com.example.project03.ui.screens.wiki.MostrarSetasScreen
 import com.example.project03.ui.screens.wiki.MushroomDetailsScreen
 import com.google.firebase.auth.ktx.auth
@@ -119,6 +120,10 @@ fun AppNavigation() {
         }
         composable(route = AppScreens.EditMyUserScreen.route) {
             EditMyUserScreen(navController)
+        }
+
+        composable(route = AppScreens.WeatherScreen.route){
+            WeatherScreen(navController)
         }
     }
 }

@@ -14,4 +14,5 @@
     <string name="bannerMushOfTheDay">Mushroom of the day</string>
     <string name="BottomSheetMenuWiki">Wiki</string>
     <string name="BottomSheetMenuRestaurants">Restaurants</string>
+    <string name="BottomSheetMenuWeather">Weather</string>
 </resources>

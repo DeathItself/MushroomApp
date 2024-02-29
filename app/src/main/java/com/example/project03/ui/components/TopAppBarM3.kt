@@ -29,22 +29,26 @@ fun TopAppBarWithoutScaffold(isHome: Boolean, navController: NavController) {
 fun SmallTopAppBarM3(
     scrollBehavior: TopAppBarScrollBehavior, isHome: Boolean, navController: NavController
 ) {
-    TopAppBar(title = { Text(text = "MushTool") }, navigationIcon = {
-        if (!isHome) {
-            run {
-                IconButton(onClick = { navController.popBackStack() }) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Regresar"
-                    )
+    TopAppBar(
+        title = { Text(text = "MushTool") },
+        navigationIcon = {
+            if (!isHome) {
+                run {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Regresar"
+                        )
+                    }
                 }
             }
+        },
+        scrollBehavior = scrollBehavior,
+        actions = {
+            //Posiblemente tenga que enviar la id???
+            IconButton(onClick = { navController.navigate(AppScreens.MyUserScreen.route) }) {
+                Icon(imageVector = Icons.Filled.AccountCircle, contentDescription = null)
+            }
         }
-    }, scrollBehavior = scrollBehavior, actions = {
-
-        //Posiblemente tenga que enviar la id???
-        IconButton(onClick = { navController.navigate(AppScreens.MyUserScreen.route) }) {
-            Icon(imageVector = Icons.Filled.AccountCircle, contentDescription = null)
-        }
-    })
+    )
 }
