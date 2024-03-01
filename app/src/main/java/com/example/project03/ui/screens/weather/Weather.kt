@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.WaterDrop
@@ -166,7 +165,7 @@ fun ShowHourly(
 
     if(hourlyWeatherData != null){
         Text(
-            text = "Hourly",
+            text = "Horas",
             fontSize = 30.sp,
             style = MaterialTheme.typography.bodyLarge
         )
@@ -189,7 +188,7 @@ fun ShowHourly(
                         horizontalArrangement = Arrangement.Center,
                         modifier = Modifier.fillMaxWidth()
                     ){
-                        BasicText(
+                        Text(
                             text = "${hour.toString().padStart(2, '0')}:00",
                             modifier = Modifier.width(80.dp),
                             style = MaterialTheme.typography.bodyMedium.copy(fontSize = 23.sp),
@@ -200,7 +199,7 @@ fun ShowHourly(
 
                     Row(modifier = Modifier.fillMaxWidth()) {
                         Column {
-                            BasicText(
+                            Text(
                                 text = "${hourlyWeatherData!!.temperature_2m[index]}º",
                                 modifier = Modifier
                                     .width(80.dp)
@@ -216,7 +215,7 @@ fun ShowHourly(
                                     contentDescription = "ubicacion",
                                     modifier = Modifier.size(15.dp)
                                 )
-                                BasicText(
+                                Text(
                                     text = "${hourlyWeatherData!!.precipitation[index]}%",
                                     modifier = Modifier
                                         .width(80.dp),
