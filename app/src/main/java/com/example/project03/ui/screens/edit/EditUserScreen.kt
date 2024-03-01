@@ -44,7 +44,7 @@ fun EditMyUserScreen(
     val isHome = false
     Scaffold(
         topBar = {
-            TopAppBarWithoutScaffold(isHome, navController)
+            TopAppBarWithoutScaffold(isHome, navController, title = "Editar usuario")
         }) { padding ->
         EditMyUser(padding, navController)
     }

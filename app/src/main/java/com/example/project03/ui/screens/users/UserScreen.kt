@@ -45,7 +45,7 @@ fun MyUserDetailsScreen(navController: NavController) {
     val isHome = false
     Scaffold(
         topBar = {
-            TopAppBarWithoutScaffold(isHome, navController)
+            TopAppBarWithoutScaffold(isHome, navController, title = "Usuario")
         }) { padding ->
         RecibirDatosUser(padding, navController)
     }

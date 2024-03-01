@@ -14,4 +14,7 @@
     <string name="bannerMushOfTheDay">Seta del día</string>
     <string name="BottomSheetMenuWiki">Wiki</string>
     <string name="BottomSheetMenuRestaurants">Restaurantes</string>
+    <string name="BottomSheetMenuWeather">Clima</string>
+    <string name="BottomSheetMenuForum">Foro</string>
+    <string name="Forum_Add_Question">Añade una pregunta al foro</string>
 </resources>
