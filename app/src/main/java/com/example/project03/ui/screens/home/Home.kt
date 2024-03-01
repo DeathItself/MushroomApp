@@ -69,7 +69,7 @@ fun ContentHomeScreen(padding: PaddingValues, navController: NavController) {
             .padding(padding)
 
     ) {
-        WeatherBanner(viewModel)
+        WeatherBanner(viewModel, navController)
         Spacer(modifier = Modifier.padding(7.dp))
         BannerCard(navController = navController)
         Spacer(modifier = Modifier.padding(5.dp))
