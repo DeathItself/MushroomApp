@@ -96,7 +96,7 @@ fun QuizApp(navController: NavController) {
         triggerNewQuestion.value = false // Restablecer el disparador
     }
     Scaffold(topBar = {
-        TopAppBarWithoutScaffold(isHome, navController)
+        TopAppBarWithoutScaffold(isHome, navController, title = "Quiz")
     }, bottomBar = {
         BottomNavigationBar(navController)
     }) { padding ->

@@ -35,7 +35,7 @@ fun HomeScreen(navController: NavController) {
     val mainViewModel: MainViewModel = viewModel()
     val isHome = true
     Scaffold(topBar = {
-        TopAppBarWithoutScaffold(isHome, navController)
+        TopAppBarWithoutScaffold(isHome, navController, title = "MushTool")
     }, bottomBar = {
         BottomNavigationBar(navController)
     }) { padding ->
@@ -53,7 +53,6 @@ fun HomeScreen(navController: NavController) {
                 }
             }
         }
-
     }
 }
 
@@ -70,7 +69,7 @@ fun ContentHomeScreen(padding: PaddingValues, navController: NavController) {
 
     ) {
         WeatherBanner(viewModel)
-        Spacer(modifier = Modifier.padding(7.dp))
+        Spacer(modifier = Modifier.padding(16.dp))
         BannerCard(navController = navController)
         Spacer(modifier = Modifier.padding(5.dp))
         CarouselCard(navController = navController)

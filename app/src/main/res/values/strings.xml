@@ -1,17 +1,20 @@
 <resources>
-    <string name="app_name">Project03</string>
-    <string name="BottomNavHome">Inicio</string>
-    <string name="BottomNavMap">Mapa</string>
-    <string name="BottomNavMyMush">Mis Setas</string>
-    <string name="BottomNavMenu">Menu</string>
-    <string name="BottomSheetMenuLearn">Aprender</string>
-    <string name="BottomSheetMenuEat">Comer</string>
-    <string name="BottomSheetMenuCommunity">Comunidad</string>
-    <string name="topAppBarReturn">Volver</string>
-    <string name="carrouselMyMush">Mis setas</string>
-    <string name="bannerMushOfTheDay">Seta del dia</string>
-    <string name="BottomSheetMenuWiki">Wiki</string>
-    <string name="BottomNavAdd">Añadir</string>
-    <string name="BottomSheetMenuRestaurants">Restaurantes</string>
-    <string name="BottomSheetMenuWeather">Clima</string>
+
+    <string name="BottomSheetMenuWeather" translatable="false">Clima</string>
+    <string name="app_name" translatable="false">Project03</string>
+    <string name="BottomNavHome" translatable="false">Inicio</string>
+    <string name="BottomNavMap" translatable="false">Mapa</string>
+    <string name="BottomNavAdd" translatable="false">Añadir</string>
+    <string name="BottomNavMyMush" translatable="false">Mis Setas</string>
+    <string name="BottomNavMenu" translatable="false">Menu</string>
+    <string name="BottomSheetMenuLearn" translatable="false">Aprender</string>
+    <string name="BottomSheetMenuEat" translatable="false">Comer</string>
+    <string name="BottomSheetMenuCommunity" translatable="false">Comunidad</string>
+    <string name="topAppBarReturn" translatable="false">Volver</string>
+    <string name="carrouselMyMush" translatable="false">Mis setas</string>
+    <string name="bannerMushOfTheDay" translatable="false">Seta del día</string>
+    <string name="BottomSheetMenuWiki" translatable="false">Wiki</string>
+    <string name="BottomSheetMenuRestaurants" translatable="false">Restaurantes</string>
+    <string name="BottomSheetMenuForum" translatable="false">Foro</string>
+    <string name="Forum_Add_Question" translatable="false">Añade una pregunta al foro</string>
 </resources>

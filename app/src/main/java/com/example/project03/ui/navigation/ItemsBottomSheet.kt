@@ -17,7 +17,7 @@ sealed class ItemsBottomSheet(
 ) {
     object ItemMenu01 : ItemsBottomSheet("Learn",R.string.BottomSheetMenuLearn, Icons.Rounded.Category)
     object ItemMenu02 : ItemsBottomSheet("Eat",R.string.BottomSheetMenuEat, Icons.Rounded.Dining)
-    object ItemMenu03 : ItemsBottomSheet("Community",R.string.BottomSheetMenuCommunity, Icons.Rounded.Diversity3)
+    object ItemMenu03 : ItemsBottomSheet("Forum",R.string.BottomSheetMenuForum, Icons.Rounded.Diversity3)
     object ItemMenu04 : ItemsBottomSheet("Wiki",R.string.BottomSheetMenuWiki, Icons.Rounded.AutoStories)
 
     object ItemMenu05 : ItemsBottomSheet("Weather", R.string.BottomSheetMenuWeather, Icons.Rounded.Cloud)

@@ -61,7 +61,7 @@ fun MostrarRestaurantes(navController: NavController) {
     val mainViewModel: MainViewModel = viewModel()
     val isHome = false
     Scaffold(topBar = {
-        TopAppBarWithoutScaffold(isHome, navController)
+        TopAppBarWithoutScaffold(isHome, navController, title = "Restaurantes")
     }, bottomBar = {
         BottomNavigationBar(navController)
     }) { padding ->

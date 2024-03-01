@@ -1,5 +1,8 @@
 package com.example.project03.ui.screens.myMush
 
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.ScrollableState
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -10,7 +13,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material.icons.filled.Edit
@@ -57,91 +61,106 @@ import kotlinx.coroutines.launch
 fun RecibirDatosSeta(padding: PaddingValues, myMushID: String, navController: NavController) {
 
     val mushObj = Data.myMushDBList().find { it.myMushID == myMushID }
-
-    Column(
-        modifier = Modifier
-            .padding(padding)
-            .fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        if (mushObj != null) {
-            val isEdibleText = when (mushObj.isEdible) {
-                true -> "Comestible"
-                false -> "No comestible"
-                else -> "Información no disponible"
-            }
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(text = mushObj.commonName, fontWeight = FontWeight.Bold)
+    val wikimush = Data.wikiDBList().find { it.commonName == mushObj?.commonName }
+    val wikimushImg = wikimush?.photo
+    LazyColumn(modifier = Modifier
+        .padding(padding)
+        .fillMaxSize()
+        .scrollable(orientation = Orientation.Vertical,
+            enabled = true,
+            reverseDirection = false,
+            state = ScrollableState { delta -> delta }),
+        horizontalAlignment = Alignment.CenterHorizontally) {
+        item {
+            if (mushObj != null) {
+                val isEdibleText = when (mushObj.isEdible) {
+                    true -> "Comestible"
+                    false -> "No comestible"
+                    else -> "Información no disponible"
+                }
                 Column(
-                    modifier = Modifier.aspectRatio(2.1f),
+                    modifier = Modifier.fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    AsyncImage(
-                        modifier = Modifier.size(250.dp),
-                        model = mushObj.photo,
-                        contentDescription = null
-                    )
-                }
-                Spacer(modifier = Modifier.height(16.dp))
-                Text(text = mushObj.scientificName, fontStyle = FontStyle.Italic)
-                Column(
-                    modifier = Modifier.padding(16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        text = mushObj.description,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.align(Alignment.CenterHorizontally)
-                    )
-                    Text(
-                        text = mushObj.habitat,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.align(Alignment.CenterHorizontally)
-                    )
-                }
-                Text(text = isEdibleText, fontWeight = FontWeight.Bold)
-                Text(text = mushObj.seasons, fontWeight = FontWeight.Bold)
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal=16.dp, vertical=8.dp),
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    Button(
-                        modifier = Modifier.padding(horizontal = 8.dp),
-                        onClick = {
-                            // Navega a la pantalla de edición con los datos de la seta
-                            navController.navigate(AppScreens.EditMyMushroomScreen.route + "/" + mushObj.myMushID)
-                        }, colors = ButtonDefaults.buttonColors(containerColor = Color.Blue)
+                    Text(text = mushObj.commonName, fontWeight = FontWeight.Bold)
+                    Row(
+                        modifier = Modifier
+                            .aspectRatio(1.2f)
+                            .padding(16.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceEvenly
                     ) {
-                        Icon(Icons.Filled.Edit, contentDescription = "Editar", tint = Color.White)
-                        Text("Editar", color = Color.White)
-                    }
-
-                    Button(
-                        onClick = {
-                            // Llama a la función para borrar la seta
-                            CoroutineScope(Dispatchers.IO).launch {
-                                FirebaseFirestore.getInstance()
-                                    .deleteMushroom(mushObj.commonName, mushObj.description)
-                            }
-                        }, colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
-                    ) {
-                        Icon(
-                            Icons.Filled.DeleteForever,
-                            contentDescription = "Borrar",
-                            tint = Color.White
+                        AsyncImage(
+                            modifier = Modifier.width(150.dp),
+                            model = mushObj.photo,
+                            contentDescription = null
                         )
-                        Text("Borrar", color = Color.White)
+                        AsyncImage(
+                            modifier = Modifier.width(150.dp),
+                            model = wikimushImg,
+                            contentDescription = "Photo of the type of mushroom"
+                        )
                     }
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text(text = mushObj.scientificName, fontStyle = FontStyle.Italic)
+                    Column(
+                        modifier = Modifier.padding(16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = mushObj.description,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.align(Alignment.CenterHorizontally)
+                        )
+                        Text(
+                            text = mushObj.habitat,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.align(Alignment.CenterHorizontally)
+                        )
+                    }
+                    Text(text = isEdibleText, fontWeight = FontWeight.Bold)
+                    Text(text = mushObj.seasons, fontWeight = FontWeight.Bold)
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp, vertical = 8.dp),
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        Button(
+                            modifier = Modifier.padding(horizontal = 8.dp), onClick = {
+                                // Navega a la pantalla de edición con los datos de la seta
+                                navController.navigate(AppScreens.EditMyMushroomScreen.route + "/" + mushObj.myMushID)
+                            }, colors = ButtonDefaults.buttonColors(containerColor = Color.Blue)
+                        ) {
+                            Icon(
+                                Icons.Filled.Edit, contentDescription = "Editar", tint = Color.White
+                            )
+                            Text("Editar", color = Color.White)
+                        }
+
+                        Button(
+                            onClick = {
+                                // Llama a la función para borrar la seta
+                                CoroutineScope(Dispatchers.IO).launch {
+                                    FirebaseFirestore.getInstance()
+                                        .deleteMushroom(mushObj.commonName, mushObj.description)
+                                }
+                            }, colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
+                        ) {
+                            Icon(
+                                Icons.Filled.DeleteForever,
+                                contentDescription = "Borrar",
+                                tint = Color.White
+                            )
+                            Text("Borrar", color = Color.White)
+                        }
+                    }
+                    //mostramos la ubicacion de la seta en un mapa pequeño debajo de la descripcion
+                    if (mushObj.latitude != null && mushObj.longitude != null) Mapa(mushObj)
                 }
-                //mostramos la ubicacion de la seta en un mapa pequeño debajo de la descripcion
-                if (mushObj.latitude != null && mushObj.longitude != null) Mapa(mushObj)
             }
         }
+
 
     }
 }
@@ -178,7 +197,7 @@ fun MyMushroomDetailsScreen(navController: NavController, myMushID: String) {
     val mainViewModel: MainViewModel = viewModel()
     val isHome = false
     Scaffold(topBar = {
-        TopAppBarWithoutScaffold(isHome, navController)
+        TopAppBarWithoutScaffold(isHome, navController, title = "Mis Setas")
     }, bottomBar = {
         BottomNavigationBar(navController)
     }) { padding ->
