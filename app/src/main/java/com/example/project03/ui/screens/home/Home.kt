@@ -15,6 +15,7 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -59,8 +60,9 @@ fun HomeScreen(navController: NavController) {
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ContentHomeScreen(padding: PaddingValues, navController: NavController) {
+    val context = LocalContext.current
     val viewModel: ApiWeatherViewModel = viewModel()
-    viewModel.GetCurrentWeather()
+    viewModel.GetWeatherData(context, "current")
     Column(
         modifier = Modifier
             .fillMaxSize()

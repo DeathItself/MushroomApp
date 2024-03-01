@@ -26,14 +26,14 @@ data class HourlyWeatherData(
 )
 
 data class DailyWeatherData(
-    val temperature_2m_max: Double,
-    val temperature_2m_min: Double,
-    val apparent_temperature_max: Double,
-    val apparent_temperature_min: Double,
-    val sunrise: String,
-    val sunset: String,
-    val precipitation_hours: Double,
-    val wind_direction_10m_dominant: Double
+    val temperature_2m_max: List<Double>,
+    val temperature_2m_min: List<Double>,
+    val apparent_temperature_max: List<Double>,
+    val apparent_temperature_min: List<Double>,
+    val sunrise: List<String>,
+    val sunset: List<String>,
+    val precipitation_hours: List<Double>,
+    val wind_direction_10m_dominant: List<Double>
 )
 
 data class CurrentWeatherData(

@@ -29,12 +29,10 @@ import com.example.project03.viewmodel.ApiWeatherViewModel
 
 @Composable
 fun WeatherBanner(viewModel: ApiWeatherViewModel){
-    val weatherData by viewModel.weatherData.observeAsState()
+    val currentWeatherData by viewModel.currentWeatherData.observeAsState()
     val ubicacion = "Terrassa"
 
-    if(weatherData != null){
-        val currentWeather = weatherData!!.current
-
+    if(currentWeatherData != null){
         ElevatedCard(
             modifier = Modifier
                 .fillMaxWidth()
@@ -55,7 +53,7 @@ fun WeatherBanner(viewModel: ApiWeatherViewModel){
                 contentAlignment = Alignment.CenterEnd
             ){
                 Icon(
-                    imageVector = currentWeather!!.getWeatherIcon(),
+                    imageVector = currentWeatherData!!.getWeatherIcon(),
                     contentDescription = "ClimaIcono",
                     modifier = Modifier
                         .size(62.dp)
@@ -67,7 +65,7 @@ fun WeatherBanner(viewModel: ApiWeatherViewModel){
                 ) {
                     Row{
                         Text(
-                            text = "${currentWeather?.temperature_2m}" + "º",
+                            text = "${currentWeatherData?.temperature_2m}" + "º",
                             style = MaterialTheme.typography.headlineMedium,
                             fontSize = 34.sp
                         )
@@ -88,12 +86,12 @@ fun WeatherBanner(viewModel: ApiWeatherViewModel){
                     Spacer(Modifier.height(10.dp))
 
                     Text(
-                        text = "Sensación térmica: ${currentWeather?.apparent_temperature}" + "º",
+                        text = "Sensación térmica: ${currentWeatherData?.apparent_temperature}" + "º",
                         fontSize = 14.sp
                     )
 
                     Text(
-                        text = "Precipitacion: ${currentWeather?.precipitation}%",
+                        text = "Precipitacion: ${currentWeatherData?.precipitation}%",
                         fontSize = 14.sp
                     )
                 }
