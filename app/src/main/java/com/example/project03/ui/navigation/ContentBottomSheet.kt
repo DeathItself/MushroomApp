@@ -31,7 +31,8 @@ fun ContentBottomSheet(
         ItemsBottomSheet.ItemMenu02,
         ItemsBottomSheet.ItemMenu03,
         ItemsBottomSheet.ItemMenu04,
-        ItemsBottomSheet.ItemMenu05
+        ItemsBottomSheet.ItemMenu05,
+        ItemsBottomSheet.ItemMenu06
     )
 
     Column (

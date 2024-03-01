@@ -49,7 +49,7 @@ fun RankingScreen(navController: NavController) {
 
     Scaffold(
         topBar = {
-            TopAppBarWithoutScaffold(isHome, navController)
+            TopAppBarWithoutScaffold(isHome, navController, "Ranking")
         }, bottomBar = {
             BottomNavigationBar(navController)
         }

@@ -287,9 +287,9 @@ fun ShowDaily(
                     ){
                         Text(
                             text = dia,
-                            fontSize = 23.sp,
+                            fontSize = 21.sp,
                             style = MaterialTheme.typography.bodyMedium,
-                            modifier = Modifier.width(100.dp),
+                            modifier = Modifier.width(110.dp),
                             fontFamily = FontFamily.Monospace
                         )
                         Spacer(modifier = Modifier.width(10.dp))
@@ -308,7 +308,7 @@ fun ShowDaily(
                         Spacer(modifier = Modifier.width(10.dp))
 
                         Text(
-                            text = "${datoClimatico.temperaturaMaxima}º / ${datoClimatico.temperaturaMinima}º",
+                            text = "${datoClimatico.temperaturaMaxima}º/${datoClimatico.temperaturaMinima}º",
                             fontSize = 20.sp,
                             style = MaterialTheme.typography.titleMedium,
                             fontFamily = FontFamily.Monospace

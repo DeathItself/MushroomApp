@@ -21,7 +21,6 @@ sealed class ItemsBottomSheet(
     object ItemMenu03 : ItemsBottomSheet("Forum",R.string.BottomSheetMenuForum, Icons.Rounded.Diversity3)
     object ItemMenu04 : ItemsBottomSheet("Wiki",R.string.BottomSheetMenuWiki, Icons.Rounded.AutoStories)
     object ItemMenu05 : ItemsBottomSheet("Ranking",R.string.BottomSheetMenuRank,Icons.Rounded.FilterList)
-
-    object ItemMenu05 : ItemsBottomSheet("Weather", R.string.BottomSheetMenuWeather, Icons.Rounded.Cloud)
+    object ItemMenu06 : ItemsBottomSheet("Weather", R.string.BottomSheetMenuWeather, Icons.Rounded.Cloud)
 
 }

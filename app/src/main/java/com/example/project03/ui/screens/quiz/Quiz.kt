@@ -146,7 +146,7 @@ fun QuizApp(navController: NavController) {
             elapsedTime.value = 0
         }
         Scaffold(topBar = {
-            TopAppBarWithoutScaffold(isHome, navController)
+            TopAppBarWithoutScaffold(isHome, navController, title = "Quiz")
         }, bottomBar = {
             BottomNavigationBar(navController)
         }) { padding ->
@@ -403,7 +403,7 @@ fun ShowFailureScreen(
             Text(
                 text = "La respuesta correcta era: $correctAnswer",
                 style = TextStyle(
-                    color = Color.White,
+                    color = MaterialTheme.colorScheme.onSurface,
                     fontSize = 18.sp
                 )
             )
