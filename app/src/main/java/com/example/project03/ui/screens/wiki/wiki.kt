@@ -60,7 +60,7 @@ fun MostrarSetasScreen(navController: NavController) {
     val mainViewModel: MainViewModel = viewModel()
     val isHome = false
     Scaffold(topBar = {
-        TopAppBarWithoutScaffold(isHome, navController)
+        TopAppBarWithoutScaffold(isHome, navController, title = "Wiki")
     }, bottomBar = {
         BottomNavigationBar(navController)
     }) { padding ->

@@ -197,7 +197,7 @@ fun MyMushroomDetailsScreen(navController: NavController, myMushID: String) {
     val mainViewModel: MainViewModel = viewModel()
     val isHome = false
     Scaffold(topBar = {
-        TopAppBarWithoutScaffold(isHome, navController, title = ": Mis Setas")
+        TopAppBarWithoutScaffold(isHome, navController, title = "Mis Setas")
     }, bottomBar = {
         BottomNavigationBar(navController)
     }) { padding ->

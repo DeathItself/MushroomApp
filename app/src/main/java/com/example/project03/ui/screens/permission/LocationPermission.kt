@@ -9,7 +9,6 @@ import com.example.project03.ui.screens.maps.permissionGranted
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 
-
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun LocationPermission(navController: NavController){

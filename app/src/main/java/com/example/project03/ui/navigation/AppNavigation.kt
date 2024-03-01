@@ -8,13 +8,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.project03.repository.ForumRepository
 import com.example.project03.ui.components.CameraScreen
-import com.example.project03.ui.screens.restaurant.MostrarRestaurantes
-import com.example.project03.ui.screens.restaurant.RecibirRestaurante
 import com.example.project03.ui.screens.addMushrooms.AddMushroomScreen
 import com.example.project03.ui.screens.authentication.LoginScreen
 import com.example.project03.ui.screens.edit.EditMyMushroomScreen
 import com.example.project03.ui.screens.edit.EditMyUserScreen
+import com.example.project03.ui.screens.forum.ForumScreen
 import com.example.project03.ui.screens.home.HomeScreen
 import com.example.project03.ui.screens.maps.MapScreen
 import com.example.project03.ui.screens.myMush.MostrarMisSetasScreen
@@ -22,9 +22,12 @@ import com.example.project03.ui.screens.myMush.MyMushroomDetailsScreen
 import com.example.project03.ui.screens.permission.CamLocationPermission
 import com.example.project03.ui.screens.permission.LocationPermission
 import com.example.project03.ui.screens.quiz.QuizApp
+import com.example.project03.ui.screens.restaurant.MostrarRestaurantes
+import com.example.project03.ui.screens.restaurant.RecibirRestaurante
 import com.example.project03.ui.screens.users.MyUserDetailsScreen
 import com.example.project03.ui.screens.wiki.MostrarSetasScreen
 import com.example.project03.ui.screens.wiki.MushroomDetailsScreen
+import com.example.project03.viewmodel.ForumViewModel
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
@@ -35,7 +38,11 @@ fun AppNavigation() {
 //    auth.signOut()
     val user = auth.currentUser
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = if (user!=null)AppScreens.HomeScreen.route else AppScreens.LoginScreen.route) {
+    val forumViewModel = ForumViewModel(ForumRepository())
+    NavHost(
+        navController = navController,
+        startDestination = if (user != null) AppScreens.HomeScreen.route else AppScreens.LoginScreen.route
+    ) {
         composable(route = AppScreens.HomeScreen.route) {
             HomeScreen(navController)
         }
@@ -104,13 +111,12 @@ fun AppNavigation() {
             arguments = listOf(navArgument("nom") {
                 type = NavType.StringType
             })
-        ) {backStackEntry ->
+        ) { backStackEntry ->
             val nom = backStackEntry.arguments?.getString("nom")
             RecibirRestaurante(
                 navController, nom ?: ""
             )
         }
-
         composable(route = AppScreens.LoginScreen.route) {
             LoginScreen(navController)
         }
@@ -119,6 +125,9 @@ fun AppNavigation() {
         }
         composable(route = AppScreens.EditMyUserScreen.route) {
             EditMyUserScreen(navController)
+        }
+        composable(route = AppScreens.ForumScreen.route) {
+            ForumScreen(forumViewModel, navController)
         }
     }
 }

@@ -33,7 +33,7 @@ fun HomeScreen(navController: NavController) {
     val isHome = true
     Scaffold(
         topBar = {
-            TopAppBarWithoutScaffold(isHome, navController)
+            TopAppBarWithoutScaffold(isHome, navController, title = "MushTool")
         }, bottomBar = {
             BottomNavigationBar(navController)
         }) { padding ->
