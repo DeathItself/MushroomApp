@@ -19,6 +19,7 @@ import com.example.project03.util.db.getRanking
 import com.example.project03.util.db.getRestaurants
 import com.example.project03.util.db.updateScore
 import com.example.project03.util.db.uploadImageAndGetUrl
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
@@ -111,6 +112,7 @@ class Data {
         suspend fun addRank(
             puntuacion: Double,
             userId: String?,
+            timestamp: Timestamp,
             ranking: List<Ranking>
         ): String {
             val db = FirebaseFirestore.getInstance()
@@ -123,7 +125,7 @@ class Data {
                 return "Score updated"
             } else {
                 // Crear un nuevo usuario con la puntuación
-                val newRanking = userId?.let { Ranking(puntuacion, it) }
+                val newRanking = userId?.let { Ranking(puntuacion, it, timestamp) }
                 if (newRanking != null) {
                     db.addRanking(newRanking)
                 }

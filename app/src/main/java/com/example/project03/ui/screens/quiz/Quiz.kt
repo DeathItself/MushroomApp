@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Context
 import android.widget.Toast
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -126,13 +125,16 @@ fun QuizApp(navController: NavController) {
         mutableStateOf(generateImageQuestion(mushrooms, score.value, usedMushrooms.value))
     val options = currentQuestion.value.options
     val isHome = false
-
     val selectedIndex = remember { mutableStateOf(-1) } // -1 indica que no hay selección
     val startTime = remember { mutableStateOf(20000) }
     val elapsedTime = remember { mutableStateOf(0) }
+    var checker: Boolean = false
+    var checkerTrue: Boolean = false
     if (currentQuestion.value.question == "No hay más preguntas disponibles") {
         // Muestra el resultado si no quedan mas preguntas
+        checkerTrue = true
         ShowResultScreen(score.value, mushrooms.size, navController)
+        elapsedTime.value = 0
     } else {
         // Observa cambios en el trigger para generar una nueva pregunta
         if (triggerNewQuestion.value) {
@@ -153,7 +155,6 @@ fun QuizApp(navController: NavController) {
                     .padding(padding)
                     .fillMaxWidth()
             ) {
-
                 val question = currentQuestion.value
                 Text(
                     modifier = Modifier
@@ -169,14 +170,17 @@ fun QuizApp(navController: NavController) {
                     text = "Puntuación: ${score.value}",
                     style = MaterialTheme.typography.bodyMedium,
                 )
-                var remainingTime = startTime.value - elapsedTime.value
+                var remainingTime = 0
                 LaunchedEffect(Unit) {
                     withContext(Dispatchers.IO) {
-                        while (remainingTime != 0) {
+                        while (remainingTime > 0) {
                             delay(1000)
                             elapsedTime.value += 1000
                         }
                     }
+                }
+                if (elapsedTime.value <= 20000) {
+                    remainingTime = startTime.value - elapsedTime.value
                 }
                 Text(
                     modifier = Modifier
@@ -185,7 +189,6 @@ fun QuizApp(navController: NavController) {
                     text = "Tiempo restante: ${remainingTime / 1000}s",
                     style = MaterialTheme.typography.bodyMedium,
                 )
-
                 Column(
                     Modifier
                         .fillMaxWidth()
@@ -214,15 +217,17 @@ fun QuizApp(navController: NavController) {
                         }
 
                         else -> {
+                            checkerTrue = true
                             ShowResultScreen(score.value, usedMushrooms.value.size, navController)
+                            elapsedTime.value = 0
                         }
                     }
                 }
                 val context = LocalContext.current
-                if (remainingTime == 0) {
+                if (remainingTime <= 0) {
                     triggerNewQuestion.value = false
-                    elapsedTime.value = 0
                     score.value = 0
+                    checker = true
                     question.image?.let {
                         ShowFailureScreen(
                             correctAnswer = question.correctAnswer,
@@ -264,18 +269,31 @@ fun QuizApp(navController: NavController) {
                         } else {
                             // Respuesta incorrecta, resetea la puntuación y prepara la siguiente pregunta
                             score.value = 0
-                            elapsedTime.value = 0
                             Toast.makeText(context, "Respuesta incorrecta", Toast.LENGTH_SHORT)
                                 .show()
                             triggerNewQuestion.value = false
-
+                            checker = true
+                            elapsedTime.value = 20000
                         }
                     }) {
-                    Text("Siguiente pregunta")
+                    if (checkerTrue) {
+                        Text("Quiz finalizado")
+                    }else if (!checker){
+                        Text("Siguiente pregunta")
+                    }else{
+                        Text("Quiz finalizado")
+                    }
                 }
-
+                if (checker) {
+                    question.image?.let {
+                        ShowFailureScreen(
+                            correctAnswer = question.correctAnswer,
+                            imagen = it,
+                            navController
+                        )
+                    }
+                }
             }
-
             if (mainViewModel.showBottomSheet) {
                 ModalBottomSheet(onDismissRequest = { mainViewModel.showBottomSheet = false }) {
                     ContentBottomSheet(mainViewModel, navController)
@@ -290,6 +308,7 @@ fun ShowResultScreen(score: Int, totalMushrooms: Int, navController: NavControll
     val context = LocalContext.current
     val userId = Firebase.auth.currentUser?.uid
     val rango = Data.myRankList()
+    var timestamp: com.google.firebase.Timestamp = com.google.firebase.Timestamp.now()
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -313,12 +332,16 @@ fun ShowResultScreen(score: Int, totalMushrooms: Int, navController: NavControll
                 // Share the score
                 CoroutineScope(Dispatchers.IO).launch {
                     val result = Data.addRank(
-                        score.toDouble(), userId, rango// Asegúrate de pasar el userId aquí
+                        score.toDouble(), userId, timestamp, rango// Asegúrate de pasar el userId aquí
                     )
                     withContext(Dispatchers.Main) {
-                        if (result == "Rank added") { //Preguntar a Kevin porque puso esto
+                        if (result == "New user added") { //Preguntar a Kevin porque puso esto
                             Toast.makeText(
                                 context, "Rango guardada con éxito", Toast.LENGTH_LONG
+                            ).show()
+                        } else if (result == "Score updated") {
+                            Toast.makeText(
+                                context, "Rango actualizado con éxito", Toast.LENGTH_LONG
                             ).show()
                         } else {
                             Toast.makeText(
@@ -395,7 +418,6 @@ fun ShowFailureScreen(
                     onClick = { navController.navigate(AppScreens.QuizScreen.route) },
                     modifier = Modifier
                         .width(120.dp)
-                        .background(Color.Green)
                 ) {
                     Text(text = "Reintentar")
                 }
@@ -404,7 +426,6 @@ fun ShowFailureScreen(
                     onClick = { navController.navigate(AppScreens.HomeScreen.route) },
                     modifier = Modifier
                         .width(120.dp)
-                        .background(Color.Red)
                 ) {
                     Text(text = "Salir")
                 }

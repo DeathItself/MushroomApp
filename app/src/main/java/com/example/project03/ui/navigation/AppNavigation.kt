@@ -20,6 +20,7 @@ import com.example.project03.ui.screens.myMush.MyMushroomDetailsScreen
 import com.example.project03.ui.screens.permission.CamLocationPermission
 import com.example.project03.ui.screens.permission.LocationPermission
 import com.example.project03.ui.screens.quiz.QuizApp
+import com.example.project03.ui.screens.quiz.RankingScreen
 import com.example.project03.ui.screens.restaurant.MostrarRestaurantes
 import com.example.project03.ui.screens.restaurant.RecibirRestaurante
 import com.example.project03.ui.screens.users.MyUserDetailsScreen
@@ -119,6 +120,9 @@ fun AppNavigation() {
         }
         composable(route = AppScreens.EditMyUserScreen.route) {
             EditMyUserScreen(navController)
+        }
+        composable(route = AppScreens.RankScreen.route){
+            RankingScreen(navController)
         }
     }
 }

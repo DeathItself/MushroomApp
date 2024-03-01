@@ -1,15 +1,20 @@
 package com.example.project03.ui.screens.quiz
 
-import android.widget.ListView
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.DropdownMenuItem
+import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -20,92 +25,128 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.project03.model.Ranking
+import com.example.project03.ui.components.TopAppBarWithoutScaffold
+import com.example.project03.ui.navigation.BottomNavigationBar
 import com.example.project03.util.data.Data
 import com.example.project03.viewmodel.MainViewModel
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RankingScreen(navController: NavController) {
     val mainViewModel: MainViewModel = viewModel()
     val id = Firebase.auth.currentUser?.uid
-    val rankings = Data.myRankList()
+    val isHome = false
+    val rankings = Data.myRankList() // Assuming Data.myRankList fetches all scores
     val filterOptions = listOf(
         "Todos",
         "Más alto",
-        "Más bajo"
+        "Más bajo",
+        "Mío"
     )
     val selectedFilter = remember { mutableStateOf(filterOptions[0]) }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        Text(
-            text = "Ranking de Puntuaciones",
-            style = MaterialTheme.typography.displayMedium,
-            modifier = Modifier.align(Alignment.CenterHorizontally)
-        )
-
-        // Dropdown para seleccionar el filtro
-        DropdownMenu(
-            expanded = selectedFilter.value != filterOptions[0],
-            onDismissRequest = { selectedFilter.value = filterOptions[0] },
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .padding(16.dp)
-        ) {
-            filterOptions.forEach { option ->
-                DropdownMenuItem(
-                    onClick = { selectedFilter.value = option }
-                ) {
-                    Text(text = option)
-                }
-            }
+    Scaffold(
+        topBar = {
+            TopAppBarWithoutScaffold(isHome, navController)
+        }, bottomBar = {
+            BottomNavigationBar(navController)
         }
+    ) { padding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+        ) {
 
-        // Lista de rankings
-        when (selectedFilter.value) {
-            "Todos" -> {
-                RankingsList(rankings)
+            // Dropdown menu for filtering
+            DropdownMenu(
+                expanded = selectedFilter.value != filterOptions[0],
+                onDismissRequest = { selectedFilter.value = filterOptions[0] },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                filterOptions.forEach { option ->
+                    DropdownMenuItem(
+                        onClick = { selectedFilter.value = option }
+                    ) {
+                        Text(text = option)
+                    }
+                }
             }
-            "Más alto" -> {
-                // Mostrar solo rankings de mayor a menor
-                val rangos = rankings.sortedBy {it.puntuacion }
-                RankingsList(rangos)
-            }
-            "Más bajo" -> {
-                // Mostrar solo tu rango
-                val userRanking = rankings.find { it.userId == id }
-                if(userRanking != null){
-                    RankingsList(userRanking)
+
+            // Show rankings based on selected filter
+            when (selectedFilter.value) {
+                "Todos" -> {
+                    RankingsList(
+                        rankings.sortedByDescending { it.puntuacion },
+                        modifier = Modifier
+                    ) // Highest to lowest
                 }
 
+                "Más alto" -> {
+                    RankingsList(
+                        rankings.sortedByDescending { it.puntuacion },
+                        modifier = Modifier
+                    ) // Highest to lowest
+                }
+
+                "Más bajo" -> {
+                    RankingsList(
+                        rankings.sortedBy { it.puntuacion },
+                        modifier = Modifier
+                    ) // Lowest to highest
+                }
+
+                "Mío" -> {
+                    val userRanking = rankings.find { it.userId == id }
+                    if (userRanking != null) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            Text("Tu puntuación: ${userRanking.puntuacion}")
+                            Button(
+                                onClick = { /* Handle user action */ },
+                                modifier = Modifier.padding(start = 16.dp)
+                            ) {
+                                Text("Reintentar")
+                            }
+                        }
+                    } else {
+                        Text("No se encontró tu rango")
+                    }
+                }
             }
         }
     }
-
 }
 
 @Composable
-fun RankingsList(rankings: List<Ranking>) {
-    ListView(
-        rankings,
-        modifier = Modifier.fillMaxWidth()
-    ) { ranking ->
-        RankingItem(ranking)
+fun RankingsList(rankings: List<Ranking>, modifier: Modifier) {
+    Surface(modifier = modifier.fillMaxSize()) {
+        LazyColumn {
+            items(rankings) { ranking ->
+                RankingItem(ranking)
+            }
+        }
     }
 }
+
 
 @Composable
 fun RankingItem(ranking: Ranking) {
+    val user = Data.myRankList() // Assuming Data.getUserById fetches user info
+   // val nombre = FirebaseFirestore.getInstance().collection("users").document(user.)
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
     ) {
-        Text(text = ranking.name, modifier = Modifier.width(200.dp)) //necesito conseguir el nombre
-        Text(text = ranking.puntuacion.toString(), modifier = Modifier.align(Alignment.CenterVertically))
+        Text(text = "user", modifier = Modifier.width(200.dp))
+        Text(
+            text = ranking.puntuacion.toString(),
+            modifier = Modifier.align(Alignment.CenterVertically)
+        )
     }
 }

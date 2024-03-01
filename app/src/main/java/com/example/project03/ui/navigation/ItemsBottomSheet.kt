@@ -6,6 +6,7 @@ import androidx.compose.material.icons.rounded.AutoStories
 import androidx.compose.material.icons.rounded.Category
 import androidx.compose.material.icons.rounded.Dining
 import androidx.compose.material.icons.rounded.Diversity3
+import androidx.compose.material.icons.rounded.FilterList
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.example.project03.R
 
@@ -18,5 +19,6 @@ sealed class ItemsBottomSheet(
     object ItemMenu02 : ItemsBottomSheet("Eat",R.string.BottomSheetMenuEat, Icons.Rounded.Dining)
     object ItemMenu03 : ItemsBottomSheet("Community",R.string.BottomSheetMenuCommunity, Icons.Rounded.Diversity3)
     object ItemMenu04 : ItemsBottomSheet("Wiki",R.string.BottomSheetMenuWiki, Icons.Rounded.AutoStories)
+    object ItemMenu05 : ItemsBottomSheet("Ranking",R.string.BottomSheetMenuRank,Icons.Rounded.FilterList)
 
 }

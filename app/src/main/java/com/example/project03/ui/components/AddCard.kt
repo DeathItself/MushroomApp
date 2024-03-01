@@ -152,7 +152,7 @@ fun AddCard(navController: NavController) {
                     // Aqui se guarda la informacion recogida en CategoryList, TextField y la imagen en la base de datos
                     CoroutineScope(Dispatchers.IO).launch {
                         val result = Data.addMushroom(
-                            nameMushroom, description, imagePath, mushroom, latitude, longitude, userId // Asegúrate de pasar el userId aquí
+                            nameMushroom, description, imagePath, mushroom, latitude, longitude, userId
                         )
                         withContext(Dispatchers.Main) {
                             if (result == "Mushroom added") {
