@@ -17,8 +17,12 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -28,9 +32,11 @@ import com.example.project03.model.Ranking
 import com.example.project03.ui.components.TopAppBarWithoutScaffold
 import com.example.project03.ui.navigation.BottomNavigationBar
 import com.example.project03.util.data.Data
+import com.example.project03.util.db.getUserName
 import com.example.project03.viewmodel.MainViewModel
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.async
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -46,6 +52,7 @@ fun RankingScreen(navController: NavController) {
         "Mío"
     )
     val selectedFilter = remember { mutableStateOf(filterOptions[0]) }
+    val expanded = remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -59,16 +66,18 @@ fun RankingScreen(navController: NavController) {
                 .fillMaxSize()
                 .padding(padding)
         ) {
-
             // Dropdown menu for filtering
             DropdownMenu(
-                expanded = selectedFilter.value != filterOptions[0],
-                onDismissRequest = { selectedFilter.value = filterOptions[0] },
+                expanded = expanded.value,
+                onDismissRequest = { expanded.value = false },
                 modifier = Modifier.fillMaxWidth()
             ) {
                 filterOptions.forEach { option ->
                     DropdownMenuItem(
-                        onClick = { selectedFilter.value = option }
+                        onClick = {
+                            selectedFilter.value = option
+                            expanded.value = false // Cierra el menú después de seleccionar una opción
+                        }
                     ) {
                         Text(text = option)
                     }
@@ -120,6 +129,7 @@ fun RankingScreen(navController: NavController) {
             }
         }
     }
+
 }
 
 @Composable
@@ -136,14 +146,19 @@ fun RankingsList(rankings: List<Ranking>, modifier: Modifier) {
 
 @Composable
 fun RankingItem(ranking: Ranking) {
-    val user = Data.myRankList() // Assuming Data.getUserById fetches user info
-   // val nombre = FirebaseFirestore.getInstance().collection("users").document(user.)
+    val coroutineScope = rememberCoroutineScope()
+    var userName by remember { mutableStateOf("") }
+
+    LaunchedEffect(ranking.userId) {
+        userName = coroutineScope.async { getUserName(ranking.userId) }.await().toString()
+    }
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
     ) {
-        Text(text = "user", modifier = Modifier.width(200.dp))
+        Text(text = userName, modifier = Modifier.width(200.dp))
         Text(
             text = ranking.puntuacion.toString(),
             modifier = Modifier.align(Alignment.CenterVertically)
