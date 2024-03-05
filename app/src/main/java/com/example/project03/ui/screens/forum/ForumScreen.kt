@@ -280,7 +280,7 @@ fun QuestionItem(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(8.dp)
-                    .height(if (isSelected) 200.dp else 0.dp)
+                    .height(if (isSelected && answers.isNotEmpty()) 150.dp else 0.dp)
                     .scrollable(
                         state = rememberScrollableState { delta -> delta },
                         orientation = Orientation.Vertical,
