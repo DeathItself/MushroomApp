@@ -55,7 +55,7 @@ import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import java.util.UUID
 
-val user = FirebaseAuth.getInstance().currentUser
+val currentUser = FirebaseAuth.getInstance().currentUser
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -66,7 +66,7 @@ fun ForumScreen(
     val questions = forumViewModel.forumQuestions.collectAsState(emptyList()).value.toMutableList()
     var selectedQuestionId by remember { mutableStateOf<String?>(null) }
     var addingQuestion by remember { mutableStateOf(false) }
-    val currentUserUid = user?.uid
+    val currentUserUid = currentUser?.uid
     val mainViewModel: MainViewModel = viewModel()
     forumViewModel.loadForumQuestions()
     Log.d("ForumScreen", "$questions")
@@ -89,7 +89,7 @@ fun ForumScreen(
                     title = title,
                     content = content,
                     userId = currentUserUid ?: "unknown",
-                    userName = user?.email?.split("@")?.get(0) ?: "unknown",
+                    userName = currentUser?.email?.split("@")?.get(0) ?: "unknown",
                     timestamp = Timestamp.now()
                 )
                 questions += newQuestion
@@ -210,7 +210,6 @@ fun QuestionItem(
 ) {
     val answers = forumViewModel.loadAnswersForQuestion(question.id)
 
-    val questionUserName = user?.email?.split("@")?.get(0) ?: "unknown"
     //Create a loading state for the answers
 
 
@@ -241,7 +240,7 @@ fun QuestionItem(
                 horizontalAlignment = Alignment.Start
             ) {
                 Text(// Nombre del usuario
-                    text = questionUserName,
+                    text = question.userName,
                     style = MaterialTheme.typography.titleLarge,
                     color = MaterialTheme.colorScheme.primary
                 )
@@ -348,9 +347,9 @@ fun AddResponseButton(
                         id = UUID.randomUUID().toString(),
                         questionId = questionId,
                         content = answerText,
-                        userId = user?.uid ?: "",
+                        userId = currentUser?.uid ?: "",
                         timestamp = Timestamp.now(),
-                        userName = user?.email?.split("@")?.get(0) ?: "unknown",
+                        userName = currentUser?.email?.split("@")?.get(0) ?: "unknown",
                     )
                     forumViewModel.postAnswer(newResponse)
                     addingAnswer = false
