@@ -13,8 +13,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,6 +26,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.project03.model.CityName
 import com.example.project03.viewmodel.ApiGeocodingViewModel
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -32,6 +35,10 @@ fun TopBarWeather(isHome: Boolean, navController: NavController){
     var adress by remember { mutableStateOf<CityName?>(null) }
     var cityName by remember { mutableStateOf("") }
     val viewModel: ApiGeocodingViewModel = viewModel()
+    val cityCoordinates = viewModel.cityCoordinates.observeAsState().value
+    val coroutineScope = rememberCoroutineScope()
+
+    Text("TopBarWeather: ${cityCoordinates?.results?.get(0)?.geometry?.location?.lat}")
 
     TopAppBar(
         modifier = Modifier,
@@ -70,6 +77,9 @@ fun TopBarWeather(isHome: Boolean, navController: NavController){
                     IconButton(
                         onClick = {
                             isSearching=false
+                            coroutineScope.launch {
+                               viewModel.getCityCoordinates(cityName)
+                            }
                             //adress!!.cityName = cityName
                         }
                     ){
@@ -78,7 +88,7 @@ fun TopBarWeather(isHome: Boolean, navController: NavController){
                             contentDescription = "Buscar ciudad"
                         )
                     }
-                    //viewModel.getCityCoordinates(adress!!.cityName)
+
                 }
                 //SearchCityCoordinates()
 

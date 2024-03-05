@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -8,6 +10,15 @@ android {
     namespace = "com.example.project03"
     compileSdk = 34
 
+    buildFeatures {
+        buildConfig = true
+    }
+
+    val localProperties = Properties()
+    val localPropertiesFile = rootProject.file("local.properties")
+    if (localPropertiesFile.exists()) {
+        localProperties.load(localPropertiesFile.inputStream())
+    }
     defaultConfig {
         applicationId = "com.example.project03"
         minSdk = 24
@@ -19,6 +30,12 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+        buildConfigField(
+            "String",
+            "GEO_API_KEY",
+            "\"${localProperties.getProperty("GEO_API_KEY", "")}\""
+        )
     }
 
     buildTypes {
@@ -46,8 +63,10 @@ android {
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            excludes +="**/*.so"
         }
     }
+
 }
 
 dependencies {
@@ -62,7 +81,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
     implementation("androidx.compose.ui:ui-tooling-preview:1.6.2")
     implementation("androidx.navigation:navigation-compose:2.7.7")
-    implementation("com.google.firebase:firebase-firestore:24.10.2")
+    implementation("com.google.firebase:firebase-firestore:24.10.3")
     implementation("com.google.android.gms:play-services-location:21.1.0")
     implementation("com.google.firebase:firebase-storage-ktx:20.3.0")
     implementation("androidx.exifinterface:exifinterface:1.3.7")
