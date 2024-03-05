@@ -11,12 +11,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.project03.ui.components.BannerCard
@@ -25,6 +29,7 @@ import com.example.project03.ui.components.TopAppBarWithoutScaffold
 import com.example.project03.ui.components.WeatherBanner
 import com.example.project03.ui.navigation.BottomNavigationBar
 import com.example.project03.ui.navigation.ContentBottomSheet
+import com.example.project03.ui.theme.interFamily
 import com.example.project03.viewmodel.ApiWeatherViewModel
 import com.example.project03.viewmodel.MainViewModel
 
@@ -66,12 +71,30 @@ fun ContentHomeScreen(padding: PaddingValues, navController: NavController) {
         modifier = Modifier
             .fillMaxSize()
             .padding(padding)
+            .padding(vertical = 10.dp),
 
     ) {
+        Text(
+            modifier = Modifier
+                .padding(start = 25.dp, bottom = 10.dp),
+            fontSize = 30.sp,
+            text = "Bienvenido, user!",
+            fontWeight = FontWeight.Medium,
+            fontFamily = interFamily
+        )
         WeatherBanner(viewModel, navController)
-        Spacer(modifier = Modifier.padding(7.dp))
+        Spacer(modifier = Modifier.padding(10.dp))
+        Text(
+            modifier = Modifier
+                .padding(start = 25.dp, bottom = 10.dp),
+            text = "Seta del dia",
+            color = MaterialTheme.colorScheme.onSurface,
+            style = MaterialTheme.typography.headlineMedium,
+            fontFamily = interFamily,
+            fontWeight = FontWeight.Medium
+        )
         BannerCard(navController = navController)
-        Spacer(modifier = Modifier.padding(5.dp))
+        Spacer(modifier = Modifier.padding(12.dp))
         CarouselCard(navController = navController)
     }
 }

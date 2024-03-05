@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.project03.ui.navigation.AppScreens
+import com.example.project03.ui.theme.interFamily
 import com.example.project03.viewmodel.ApiWeatherViewModel
 
 
@@ -72,11 +73,10 @@ fun WeatherBanner(viewModel: ApiWeatherViewModel, navController: NavController){
                     Row{
                         Text(
                             text = "${currentWeatherData?.temperature_2m}" + "º",
-                            style = MaterialTheme.typography.headlineMedium,
+                            fontFamily = interFamily,
                             fontSize = 34.sp
                         )
                     }
-
                     Row{
                         Icon(
                             imageVector = Icons.Rounded.LocationOn,
@@ -85,6 +85,7 @@ fun WeatherBanner(viewModel: ApiWeatherViewModel, navController: NavController){
                         )
                         Text(
                             text = ubicacion,
+                            fontFamily = interFamily,
                             fontSize = 18.sp
                         )
                     }
@@ -93,11 +94,13 @@ fun WeatherBanner(viewModel: ApiWeatherViewModel, navController: NavController){
 
                     Text(
                         text = "Sensación térmica: ${currentWeatherData?.apparent_temperature}" + "º",
+                        fontFamily = interFamily,
                         fontSize = 14.sp
                     )
 
                     Text(
                         text = "Precipitacion: ${currentWeatherData?.precipitation}%",
+                        fontFamily = interFamily,
                         fontSize = 14.sp
                     )
                 }

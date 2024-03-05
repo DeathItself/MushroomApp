@@ -156,13 +156,7 @@ fun QuizApp(navController: NavController) {
                     .fillMaxWidth()
             ) {
                 val question = currentQuestion.value
-                Text(
-                    modifier = Modifier
-                        .padding(5.dp)
-                        .align(Alignment.CenterHorizontally),
-                    text = "QUIZ",
-                    style = MaterialTheme.typography.displayMedium,
-                )
+
                 Text(
                     modifier = Modifier
                         .padding(horizontal = 10.dp)
@@ -198,7 +192,7 @@ fun QuizApp(navController: NavController) {
                         QuestionType.Image -> {
                             AsyncImage(
                                 modifier = Modifier
-                                    .size(150.dp)
+                                    .size(280.dp)
                                     .align(Alignment.CenterHorizontally),
                                 model = question.image,
                                 contentDescription = null,

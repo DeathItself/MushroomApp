@@ -17,6 +17,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.project03.R
+import com.example.project03.ui.theme.interFamily
 import com.example.project03.viewmodel.MainViewModel
 
 data class BottomNavigationItem(
@@ -76,7 +77,8 @@ fun BottomNavigationBar(navController: NavController) {
             }, label = {
                 Text(
                     text = item.title,
-                    color = if (currentRoute == item.route) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
+                    color = if (currentRoute == item.route) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
+                    fontFamily = interFamily
                 )
             })
         }

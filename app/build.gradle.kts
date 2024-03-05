@@ -62,7 +62,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
     implementation("androidx.compose.ui:ui-tooling-preview:1.6.2")
     implementation("androidx.navigation:navigation-compose:2.7.7")
-    implementation("com.google.firebase:firebase-firestore:24.10.2")
+    implementation("com.google.firebase:firebase-firestore:24.10.3")
     implementation("com.google.android.gms:play-services-location:21.1.0")
     implementation("com.google.firebase:firebase-storage-ktx:20.3.0")
     implementation("androidx.exifinterface:exifinterface:1.3.7")
@@ -74,7 +74,6 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest:1.7.0-alpha03")
     implementation("androidx.compose.ui:ui-text-google-fonts:1.6.2")
-    implementation("androidx.compose.material:material-icons-extended:1.6.2")
     implementation("com.google.accompanist:accompanist-systemuicontroller:0.34.0")
     implementation("com.google.code.gson:gson:2.10.1")
     implementation("com.google.accompanist:accompanist-pager:0.34.0")
@@ -106,4 +105,8 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
     implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:1.0.0")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
+
+    //iconos
+    implementation("androidx.compose.material:material-icons-extended:1.6.2")
 }
+

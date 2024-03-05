@@ -35,6 +35,7 @@ import coil.request.ImageRequest
 import coil.size.Scale
 import com.example.project03.R
 import com.example.project03.ui.navigation.AppScreens
+import com.example.project03.ui.theme.interFamily
 import com.example.project03.util.data.Data
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
@@ -124,9 +125,10 @@ fun CarouselCard(navController: NavController) {
             Text(
                 text = stringResource(R.string.carrouselMyMush),
                 Modifier.padding(8.dp),
-                style = MaterialTheme.typography.headlineMedium
+                style = MaterialTheme.typography.headlineMedium,
+                fontFamily = interFamily,
+                fontWeight = FontWeight.Medium
             )
-
             HorizontalPager(
                 count = mushroomList.size,
                 state = pagerState,
@@ -172,8 +174,9 @@ fun CarouselCard(navController: NavController) {
                                     .padding(8.dp),
                                 text = mushroomList.toList()[page].commonName,
                                 style = MaterialTheme.typography.bodySmall,
-                                fontSize = 20.sp,
-                                color = Color.White,
+                                fontSize = 24.sp,
+                                color = MaterialTheme.colorScheme.inverseSurface,
+                                fontFamily = interFamily,
                                 fontWeight = FontWeight.Bold
                             )
                         }

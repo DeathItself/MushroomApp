@@ -11,8 +11,10 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavController
 import com.example.project03.ui.navigation.AppScreens
+import com.example.project03.ui.theme.interFamily
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -29,22 +31,31 @@ fun TopAppBarWithoutScaffold(isHome: Boolean, navController: NavController, titl
 fun SmallTopAppBarM3(
     scrollBehavior: TopAppBarScrollBehavior, isHome: Boolean, navController: NavController, title: String
 ) {
-    TopAppBar(title = { Text(text = title) }, navigationIcon = {
-        if (!isHome) {
-            run {
-                IconButton(onClick = { navController.popBackStack() }) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Regresar"
-                    )
+    TopAppBar(
+        title = {
+            Text(
+                text = title,
+                fontFamily = interFamily,
+                fontWeight =  FontWeight.Bold
+            )
+        },
+        navigationIcon = {
+            if (!isHome) {
+                run {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Regresar"
+                        )
+                    }
                 }
             }
+        },
+        scrollBehavior = scrollBehavior,
+        actions = {
+            IconButton(onClick = { navController.navigate(AppScreens.MyUserScreen.route) }) {
+                Icon(imageVector = Icons.Filled.AccountCircle, contentDescription = null)
+            }
         }
-    }, scrollBehavior = scrollBehavior, actions = {
-
-        //Posiblemente tenga que enviar la id???
-        IconButton(onClick = { navController.navigate(AppScreens.MyUserScreen.route) }) {
-            Icon(imageVector = Icons.Filled.AccountCircle, contentDescription = null)
-        }
-    })
+    )
 }
