@@ -98,6 +98,8 @@ fun ForumScreen(
                 forumViewModel.postQuestion(newQuestion)
             }, onCancel = { addingQuestion = false }, padding = padding
             )
+//            refresh the forum questions after adding a new question to the list of questions
+            forumViewModel.loadForumQuestions()
         }
         if (questions.isEmpty() && !addingQuestion) {
             Column(Modifier.padding(padding)) {
@@ -274,12 +276,16 @@ fun QuestionItem(
                     overflow = TextOverflow.Ellipsis
                 )
             } // AddResponseButton with onUpdateResponses function passed
-            Column(
+            LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(8.dp)
                     .height(if (isSelected) 200.dp else 0.dp)
-            ) {
+                    .scrollable(
+                        state = rememberScrollableState { delta -> delta },
+                        orientation = Orientation.Vertical,
+                        enabled = true)
+            ) {item {
                 if (answers.isNotEmpty()) {
                     answers.forEach { answer ->
                         Column {
@@ -297,6 +303,8 @@ fun QuestionItem(
                         }
                     }
                 }
+            }
+
 
             }
             if (isSelected) {
@@ -327,6 +335,7 @@ fun AddResponseButton(
         Button(onClick = { addingAnswer = true }) {
             Text("Add Response")
         }
+        forumViewModel.reloadForumAnswers(questionId)
     }
 
     if (addingAnswer) {
@@ -356,15 +365,10 @@ fun AddResponseButton(
                     forumViewModel.reloadForumAnswers(questionId)
                     onUpdateResponses()
                     answerText = ""
-
-                    // Call the function to update responses after adding a new response
-
                 }
             }) {
                 Text("Submit Response")
             }
-
-            Spacer(modifier = Modifier.width(8.dp))
             Button(onClick = { addingAnswer = false }) {
                 Text("Cancel")
             }
