@@ -26,15 +26,6 @@ fun ContentBottomSheet(
     navController: NavController
 ) {
 
-    val itemsMenu = listOf(
-        ItemsBottomSheet.ItemMenu01,
-        ItemsBottomSheet.ItemMenu02,
-        ItemsBottomSheet.ItemMenu03,
-        ItemsBottomSheet.ItemMenu04,
-        ItemsBottomSheet.ItemMenu05,
-        ItemsBottomSheet.ItemMenu06
-    )
-
     Column (
         modifier = Modifier
             .fillMaxSize()
@@ -44,7 +35,7 @@ fun ContentBottomSheet(
 
                 )
     ){
-        itemsMenu.forEach{item ->
+        Menu.itemsMenu.forEach{ item ->
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier

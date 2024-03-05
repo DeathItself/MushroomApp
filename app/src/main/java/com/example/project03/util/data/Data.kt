@@ -26,6 +26,7 @@ import com.google.firebase.ktx.Firebase
 
 class Data {
     companion object {
+
         @JvmStatic
         @Composable
         fun wikiDBList(): List<Mushroom> {
@@ -102,7 +103,7 @@ class Data {
                 longitude = longitude,
                 scientificName = matchedMushroom.scientificName,
                 seasons = matchedMushroom.seasons,
-                timestamp = com.google.firebase.Timestamp.now()
+                timestamp = Timestamp.now()
             )
 
             db.addMushroom(myMush, userId!!)

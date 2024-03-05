@@ -64,7 +64,6 @@ suspend fun FirebaseFirestore.getRanking(userId: String): List<Ranking> {
     return try {
         val excludedDocumentName = "prueba"
         val documents = collection("puntuacion")
-            .whereEqualTo("userId", userId)
             .get().await().documents.mapNotNull { document ->
                 document.toObject(Ranking::class.java)
             }
@@ -83,6 +82,19 @@ suspend fun FirebaseFirestore.addRanking(ranking: Ranking){
         .addOnFailureListener { exception ->
             Log.e("Ranking", "Error adding ranking: ${exception.message}")
         }
+}
+suspend fun getUserName(userId: String): String {
+    return try {
+        if (userId.isBlank()) {
+            throw IllegalArgumentException("El userId está vacío.")
+        }
+        val db = FirebaseFirestore.getInstance()
+        val document = db.collection("users").document(userId).get().await()
+        document.getString("username") ?: "Usuario desconocido"
+    } catch (e: Exception) {
+        Log.e("getUserName", "Error al obtener el nombre de usuario: ${e.message}")
+        "Error al obtener usuario"
+    }
 }
 
 suspend fun FirebaseFirestore.updateScore(ranking: Ranking) {
