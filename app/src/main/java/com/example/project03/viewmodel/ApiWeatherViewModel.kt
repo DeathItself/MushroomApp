@@ -1,17 +1,16 @@
 package com.example.project03.viewmodel
 
-import android.content.Context
 import android.util.Log
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.project03.model.CurrentWeatherData
 import com.example.project03.model.DailyWeatherData
 import com.example.project03.model.HourlyWeatherData
-import com.example.project03.ui.components.getMyLocation
 import com.example.project03.util.ApiService.WeatherApi
+import kotlinx.coroutines.launch
+
 
 class ApiWeatherViewModel() : ViewModel(){
     private val _currentWeatherData = MutableLiveData<CurrentWeatherData?>()
@@ -23,10 +22,27 @@ class ApiWeatherViewModel() : ViewModel(){
     private val _dailyWeatherData = MutableLiveData<DailyWeatherData?>()
     val dailyWeatherData: LiveData<DailyWeatherData?> = _dailyWeatherData
 
-     @Composable
-     fun GetWeatherData(context: Context, dataType: String){
-        LaunchedEffect(true){
-            val (latitude, longitude) = getMyLocation(context)
+    private val _latitude = MutableLiveData<Double>()
+    val latitude: LiveData<Double> = _latitude
+
+    private val _longitude = MutableLiveData<Double>()
+    val longitude: LiveData<Double> = _longitude
+
+    fun setCoordinates(latitude: Double, longitude: Double) {
+        _latitude.value = latitude
+        _longitude.value = longitude
+    }
+
+    fun getWeatherData(dataType: String) {
+        val lat = latitude.value ?: return
+        val lng = longitude.value ?: return
+        GetWeatherData(dataType, lat, lng)
+    }
+
+
+     fun GetWeatherData(dataType: String, latitude: Double, longitude: Double){
+        viewModelScope.launch{
+            //val (latitude, longitude) = getMyLocation(context)
             try {
                 val weatherData = when (dataType) {
                     "current" -> WeatherApi.retrofitService.getWeather(latitude, longitude, current = "temperature_2m,apparent_temperature,precipitation,rain,wind_speed_10m,wind_direction_10m,is_day")
@@ -45,6 +61,5 @@ class ApiWeatherViewModel() : ViewModel(){
                 Log.e("Mushtool", "Error fetching weather  data: ${e.message}", e)
             }
         }
-
     }
 }

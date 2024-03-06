@@ -1,5 +1,6 @@
 package com.example.project03.ui.screens.weather
 
+import android.util.Log
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -42,14 +43,14 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.project03.model.DailyWeatherData
 import com.example.project03.ui.components.TopBarWeather
+import com.example.project03.ui.components.getMyLocation
 import com.example.project03.ui.navigation.BottomNavigationBar
 import com.example.project03.ui.navigation.ContentBottomSheet
+import com.example.project03.viewmodel.ApiGeocodingViewModel
 import com.example.project03.viewmodel.ApiWeatherViewModel
 import com.example.project03.viewmodel.MainViewModel
 import kotlinx.coroutines.delay
-import java.text.SimpleDateFormat
 import java.util.Calendar
-import java.util.Locale
 
 data class DatoClimatico(
     val temperaturaMaxima: Double,
@@ -67,6 +68,8 @@ data class DatoClimatico(
 fun WeatherScreen(navController: NavController){
     val mainViewModel: MainViewModel = viewModel()
     val viewModel: ApiWeatherViewModel = viewModel()
+    val apiGeocodingViewModel: ApiGeocodingViewModel = viewModel()
+
     val isHome = false
     Scaffold(topBar = {
         TopBarWeather(isHome, navController)
@@ -78,7 +81,7 @@ fun WeatherScreen(navController: NavController){
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
         ){
-            WeatherContent(padding, viewModel)
+            WeatherContent(padding, viewModel, apiGeocodingViewModel)
             //submenu
             if (mainViewModel.showBottomSheet) {
                 ModalBottomSheet(onDismissRequest = { mainViewModel.showBottomSheet = false }) {
@@ -93,7 +96,8 @@ fun WeatherScreen(navController: NavController){
 @Composable
 fun WeatherContent(
     padding: PaddingValues,
-    viewModel: ApiWeatherViewModel
+    viewModel: ApiWeatherViewModel,
+    apiGeocodingViewModel: ApiGeocodingViewModel,
 ){
     Column(
         modifier = Modifier
@@ -112,14 +116,14 @@ fun WeatherContent(
                 disabledContentColor = MaterialTheme.colorScheme.onTertiaryContainer
             )
         ) {
+
             Column(
                 modifier = Modifier.padding(20.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                ShowHourly(viewModel)
+                ShowHourly(viewModel, apiGeocodingViewModel)
             }
         }
-
 
         Spacer(modifier = Modifier.height(15.dp))
 
@@ -139,7 +143,7 @@ fun WeatherContent(
                     .fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                ShowDaily(viewModel)
+                ShowDaily(viewModel, apiGeocodingViewModel)
             }
         }
 
@@ -149,13 +153,31 @@ fun WeatherContent(
 
 @Composable
 fun ShowHourly(
-    viewModel: ApiWeatherViewModel
+    viewModel: ApiWeatherViewModel,
+    apiGeocodingViewModel: ApiGeocodingViewModel,
 ) {
     val context = LocalContext.current
-    viewModel.GetWeatherData(context, "hourly")
-    val hourlyWeatherData by viewModel.hourlyWeatherData.observeAsState()
-    val currentHour = remember { mutableStateOf(Calendar.getInstance().get(Calendar.HOUR_OF_DAY)) }
+    val cityCoordinates = apiGeocodingViewModel.cityCoordinates.observeAsState()
 
+    Log.d("Coordenadas", "CityCordinates ${cityCoordinates.value}")
+    LaunchedEffect(Unit){
+        if (cityCoordinates.value == null || cityCoordinates.value!!.results.isEmpty()) {
+            val(latitude, longitude) = getMyLocation(context)
+            viewModel.setCoordinates(latitude!!, longitude!!)
+            viewModel.getWeatherData("hourly")
+            Log.d("Coordenadas", "GetMyLoation: $latitude" + ", $longitude")
+        } else {
+            // Si se ha buscado una ciudad, obtener los datos climáticos de esa ciudad
+            val latitude = cityCoordinates.value!!.results[0].geometry.location.lat
+            val longitude = cityCoordinates.value!!.results[0].geometry.location.lng
+            viewModel.GetWeatherData("hourly", latitude, longitude)
+            Log.d("Coordenadas", "GetMyLoccation: $latitude" + ", $longitude")
+        }
+    }
+
+    val hourlyWeatherData by viewModel.hourlyWeatherData.observeAsState()
+
+    val currentHour = remember { mutableStateOf(Calendar.getInstance().get(Calendar.HOUR_OF_DAY)) }
     LaunchedEffect(true) {
         while (true) {
             delay(3600000) // Esperar 1 hora (3600 segundos * 1000 milisegundos)
@@ -179,7 +201,7 @@ fun ShowHourly(
         ) {
 
 
-            val sdf = SimpleDateFormat("HH:mm", Locale.getDefault())
+            //val sdf = SimpleDateFormat("HH:mm", Locale.getDefault())
 
             repeat(hourlyWeatherData!!.temperature_2m.size) {index ->
                 val hour = (currentHour.value + index) % 24
@@ -233,10 +255,24 @@ fun ShowHourly(
 
 @Composable
 fun ShowDaily(
-    viewModel: ApiWeatherViewModel
+    viewModel: ApiWeatherViewModel,
+    apiGeocodingViewModel: ApiGeocodingViewModel,
 ){
     val context = LocalContext.current
-    viewModel.GetWeatherData(context, "daily")
+    val cityCoordinates = apiGeocodingViewModel.cityCoordinates.observeAsState()
+
+    LaunchedEffect(Unit){
+        if (cityCoordinates.value == null || cityCoordinates.value!!.results.isEmpty()) {
+            val(latitude, longitude) = getMyLocation(context)
+            viewModel.setCoordinates(latitude!!, longitude!!)
+            viewModel.getWeatherData( "daily")
+        } else {
+            // Si se ha buscado una ciudad, obtener los datos climáticos de esa ciudad
+            val latitude = cityCoordinates.value!!.results[0].geometry.location.lat
+            val longitude = cityCoordinates.value!!.results[0].geometry.location.lng
+            viewModel.GetWeatherData("daily", latitude, longitude)
+        }
+    }
     val dailyWeatherData  by viewModel.dailyWeatherData.observeAsState()
 
     val diasSemana = listOf("Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado")

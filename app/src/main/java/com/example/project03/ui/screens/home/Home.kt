@@ -16,6 +16,7 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -27,6 +28,7 @@ import com.example.project03.ui.components.BannerCard
 import com.example.project03.ui.components.CarouselCard
 import com.example.project03.ui.components.TopAppBarWithoutScaffold
 import com.example.project03.ui.components.WeatherBanner
+import com.example.project03.ui.components.getMyLocation
 import com.example.project03.ui.navigation.BottomNavigationBar
 import com.example.project03.ui.navigation.ContentBottomSheet
 import com.example.project03.ui.theme.interFamily
@@ -54,7 +56,7 @@ fun HomeScreen(navController: NavController) {
             //submenu
             if (mainViewModel.showBottomSheet) {
                 ModalBottomSheet(onDismissRequest = { mainViewModel.showBottomSheet = false }) {
-                    ContentBottomSheet(mainViewModel, navController)
+                     ContentBottomSheet(mainViewModel, navController)
                 }
             }
         }
@@ -66,7 +68,12 @@ fun HomeScreen(navController: NavController) {
 fun ContentHomeScreen(padding: PaddingValues, navController: NavController) {
     val context = LocalContext.current
     val viewModel: ApiWeatherViewModel = viewModel()
-    viewModel.GetWeatherData(context, "current")
+    LaunchedEffect(Unit){
+        val(latitude, longitude) = getMyLocation(context)
+        viewModel.setCoordinates(latitude!!, longitude!!)
+        viewModel.GetWeatherData("current", latitude, longitude)
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()

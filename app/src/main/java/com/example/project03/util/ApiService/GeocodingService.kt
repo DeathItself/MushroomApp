@@ -14,6 +14,7 @@ private val retrofit: Retrofit = Retrofit.Builder()
 
 val apiKey: String = BuildConfig.GEO_API_KEY
 
+
 object GeocodingApi{
     val retrofitGeocoding: GeocodingApiService by lazy{
         retrofit.create(GeocodingApiService::class.java)

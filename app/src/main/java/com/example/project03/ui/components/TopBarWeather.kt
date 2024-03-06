@@ -13,7 +13,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -24,7 +23,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.project03.model.CityName
 import com.example.project03.viewmodel.ApiGeocodingViewModel
 import kotlinx.coroutines.launch
 
@@ -32,13 +30,9 @@ import kotlinx.coroutines.launch
 @Composable
 fun TopBarWeather(isHome: Boolean, navController: NavController){
     var isSearching by remember { mutableStateOf(false) }
-    var adress by remember { mutableStateOf<CityName?>(null) }
     var cityName by remember { mutableStateOf("") }
     val viewModel: ApiGeocodingViewModel = viewModel()
-    val cityCoordinates = viewModel.cityCoordinates.observeAsState().value
     val coroutineScope = rememberCoroutineScope()
-
-    Text("TopBarWeather: ${cityCoordinates?.results?.get(0)?.geometry?.location?.lat}")
 
     TopAppBar(
         modifier = Modifier,
@@ -69,7 +63,9 @@ fun TopBarWeather(isHome: Boolean, navController: NavController){
                 ){
                     OutlinedTextField(
                         value = cityName,
-                        onValueChange = { cityName = it },
+                        onValueChange = {
+                            cityName = it
+                        },
                         label = { Text("Buscar ciudad") },
                         modifier = Modifier.padding(horizontal = 8.dp)
                     )
@@ -78,9 +74,10 @@ fun TopBarWeather(isHome: Boolean, navController: NavController){
                         onClick = {
                             isSearching=false
                             coroutineScope.launch {
-                               viewModel.getCityCoordinates(cityName)
+                                viewModel.getCityCoordinates(cityName)
+                                navController.navigate(navController.currentDestination?.route ?: "")
                             }
-                            //adress!!.cityName = cityName
+
                         }
                     ){
                         Icon(
@@ -105,6 +102,9 @@ fun TopBarWeather(isHome: Boolean, navController: NavController){
         },
     )
 }
+
+
+
 
 
 
