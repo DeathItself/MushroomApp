@@ -30,6 +30,7 @@ import com.example.project03.ui.components.WeatherBanner
 import com.example.project03.ui.navigation.BottomNavigationBar
 import com.example.project03.ui.navigation.ContentBottomSheet
 import com.example.project03.ui.theme.interFamily
+import com.example.project03.util.data.Data
 import com.example.project03.viewmodel.ApiWeatherViewModel
 import com.example.project03.viewmodel.MainViewModel
 
@@ -48,7 +49,7 @@ fun HomeScreen(navController: NavController) {
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
-        ){
+        ) {
             ContentHomeScreen(padding = padding, navController = navController)
 
             //submenu
@@ -66,6 +67,8 @@ fun HomeScreen(navController: NavController) {
 fun ContentHomeScreen(padding: PaddingValues, navController: NavController) {
     val context = LocalContext.current
     val viewModel: ApiWeatherViewModel = viewModel()
+    val user = Data.getUserObj()
+
     viewModel.GetWeatherData(context, "current")
     Column(
         modifier = Modifier
@@ -73,20 +76,18 @@ fun ContentHomeScreen(padding: PaddingValues, navController: NavController) {
             .padding(padding)
             .padding(vertical = 10.dp),
 
-    ) {
+        ) {
         Text(
-            modifier = Modifier
-                .padding(start = 25.dp, bottom = 10.dp),
+            modifier = Modifier.padding(start = 25.dp, bottom = 10.dp),
             fontSize = 30.sp,
-            text = "Bienvenido, user!",
+            text = "Bienvenido, " + user.username,
             fontWeight = FontWeight.Medium,
             fontFamily = interFamily
         )
         WeatherBanner(viewModel, navController)
         Spacer(modifier = Modifier.padding(10.dp))
         Text(
-            modifier = Modifier
-                .padding(start = 25.dp, bottom = 10.dp),
+            modifier = Modifier.padding(start = 25.dp, bottom = 10.dp),
             text = "Seta del dia",
             color = MaterialTheme.colorScheme.onSurface,
             style = MaterialTheme.typography.headlineMedium,

@@ -74,7 +74,7 @@ suspend fun FirebaseFirestore.getRanking(userId: String): List<Ranking> {
     }
 }
 
-suspend fun FirebaseFirestore.addRanking(ranking: Ranking){
+suspend fun FirebaseFirestore.addRanking(ranking: Ranking) {
     collection("puntuacion").add(ranking)
         .addOnSuccessListener { documentReference ->
             Log.d("Ranking", "New ranking added with ID: ${documentReference.id}")
@@ -83,6 +83,7 @@ suspend fun FirebaseFirestore.addRanking(ranking: Ranking){
             Log.e("Ranking", "Error adding ranking: ${exception.message}")
         }
 }
+
 suspend fun getUserName(userId: String): String {
     return try {
         if (userId.isBlank()) {
@@ -108,7 +109,6 @@ suspend fun FirebaseFirestore.deleteMushroom(commonName: String, Description: St
     try {
         // Delete the mushroom document
         collection("my_mushrooms").document(documentId).delete().await()
-
     } catch (e: Exception) {
         println("Error deleting mushroom from Firebase: ${e.message}")
     }
@@ -129,13 +129,26 @@ suspend fun uploadImageAndGetUrl(imagePath: String): String {
 
     return downloadUrl
 }
+
 suspend fun FirebaseFirestore.getRestaurants(): List<Restaurants> {
     return try {
         val documents = collection("restaurantes").get()
             .await()
         documents.toObjects(Restaurants::class.java)
-    }catch (e: Exception) {
+    } catch (e: Exception) {
         println("Error getting restaurants from Firebase: ${e.message}")
         emptyList()
     }
 }
+
+//    get username from user id
+suspend fun FirebaseFirestore.getUserName(userId: String): String {
+    return try {
+        val document = collection("users").document(userId).get().await()
+        document.getString("username") ?: "Unknown user"
+    } catch (e: Exception) {
+        println("Error getting username from Firebase: ${e.message}")
+        "Unknown user"
+    }
+}
+

@@ -10,6 +10,7 @@ import com.example.project03.model.Mushroom
 import com.example.project03.model.MyMushroom
 import com.example.project03.model.Ranking
 import com.example.project03.model.Restaurants
+import com.example.project03.model.User
 import com.example.project03.ui.components.Loading.Companion.LoadingState
 import com.example.project03.util.db.addMushroom
 import com.example.project03.util.db.addRanking
@@ -17,9 +18,11 @@ import com.example.project03.util.db.getMushrooms
 import com.example.project03.util.db.getMyMushrooms
 import com.example.project03.util.db.getRanking
 import com.example.project03.util.db.getRestaurants
+import com.example.project03.util.db.getUserName
 import com.example.project03.util.db.updateScore
 import com.example.project03.util.db.uploadImageAndGetUrl
 import com.google.firebase.Timestamp
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
@@ -81,7 +84,7 @@ class Data {
 
         suspend fun addMushroom(
             nameMushroom: String,
-            description: String,
+            commentary: String,
             imagePath: String,
             mushroom: List<Mushroom>,
             latitude: Double,
@@ -94,7 +97,8 @@ class Data {
 
             val myMush = MyMushroom(
                 nameMushroom,
-                description,
+                commentary,
+                description = matchedMushroom.description,
                 photo = imageUrl,
                 dificulty = matchedMushroom.dificulty,
                 habitat = matchedMushroom.habitat,
@@ -150,5 +154,33 @@ class Data {
             }
             return restarauntsList
         }
+
+        @JvmStatic
+        @Composable
+        fun getUserObj ():User{
+            val user = User(
+                id = FirebaseAuth.getInstance().currentUser?.uid.toString(),
+                username = (getUsername(userId = FirebaseAuth.getInstance().currentUser?.uid.toString()) ),
+                email = FirebaseAuth.getInstance().currentUser?.email.toString()
+            )
+            return user
+        }
+        @JvmStatic
+        @Composable
+        fun getUsername(userId: String): String {
+            val db = FirebaseFirestore.getInstance()
+            var username by remember { mutableStateOf("") }
+            var isLoading by remember { mutableStateOf(true) } // Asume carga inicialmente
+            // Efecto lanzado para cargar los datos
+            LaunchedEffect(key1 = Unit) {
+                username = db.getUserName(userId)
+                isLoading = false // Marca la carga como finalizada después de obtener los datos
+            }
+            if (isLoading) {
+                LoadingState()
+            }
+            return username
+        }
+
     }
 }

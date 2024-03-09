@@ -63,7 +63,7 @@ fun AddCard(navController: NavController) {
     val mushroom = Data.wikiDBList()
     val imagePath = ImagePath.imagePath
     var nameMushroom = ""
-    var description = ""
+    var commentary = ""
     val context = LocalContext.current
     var latitude by remember { mutableDoubleStateOf(0.0) }
     var longitude by remember { mutableDoubleStateOf(0.0) }
@@ -129,7 +129,7 @@ fun AddCard(navController: NavController) {
             nameMushroom = categoryList(mushroom)
 
             Spacer(modifier = Modifier.height(10.dp))
-            description = textField()
+            commentary = textField()
             LaunchedEffect(key1 = true) {
                 val (lat, lon) = getMyLocation(context)
                 if (lat != null) {
@@ -152,7 +152,7 @@ fun AddCard(navController: NavController) {
                     // Aqui se guarda la informacion recogida en CategoryList, TextField y la imagen en la base de datos
                     CoroutineScope(Dispatchers.IO).launch {
                         val result = Data.addMushroom(
-                            nameMushroom, description, imagePath, mushroom, latitude, longitude, userId
+                            nameMushroom, commentary, imagePath, mushroom, latitude, longitude, userId
                         )
                         withContext(Dispatchers.Main) {
                             if (result == "Mushroom added") {
