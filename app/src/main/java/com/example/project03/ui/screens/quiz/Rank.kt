@@ -25,9 +25,11 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.project03.R
 import com.example.project03.model.Ranking
 import com.example.project03.ui.components.TopAppBarWithoutScaffold
 import com.example.project03.ui.navigation.BottomNavigationBar
@@ -46,10 +48,10 @@ fun RankingScreen(navController: NavController) {
     val isHome = false
     val rankings = Data.myRankList() // Assuming Data.myRankList fetches all scores
     val filterOptions = listOf(
-        "Todos",
-        "Más alto",
-        "Más bajo",
-        "Mío"
+        stringResource(R.string.all_rank),
+        stringResource(R.string.higher),
+        stringResource(R.string.lower),
+        stringResource(R.string.mine)
     )
     val selectedFilter = remember { mutableStateOf(filterOptions[0]) }
     val expanded = remember { mutableStateOf(false) }
@@ -86,44 +88,44 @@ fun RankingScreen(navController: NavController) {
 
             // Show rankings based on selected filter
             when (selectedFilter.value) {
-                "Todos" -> {
+                stringResource(R.string.all_rank) -> {
                     RankingsList(
                         rankings.sortedByDescending { it.puntuacion },
                         modifier = Modifier
                     ) // Highest to lowest
                 }
 
-                "Más alto" -> {
+                stringResource(R.string.higher) -> {
                     RankingsList(
                         rankings.sortedByDescending { it.puntuacion },
                         modifier = Modifier
                     ) // Highest to lowest
                 }
 
-                "Más bajo" -> {
+                stringResource(R.string.lower) -> {
                     RankingsList(
                         rankings.sortedBy { it.puntuacion },
                         modifier = Modifier
                     ) // Lowest to highest
                 }
 
-                "Mío" -> {
+                stringResource(R.string.mine) -> {
                     val userRanking = rankings.find { it.userId == id }
                     if (userRanking != null) {
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.Center
                         ) {
-                            Text("Tu puntuación: ${userRanking.puntuacion}")
+                            Text(stringResource(R.string.your_score)+": "+userRanking.puntuacion)
                             Button(
                                 onClick = { /* Handle user action */ },
                                 modifier = Modifier.padding(start = 16.dp)
                             ) {
-                                Text("Reintentar")
+                                Text(stringResource(R.string.retry))
                             }
                         }
                     } else {
-                        Text("No se encontró tu rango")
+                        Text(stringResource(R.string.your_rank_not_found))
                     }
                 }
             }
@@ -152,7 +154,6 @@ fun RankingItem(ranking: Ranking) {
     LaunchedEffect(ranking.userId) {
         userName = coroutineScope.async { getUserName(ranking.userId) }.await().toString()
     }
-
     Row(
         modifier = Modifier
             .fillMaxWidth()

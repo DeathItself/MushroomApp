@@ -23,6 +23,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -110,9 +111,7 @@ fun ContentGoogleMaps(padding: PaddingValues, navController: NavController) {
             // Itera por cada seta y coloca un marcador en su ubicación
             mushroom.forEach { mushroom ->
                 val position = LatLng(mushroom.latitude!!, mushroom.longitude!!)
-                val badMarker = BitmapDescriptorFactory.fromResource(R.drawable.bad_mush_map_pin_overlay)
-                val goodMarker = BitmapDescriptorFactory.fromResource(R.drawable.good_mush_map_pin_overlay)
-                val marker = if (mushroom.isEdible == true) goodMarker else badMarker
+                val marker = BitmapDescriptorFactory.fromResource(R.drawable.good_mush_map_pin_overlay)
                 Marker(
                     icon = marker,
                     onClick = {
@@ -162,9 +161,9 @@ fun MapContentBottomSheet(mushroom: MyMushroom) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             val isEdibleText = when (mushroom.isEdible) {
-                true -> "Comestible"
-                false -> "No comestible"
-                else -> "Información no disponible"
+                true -> stringResource(R.string.edible)
+                false -> stringResource(R.string.not_edible)
+                else -> stringResource(R.string.unknown)
             }
             MushDetailsMap(mushroom, isEdibleText)
         }
@@ -204,6 +203,11 @@ fun MushDetailsMap(mushroom: MyMushroom, isEdibleText: String) {
     Column(
         modifier = Modifier.padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Text (
+            text = mushroom.commentary,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.align(Alignment.CenterHorizontally)
+        )
         Text(
             text = mushroom.description,
             fontWeight = FontWeight.Bold,

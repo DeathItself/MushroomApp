@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ProgressIndicatorDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,15 +33,6 @@ class Loading {
                     strokeWidth = 5.dp
                 )
             }
-
-
-            /*Text(
-                modifier = Modifier,
-                text = "Cargando",
-                style = MaterialTheme.typography.bodyLarge,
-                textAlign = TextAlign.Center,
-            ) // Ejemplo de componente de carga, puede ser sustituido por cualquier otro*/
-//
         }
     }
 }

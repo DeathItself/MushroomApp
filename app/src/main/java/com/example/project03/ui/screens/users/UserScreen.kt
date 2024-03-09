@@ -30,11 +30,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.project03.R
 import com.example.project03.model.User
 import com.example.project03.ui.components.LabeledIconRow
 import com.example.project03.ui.components.Loading
@@ -51,7 +53,7 @@ fun MyUserDetailsScreen(navController: NavController) {
     val isHome = false
     Scaffold(
         topBar = {
-            TopAppBarWithoutScaffold(isHome, navController, title = "Usuario")
+            TopAppBarWithoutScaffold(isHome, navController, title = stringResource(R.string.user))
         }) { padding ->
         RecibirDatosUser(padding, navController)
     }
@@ -84,7 +86,7 @@ fun RecibirDatosUser(
             horizontalAlignment = Alignment.Start
         ) {
             Text(
-                text = "Informacion de la cuenta",
+                text = stringResource(R.string.account_details),
                 fontFamily = interFamily
             )
 
@@ -106,7 +108,7 @@ fun RecibirDatosUser(
                 ){
                     Text(
                         modifier = Modifier.padding(10.dp),
-                        text = "Nombre de usuario",
+                        text = stringResource(R.string.username_text),
                         fontSize = 18.sp,
                         fontFamily = interFamily,
                         fontWeight = FontWeight.SemiBold,
@@ -131,7 +133,7 @@ fun RecibirDatosUser(
                 ){
                     Text(
                         modifier = Modifier.padding(10.dp),
-                        text = "Correo electrónico",
+                        text = stringResource(R.string.email_text),
                         fontSize = 18.sp,
                         fontFamily = interFamily,
                         fontWeight = FontWeight.SemiBold,
@@ -151,7 +153,7 @@ fun RecibirDatosUser(
                 horizontalAlignment = Alignment.Start
             ) {
                 Text(
-                    text = "Gestión de cuenta",
+                    text = stringResource(R.string.account_settings),
                     fontFamily = interFamily
                 )
 
@@ -212,7 +214,7 @@ fun EditButton(
         }
     ) {
         Text(
-            text = "Editar",
+            text = stringResource(R.string.edit),
             fontFamily = interFamily,
             fontSize = 18.sp
         )
@@ -239,7 +241,7 @@ fun DeleteAccountButton(navController: NavController, loginViewModel: loginScree
             loginViewModel.signOut(navController)}
     ) {
         Text(
-            text = "Eliminar cuenta",
+            text = stringResource(R.string.delete_account),
             fontFamily = interFamily,
             fontWeight = FontWeight.Black,
             fontSize = 18.sp
@@ -263,7 +265,7 @@ fun SignOffButton(navController: NavController, loginViewModel: loginScreenViewM
         }
     ) {
         Text(
-            text = "Cerrar sesión",
+            text = stringResource(R.string.sign_out),
             fontFamily = interFamily,
             fontSize = 18.sp
         )

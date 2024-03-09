@@ -40,10 +40,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.project03.R
 import com.example.project03.model.ForumAnswer
 import com.example.project03.model.ForumQuestion
 import com.example.project03.ui.components.TopAppBarWithoutScaffold
@@ -171,7 +173,7 @@ fun AddQuestionForm(
     ) {
         TextField(value = title,
             onValueChange = { title = it },
-            label = { Text("Title") },
+            label = { Text(stringResource(R.string.title)) },
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -179,7 +181,7 @@ fun AddQuestionForm(
 
         TextField(value = content,
             onValueChange = { content = it },
-            label = { Text("Text") },
+            label = { Text(stringResource(R.string.text)) },
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -189,13 +191,13 @@ fun AddQuestionForm(
             modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End
         ) {
             Button(onClick = { onAddQuestion(title, content) }) {
-                Text("Add")
+                Text(stringResource(R.string.add))
             }
 
             Spacer(modifier = Modifier.width(8.dp))
 
             Button(onClick = onCancel) {
-                Text("Cancel")
+                Text(stringResource(R.string.cancel))
             }
         }
     }
@@ -333,7 +335,7 @@ fun AddResponseButton(
 
     if (!addingAnswer) {
         Button(onClick = { addingAnswer = true }) {
-            Text("Add Response")
+            Text(stringResource(R.string.add_response))
         }
         forumViewModel.reloadForumAnswers(questionId)
     }
@@ -341,7 +343,7 @@ fun AddResponseButton(
     if (addingAnswer) {
         TextField(value = answerText,
             onValueChange = { answerText = it },
-            label = { Text("Your response") },
+            label = { Text(stringResource(R.string.your_response)) },
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -367,10 +369,10 @@ fun AddResponseButton(
                     answerText = ""
                 }
             }) {
-                Text("Submit Response")
+                Text(stringResource(R.string.submit_response))
             }
             Button(onClick = { addingAnswer = false }) {
-                Text("Cancel")
+                Text(stringResource(R.string.cancel))
             }
         }
     }

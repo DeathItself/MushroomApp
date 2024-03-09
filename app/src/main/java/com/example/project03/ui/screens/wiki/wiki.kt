@@ -21,6 +21,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -28,6 +29,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import com.example.project03.R
 import com.example.project03.model.Mushroom
 import com.example.project03.ui.components.TopAppBarWithoutScaffold
 import com.example.project03.ui.navigation.AppScreens
@@ -47,7 +49,7 @@ fun EmptyState() {
         Spacer(modifier = Modifier.size(16.dp))
         Text(
             modifier = Modifier.fillMaxWidth(),
-            text = "No hay setas",
+            text = stringResource(id = R.string.no_mushrooms_found),
             style = MaterialTheme.typography.bodyLarge,
             textAlign = TextAlign.Center
         ) // Ejemplo de componente de carga, puede ser sustituido por cualquier otro

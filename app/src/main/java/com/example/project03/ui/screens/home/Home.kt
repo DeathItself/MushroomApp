@@ -18,11 +18,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.project03.R
 import com.example.project03.ui.components.BannerCard
 import com.example.project03.ui.components.CarouselCard
 import com.example.project03.ui.components.TopAppBarWithoutScaffold
@@ -80,7 +82,7 @@ fun ContentHomeScreen(padding: PaddingValues, navController: NavController) {
         Text(
             modifier = Modifier.padding(start = 25.dp, bottom = 10.dp),
             fontSize = 30.sp,
-            text = "Bienvenido, " + user.username,
+            text = stringResource(R.string.welcome)+", " + user.username,
             fontWeight = FontWeight.Medium,
             fontFamily = interFamily
         )
@@ -88,7 +90,7 @@ fun ContentHomeScreen(padding: PaddingValues, navController: NavController) {
         Spacer(modifier = Modifier.padding(10.dp))
         Text(
             modifier = Modifier.padding(start = 25.dp, bottom = 10.dp),
-            text = "Seta del dia",
+            text = stringResource(R.string.Mush_of_the_day),
             color = MaterialTheme.colorScheme.onSurface,
             style = MaterialTheme.typography.headlineMedium,
             fontFamily = interFamily,

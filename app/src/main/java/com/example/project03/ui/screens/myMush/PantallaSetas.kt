@@ -32,6 +32,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -39,6 +40,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import com.example.project03.R
 import com.example.project03.model.MyMushroom
 import com.example.project03.ui.components.TopAppBarWithoutScaffold
 import com.example.project03.ui.navigation.AppScreens
@@ -76,7 +78,7 @@ fun MostrarMisSetasScreen(navController: NavController) {
     val mainViewModel: MainViewModel = viewModel()
     val isHome = false
     Scaffold(topBar = {
-        TopAppBarWithoutScaffold(isHome, navController, title = "Mis Setas")
+        TopAppBarWithoutScaffold(isHome, navController, title = stringResource(R.string.my_mushs))
     }, bottomBar = {
         BottomNavigationBar(navController)
     }) { padding ->
@@ -156,7 +158,11 @@ fun MyMushroomList(mushrooms: List<MyMushroom>, navController: NavController) {
                         ) {
                             Icon(
                                 imageVector = if (mushroom.isEdible == true) Icons.Filled.Dining else Icons.Filled.Dining,
-                                contentDescription = if (mushroom.isEdible == true) "Comestible" else "No comestible",
+                                contentDescription = if (mushroom.isEdible == true) {
+                                    stringResource(R.string.edible)
+                                } else {
+                                    stringResource(R.string.not_edible)
+                                },
                                 tint = if (mushroom.isEdible == true) Color.Green else Color.Red,
                                 modifier = Modifier.size(24.dp)
                             )

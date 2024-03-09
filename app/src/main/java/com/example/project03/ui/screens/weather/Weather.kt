@@ -35,11 +35,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.project03.R
 import com.example.project03.model.DailyWeatherData
 import com.example.project03.ui.components.TopBarWeather
 import com.example.project03.ui.navigation.BottomNavigationBar
@@ -239,7 +241,15 @@ fun ShowDaily(
     viewModel.GetWeatherData(context, "daily")
     val dailyWeatherData  by viewModel.dailyWeatherData.observeAsState()
 
-    val diasSemana = listOf("Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado")
+    val diasSemana = listOf(
+        stringResource(R.string.monday),
+        stringResource(R.string.tuesday),
+        stringResource(R.string.wednesday),
+        stringResource(R.string.thursday),
+        stringResource(R.string.friday),
+        stringResource(R.string.saturday),
+        stringResource(R.string.sunday)
+    )
     val calendar = Calendar.getInstance()
     val diaActual = calendar.get(Calendar.DAY_OF_WEEK) - 1
 
@@ -257,7 +267,7 @@ fun ShowDaily(
             horizontalAlignment = Alignment.CenterHorizontally
         ){
             Text(
-                text = "Próximos días:",
+                text = stringResource(R.string.next_days) +": ",
                 fontSize = 30.sp,
                 style = MaterialTheme.typography.bodyLarge
             )
@@ -269,7 +279,7 @@ fun ShowDaily(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = "Dias",
+                    text = stringResource(R.string.days),
                     modifier = Modifier.width(87.dp)
                 )
                 Text(text = "Precip.%")

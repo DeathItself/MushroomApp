@@ -29,12 +29,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import com.example.project03.R
 import com.example.project03.model.MyMushroom
 import com.example.project03.ui.components.TopAppBarWithoutScaffold
 import com.example.project03.ui.navigation.AppScreens
@@ -107,6 +109,9 @@ fun RecibirDatosSeta(padding: PaddingValues, myMushID: String, navController: Na
                         modifier = Modifier.padding(16.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
+                        Text(text = mushObj.commentary,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.align(Alignment.CenterHorizontally))
                         Text(
                             text = mushObj.description,
                             fontWeight = FontWeight.Bold,
@@ -114,6 +119,11 @@ fun RecibirDatosSeta(padding: PaddingValues, myMushID: String, navController: Na
                         )
                         Text(
                             text = mushObj.habitat,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.align(Alignment.CenterHorizontally)
+                        )
+                        Text(
+                            text = mushObj.timestamp.toDate().toString(),
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier.align(Alignment.CenterHorizontally)
                         )
@@ -197,7 +207,7 @@ fun MyMushroomDetailsScreen(navController: NavController, myMushID: String) {
     val mainViewModel: MainViewModel = viewModel()
     val isHome = false
     Scaffold(topBar = {
-        TopAppBarWithoutScaffold(isHome, navController, title = "Mis Setas")
+        TopAppBarWithoutScaffold(isHome, navController, title = stringResource(R.string.my_mushs))
     }, bottomBar = {
         BottomNavigationBar(navController)
     }) { padding ->

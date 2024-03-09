@@ -1,4 +1,5 @@
-<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
     <string name="BottomSheetMenuRank" >Ranking</string>
     <string name="BottomSheetMenuWeather" >Clima</string>
     <string name="app_name" >MushTool</string>
@@ -23,7 +24,7 @@
     <string name="cancel">Cancelar</string>
     <string name="user_edit_text">Editar usuario</string>
     <string name="welcome">Bienvenido</string>
-    <string name="Mush_of_the_day">Seta del dia</string>
+    <string name="Mush_of_the_day">Seta del día</string>
     <string name="your_score">Tu puntuación</string>
     <string name="retry">Reintentar</string>
     <string name="your_rank_not_found">No se encontró tu rango</string>
@@ -95,8 +96,8 @@
     <string name="friday">Viernes</string>
     <string name="saturday">Sábado</string>
     <string name="sunday">Domingo</string>
-    <string name="next_days">Próximos dias</string>
-    <string name="days">dias</string>
+    <string name="next_days">Próximos días</string>
+    <string name="days">días</string>
     <string name="title">título</string>
     <string name="text">texto</string>
     <string name="add">añadir</string>

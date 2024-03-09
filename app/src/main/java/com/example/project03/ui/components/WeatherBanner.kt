@@ -23,20 +23,22 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.project03.R
 import com.example.project03.ui.navigation.AppScreens
 import com.example.project03.ui.theme.interFamily
 import com.example.project03.viewmodel.ApiWeatherViewModel
 
 
 @Composable
-fun WeatherBanner(viewModel: ApiWeatherViewModel, navController: NavController){
+fun WeatherBanner(viewModel: ApiWeatherViewModel, navController: NavController) {
     val currentWeatherData by viewModel.currentWeatherData.observeAsState()
     val ubicacion = "Terrassa"
 
-    if(currentWeatherData != null){
+    if (currentWeatherData != null) {
         ElevatedCard(
             modifier = Modifier
                 .fillMaxWidth()
@@ -58,7 +60,7 @@ fun WeatherBanner(viewModel: ApiWeatherViewModel, navController: NavController){
                     .fillMaxSize()
                     .padding(end = 60.dp),
                 contentAlignment = Alignment.CenterEnd
-            ){
+            ) {
                 Icon(
                     imageVector = currentWeatherData!!.getWeatherIcon(),
                     contentDescription = "ClimaIcono",
@@ -70,14 +72,14 @@ fun WeatherBanner(viewModel: ApiWeatherViewModel, navController: NavController){
                         .padding(horizontal = 20.dp, vertical = 8.dp)
                         .fillMaxSize()
                 ) {
-                    Row{
+                    Row {
                         Text(
                             text = "${currentWeatherData?.temperature_2m}" + "º",
                             fontFamily = interFamily,
                             fontSize = 34.sp
                         )
                     }
-                    Row{
+                    Row {
                         Icon(
                             imageVector = Icons.Rounded.LocationOn,
                             contentDescription = "ubicacion",
@@ -93,13 +95,13 @@ fun WeatherBanner(viewModel: ApiWeatherViewModel, navController: NavController){
                     Spacer(Modifier.height(10.dp))
 
                     Text(
-                        text = "Sensación térmica: ${currentWeatherData?.apparent_temperature}" + "º",
+                        text = stringResource(R.string.termic_sensation) + ": " + currentWeatherData?.apparent_temperature + "º",
                         fontFamily = interFamily,
                         fontSize = 14.sp
                     )
 
                     Text(
-                        text = "Precipitacion: ${currentWeatherData?.precipitation}%",
+                        text = stringResource(R.string.precipitation) + ": " + currentWeatherData?.precipitation + "%",
                         fontFamily = interFamily,
                         fontSize = 14.sp
                     )
