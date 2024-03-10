@@ -23,11 +23,13 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.project03.R
 import com.example.project03.model.User
 import com.example.project03.ui.components.Loading
 import com.example.project03.ui.components.TopAppBarWithoutScaffold
@@ -46,7 +48,7 @@ fun EditMyUserScreen(
     val isHome = false
     Scaffold(
         topBar = {
-            TopAppBarWithoutScaffold(isHome, navController, title = "Editar usuario")
+            TopAppBarWithoutScaffold(isHome, navController, title = stringResource(R.string.user_edit_text))
         }) { padding ->
         EditMyUser(padding, navController)
     }
@@ -113,7 +115,7 @@ fun EditMyUserForm(
         ){
             Text(
                 modifier = Modifier.padding(10.dp),
-                text = "Nombre de usuario",
+                text = stringResource(R.string.username_text),
                 fontSize = 18.sp,
                 fontFamily = interFamily,
                 fontWeight = FontWeight.SemiBold,
@@ -121,7 +123,7 @@ fun EditMyUserForm(
             OutlinedTextField(
                 value = username,
                 onValueChange = { username = it },
-                label = { "username" },
+                label = { stringResource(R.string.username_text) },
                 shape = RoundedCornerShape(10.dp)
             )
         }
@@ -133,7 +135,7 @@ fun EditMyUserForm(
         ) {
             Text(
                 modifier = Modifier.padding(10.dp),
-                text = "Correo electrónico",
+                text = stringResource(R.string.email_text),
                 fontSize = 18.sp,
                 fontFamily = interFamily,
                 fontWeight = FontWeight.SemiBold,
@@ -141,7 +143,7 @@ fun EditMyUserForm(
             OutlinedTextField(
                 value = email,
                 onValueChange = { email = it },
-                label = { "email" },
+                label = { stringResource(R.string.email_text) },
                 shape = RoundedCornerShape(10.dp)
             )
         }
@@ -160,13 +162,13 @@ fun EditMyUserForm(
                     onSave(user)
                 }
             ){
-                Text(text = "Guardar", fontFamily = interFamily)
+                Text(text = stringResource(R.string.save), fontFamily = interFamily)
             }
 
             Spacer(modifier = Modifier.width(8.dp))
 
             Button(onClick = onCancel) {
-                Text(text = "Cancelar", fontFamily = interFamily)
+                Text(text = stringResource(R.string.cancel), fontFamily = interFamily)
             }
         }
     }

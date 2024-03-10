@@ -6,6 +6,7 @@ import com.google.firebase.firestore.PropertyName
 
 data class MyMushroom(
     var commonName: String = "",
+    var commentary: String = "",
     var description: String = "",
     var dificulty: String = "",
     var habitat: String = "",

@@ -24,9 +24,11 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.project03.R
 import com.example.project03.model.MyMushroom
 import com.example.project03.ui.components.Loading
 import com.example.project03.ui.components.TopAppBarWithoutScaffold
@@ -43,7 +45,7 @@ fun EditMyMushroomScreen(navController: NavController, myMushID: String) {
     val mainViewModel: MainViewModel = viewModel()
     val isHome = false
     Scaffold(topBar = {
-        TopAppBarWithoutScaffold(isHome, navController, title = "Editar Setas")
+        TopAppBarWithoutScaffold(isHome, navController, title = stringResource(R.string.edit_mushroom))
     }, bottomBar = {
         BottomNavigationBar(navController)
     }) { padding ->
@@ -107,32 +109,44 @@ fun EditMyMushroomForm(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         // Utiliza myMushroom para inicializar los estados de los campos de texto
+        var commentary by remember { mutableStateOf(myMushroom.commentary) }
         var commonName by remember { mutableStateOf(myMushroom.commonName) }
         var description by remember { mutableStateOf(myMushroom.description) }
         var habitat by remember { mutableStateOf(myMushroom.habitat) }
         var isEdible by remember { mutableStateOf(myMushroom.isEdible) }
         var seasons by remember { mutableStateOf(myMushroom.seasons) }
 
-        OutlinedTextField(value = commonName,
+        OutlinedTextField(
+            value = commonName,
             onValueChange = { commonName = it },
-            label = { Text("Nombre Común", fontFamily = interFamily) })
-        OutlinedTextField(value = description,
+            label = { Text(stringResource(R.string.common_name), fontFamily = interFamily) }
+        )
+        OutlinedTextField(
+            value = commentary,
+            onValueChange = { commentary = it },
+            label = { Text(stringResource(R.string.commentary), fontFamily = interFamily) }
+        )
+        OutlinedTextField(
+            value = description,
             onValueChange = { description = it },
-            label = { Text("Descripción", fontFamily = interFamily) })
-        OutlinedTextField(value = habitat,
+            label = { Text(stringResource(R.string.description), fontFamily = interFamily) })
+        OutlinedTextField(
+            value = habitat,
             onValueChange = { habitat = it },
-            label = { Text("Hábitat", fontFamily = interFamily) })
+            label = { Text(stringResource(R.string.habitat), fontFamily = interFamily) })
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Text("Comestible", fontFamily = interFamily)
+            Text(stringResource(R.string.edible), fontFamily = interFamily)
             Switch(checked = isEdible ?: false, onCheckedChange = { isEdible = it })
         }
-        OutlinedTextField(value = seasons,
+        OutlinedTextField(
+            value = seasons,
             onValueChange = { seasons = it },
-            label = { Text("Temporadas") })
+            label = { Text(stringResource(R.string.seasons)) })
 
         Row {
             Button(onClick = {
                 // Actualiza myMushroom con los nuevos valores
+                myMushroom.commentary = commentary
                 myMushroom.commonName = commonName
                 myMushroom.description = description
                 myMushroom.habitat = habitat
@@ -141,13 +155,13 @@ fun EditMyMushroomForm(
 
                 onSave(myMushroom)
             }) {
-                Text("Guardar")
+                Text(stringResource(R.string.save))
             }
 
             Spacer(modifier = Modifier.width(8.dp))
 
             Button(onClick = onCancel) {
-                Text("Cancelar")
+                Text(stringResource(R.string.cancel))
             }
         }
 //        dev info about the mushroom

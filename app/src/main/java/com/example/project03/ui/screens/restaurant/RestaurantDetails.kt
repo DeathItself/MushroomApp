@@ -15,11 +15,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import com.example.project03.R
 import com.example.project03.model.Restaurants
 import com.example.project03.ui.components.TopAppBarWithoutScaffold
 import com.example.project03.ui.navigation.BottomNavigationBar
@@ -52,21 +54,18 @@ fun RecibirDatosRestaurante(padding: PaddingValues, s: String) {
                 modifier = Modifier.size(200.dp), model = restObj.photo, contentDescription = null
             )
             Spacer(modifier = Modifier.height(16.dp))
+            MapaRestaurante(restObj)
         }
-        //mostramos la ubicacion de la seta en un mapa pequeño debajo de la descripcion
-        MapaRestaurante(restObj)
     }
 }
 
 @Composable
-fun MapaRestaurante(restaurants: Restaurants?) {
+fun MapaRestaurante(restaurants: Restaurants) {
     // Minimapa
     val cameraPositionState = rememberCameraPositionState {
-        if (restaurants != null) {
-            position = CameraPosition.fromLatLngZoom(
-                LatLng(restaurants.latitude, restaurants.longitud), 15f
-            )
-        }
+        position = CameraPosition.fromLatLngZoom(
+            LatLng(restaurants.latitude, restaurants.longitud), 15f
+        )
     }
     GoogleMap(
         modifier = Modifier
@@ -93,7 +92,9 @@ fun RecibirRestaurante(navController: NavController, s: String) {
     val mainViewModel: MainViewModel = viewModel()
     val isHome = false
     Scaffold(topBar = {
-        TopAppBarWithoutScaffold(isHome, navController, title = "Restaurantes")
+        TopAppBarWithoutScaffold(
+            isHome, navController, title = stringResource(R.string.restaurants)
+        )
     }, bottomBar = {
         BottomNavigationBar(navController)
     }) { padding ->

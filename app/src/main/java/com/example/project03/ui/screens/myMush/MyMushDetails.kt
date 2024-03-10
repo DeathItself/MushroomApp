@@ -34,6 +34,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -42,6 +43,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import com.example.project03.R
 import com.example.project03.model.MyMushroom
 import com.example.project03.ui.components.TopAppBarWithoutScaffold
 import com.example.project03.ui.navigation.AppScreens
@@ -169,6 +171,12 @@ fun RecibirDatosSeta(padding: PaddingValues, myMushID: String, navController: Na
                             Text(text = "Estación: ", fontSize = 18.sp,fontFamily = interFamily, fontWeight = FontWeight.SemiBold)
                             Text(text = mushObj.seasons, fontSize = 18.sp, fontFamily = interFamily)
                         }
+                        //TODO
+                        Text(
+                            text = mushObj.timestamp.toDate().toString(),
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.align(Alignment.CenterHorizontally)
+                        )
 
                     }
 
@@ -187,7 +195,7 @@ fun RecibirDatosSeta(padding: PaddingValues, myMushID: String, navController: Na
                             Icon(
                                 Icons.Filled.Edit, contentDescription = "Editar", tint = Color.White
                             )
-                            Text("Editar", color = Color.White, fontFamily = interFamily)
+                            Text(stringResource(R.string.edit), color = Color.White, fontFamily = interFamily)
                         }
 
                         Button(
@@ -247,7 +255,7 @@ fun MyMushroomDetailsScreen(navController: NavController, myMushID: String) {
     val mainViewModel: MainViewModel = viewModel()
     val isHome = false
     Scaffold(
-        topBar = { TopAppBarWithoutScaffold(isHome, navController, title = "Mis Setas") },
+        topBar = { TopAppBarWithoutScaffold(isHome, navController, title = stringResource(R.string.my_mushs)) },
         bottomBar = { BottomNavigationBar(navController) }
     ) { padding ->
         RecibirDatosSeta(padding = padding, myMushID, navController)

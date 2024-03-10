@@ -24,6 +24,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -165,9 +166,9 @@ fun MapContentBottomSheet(mushroom: MyMushroom) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             val isEdibleText = when (mushroom.isEdible) {
-                true -> "Comestible"
-                false -> "No comestible"
-                else -> "Información no disponible"
+                true -> stringResource(R.string.edible)
+                false -> stringResource(R.string.not_edible)
+                else -> stringResource(R.string.unknown)
             }
             MushDetailsMap(mushroom, isEdibleText)
         }
@@ -209,7 +210,8 @@ fun MushDetailsMap(mushroom: MyMushroom, isEdibleText: String) {
         horizontalAlignment = Alignment.Start
     ) {
         Row (modifier = Modifier.padding(3.dp)){
-            Text(text = "Nombre científico: ", fontSize = 18.sp,fontFamily = interFamily, fontWeight = FontWeight.SemiBold)
+            Text(text = "Nombre científico: ",
+                fontSize = 18.sp,fontFamily = interFamily, fontWeight = FontWeight.SemiBold)
             Text(
                 text = mushroom.scientificName,
                 fontSize = 20.sp,
@@ -217,25 +219,38 @@ fun MushDetailsMap(mushroom: MyMushroom, isEdibleText: String) {
                 fontStyle = FontStyle.Italic
             )
         }
+        Row (modifier = Modifier.padding(3.dp)) {
+            Text(text = stringResource(R.string.commentary)+": ",
+                fontSize = 18.sp,fontFamily = interFamily, fontWeight = FontWeight.SemiBold)
+            Text (
+                text = mushroom.commentary,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            )
+        }
 
         Row(modifier = Modifier.padding(3.dp)) {
-            Text(text = "Descripcion: ",fontSize = 20.sp, fontFamily = interFamily, fontWeight = FontWeight.SemiBold)
+            Text(text = "Descripcion: ",
+                fontSize = 20.sp, fontFamily = interFamily, fontWeight = FontWeight.SemiBold)
             Text(text = mushroom.description, fontSize = 20.sp,fontFamily = interFamily,)
         }
 
         Row (modifier = Modifier.padding(3.dp)){
-            Text(text = "Hábitat: ",fontSize = 20.sp, fontFamily = interFamily, fontWeight = FontWeight.SemiBold)
+            Text(text = "Hábitat: ",
+                fontSize = 20.sp, fontFamily = interFamily, fontWeight = FontWeight.SemiBold)
             Text(text = mushroom.habitat, fontSize = 20.sp,fontFamily = interFamily)
         }
 
         Row(modifier = Modifier.padding(3.dp)) {
-            Text(text = "Estado: ",fontSize = 20.sp, fontFamily = interFamily, fontWeight = FontWeight.SemiBold)
+            Text(text = "Estado: ",
+                fontSize = 20.sp, fontFamily = interFamily, fontWeight = FontWeight.SemiBold)
             Text(text = isEdibleText, fontSize = 20.sp,fontFamily = interFamily)
         }
 
 
         Row(modifier = Modifier.padding(3.dp)) {
-            Text(text = "Estación: ", fontSize = 20.sp,fontFamily = interFamily, fontWeight = FontWeight.SemiBold)
+            Text(text = "Estación: ",
+                fontSize = 20.sp,fontFamily = interFamily, fontWeight = FontWeight.SemiBold)
             Text(text = mushroom.seasons, fontSize = 20.sp, fontFamily = interFamily)
         }
 

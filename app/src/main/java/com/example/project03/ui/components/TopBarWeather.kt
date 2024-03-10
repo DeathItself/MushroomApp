@@ -20,11 +20,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.project03.ui.theme.interFamily
+import com.example.project03.R
+import com.example.project03.model.CityName
 import com.example.project03.viewmodel.ApiGeocodingViewModel
 import kotlinx.coroutines.launch
 
@@ -40,7 +43,7 @@ fun TopBarWeather(isHome: Boolean, navController: NavController){
         modifier = Modifier,
         title = {
             Text(
-                "Ciudad",
+                stringResource(R.string.city_text),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 fontFamily = interFamily,
@@ -70,7 +73,7 @@ fun TopBarWeather(isHome: Boolean, navController: NavController){
                         onValueChange = {
                             cityName = it
                         },
-                        label = { Text("Buscar ciudad") },
+                        label = { Text(stringResource(R.string.find_city)) },
                         modifier = Modifier.padding(horizontal = 8.dp)
                     )
 
@@ -106,9 +109,6 @@ fun TopBarWeather(isHome: Boolean, navController: NavController){
         },
     )
 }
-
-
-
 
 
 

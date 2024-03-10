@@ -15,7 +15,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
+import com.example.project03.R
 import com.example.project03.model.BottomNavigation
 import com.example.project03.model.ImagePath
 import com.example.project03.ui.navigation.AppScreens
@@ -26,12 +28,12 @@ fun BottomBarCheck(navController: NavController){
     val selectedItem by remember { mutableStateOf(0) }
     val items = listOf(
         BottomNavigation (
-            title = "Cancelar",
+            title = stringResource(R.string.cancel),
             icon = Icons.Rounded.Cancel
         ),
 
         BottomNavigation (
-            title = "Confirmar",
+            title = stringResource(R.string.confirm),
             icon = Icons.Rounded.Check
         )
     )

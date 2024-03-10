@@ -40,10 +40,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.project03.R
 import com.example.project03.model.ForumAnswer
 import com.example.project03.model.ForumQuestion
 import com.example.project03.ui.components.TopAppBarWithoutScaffold
@@ -55,7 +57,7 @@ import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import java.util.UUID
 
-val user = FirebaseAuth.getInstance().currentUser
+val currentUser = FirebaseAuth.getInstance().currentUser
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -66,7 +68,7 @@ fun ForumScreen(
     val questions = forumViewModel.forumQuestions.collectAsState(emptyList()).value.toMutableList()
     var selectedQuestionId by remember { mutableStateOf<String?>(null) }
     var addingQuestion by remember { mutableStateOf(false) }
-    val currentUserUid = user?.uid
+    val currentUserUid = currentUser?.uid
     val mainViewModel: MainViewModel = viewModel()
     forumViewModel.loadForumQuestions()
     Log.d("ForumScreen", "$questions")
@@ -89,7 +91,7 @@ fun ForumScreen(
                     title = title,
                     content = content,
                     userId = currentUserUid ?: "unknown",
-                    userName = user?.email?.split("@")?.get(0) ?: "unknown",
+                    userName = currentUser?.email?.split("@")?.get(0) ?: "unknown",
                     timestamp = Timestamp.now()
                 )
                 questions += newQuestion
@@ -98,6 +100,8 @@ fun ForumScreen(
                 forumViewModel.postQuestion(newQuestion)
             }, onCancel = { addingQuestion = false }, padding = padding
             )
+//            refresh the forum questions after adding a new question to the list of questions
+            forumViewModel.loadForumQuestions()
         }
         if (questions.isEmpty() && !addingQuestion) {
             Column(Modifier.padding(padding)) {
@@ -169,7 +173,7 @@ fun AddQuestionForm(
     ) {
         TextField(value = title,
             onValueChange = { title = it },
-            label = { Text("Title") },
+            label = { Text(stringResource(R.string.title)) },
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -177,7 +181,7 @@ fun AddQuestionForm(
 
         TextField(value = content,
             onValueChange = { content = it },
-            label = { Text("Text") },
+            label = { Text(stringResource(R.string.text)) },
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -187,13 +191,13 @@ fun AddQuestionForm(
             modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End
         ) {
             Button(onClick = { onAddQuestion(title, content) }) {
-                Text("Add")
+                Text(stringResource(R.string.add))
             }
 
             Spacer(modifier = Modifier.width(8.dp))
 
             Button(onClick = onCancel) {
-                Text("Cancel")
+                Text(stringResource(R.string.cancel))
             }
         }
     }
@@ -210,7 +214,6 @@ fun QuestionItem(
 ) {
     val answers = forumViewModel.loadAnswersForQuestion(question.id)
 
-    val questionUserName = user?.email?.split("@")?.get(0) ?: "unknown"
     //Create a loading state for the answers
 
 
@@ -241,7 +244,7 @@ fun QuestionItem(
                 horizontalAlignment = Alignment.Start
             ) {
                 Text(// Nombre del usuario
-                    text = questionUserName,
+                    text = question.userName,
                     style = MaterialTheme.typography.titleLarge,
                     color = MaterialTheme.colorScheme.primary
                 )
@@ -275,12 +278,16 @@ fun QuestionItem(
                     overflow = TextOverflow.Ellipsis
                 )
             } // AddResponseButton with onUpdateResponses function passed
-            Column(
+            LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(8.dp)
-                    .height(if (isSelected) 200.dp else 0.dp)
-            ) {
+                    .height(if (isSelected && answers.isNotEmpty()) 150.dp else 0.dp)
+                    .scrollable(
+                        state = rememberScrollableState { delta -> delta },
+                        orientation = Orientation.Vertical,
+                        enabled = true)
+            ) {item {
                 if (answers.isNotEmpty()) {
                     answers.forEach { answer ->
                         Column {
@@ -298,6 +305,8 @@ fun QuestionItem(
                         }
                     }
                 }
+            }
+
 
             }
             if (isSelected) {
@@ -326,14 +335,15 @@ fun AddResponseButton(
 
     if (!addingAnswer) {
         Button(onClick = { addingAnswer = true }) {
-            Text("Add Response")
+            Text(stringResource(R.string.add_response))
         }
+        forumViewModel.reloadForumAnswers(questionId)
     }
 
     if (addingAnswer) {
         TextField(value = answerText,
             onValueChange = { answerText = it },
-            label = { Text("Your response") },
+            label = { Text(stringResource(R.string.your_response)) },
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -348,26 +358,21 @@ fun AddResponseButton(
                         id = UUID.randomUUID().toString(),
                         questionId = questionId,
                         content = answerText,
-                        userId = user?.uid ?: "",
+                        userId = currentUser?.uid ?: "",
                         timestamp = Timestamp.now(),
-                        userName = user?.email?.split("@")?.get(0) ?: "unknown",
+                        userName = currentUser?.email?.split("@")?.get(0) ?: "unknown",
                     )
                     forumViewModel.postAnswer(newResponse)
                     addingAnswer = false
                     forumViewModel.reloadForumAnswers(questionId)
                     onUpdateResponses()
                     answerText = ""
-
-                    // Call the function to update responses after adding a new response
-
                 }
             }) {
-                Text("Submit Response")
+                Text(stringResource(R.string.submit_response))
             }
-
-            Spacer(modifier = Modifier.width(8.dp))
             Button(onClick = { addingAnswer = false }) {
-                Text("Cancel")
+                Text(stringResource(R.string.cancel))
             }
         }
     }

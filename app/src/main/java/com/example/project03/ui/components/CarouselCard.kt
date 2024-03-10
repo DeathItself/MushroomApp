@@ -78,7 +78,7 @@ fun CarouselCard(navController: NavController) {
                     ) {
                         Text(
                             modifier = Modifier,
-                            text = "No hay setas añadidas",
+                            text = stringResource(R.string.no_mushrooms_found),
                             style = MaterialTheme.typography.bodySmall,
                             fontSize = 20.sp,
                             color = MaterialTheme.colorScheme.inverseSurface,
@@ -102,7 +102,7 @@ fun CarouselCard(navController: NavController) {
                     ) {
                         Text(
                             modifier = Modifier.padding(8.dp),
-                            text = "Añade una seta",
+                            text = stringResource(R.string.add_mushroom),
                             style = MaterialTheme.typography.bodySmall,
                             fontSize = 20.sp,
                             color = MaterialTheme.colorScheme.inverseSurface,

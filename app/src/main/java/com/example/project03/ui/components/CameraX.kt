@@ -32,12 +32,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.exifinterface.media.ExifInterface
 import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.NavController
+import com.example.project03.R
 import com.example.project03.model.ImagePath
 import com.example.project03.ui.screens.addMushrooms.Screenshot
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -88,7 +90,7 @@ fun CameraScreen(navController: NavController){
             }
         }
     }else{
-        Text(text = "Permiso Denegado")
+        Text(text = stringResource(R.string.permission_denied))
     }
 
 }

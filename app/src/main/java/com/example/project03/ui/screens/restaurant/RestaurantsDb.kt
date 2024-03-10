@@ -21,6 +21,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -28,6 +29,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import com.example.project03.R
 import com.example.project03.model.Restaurants
 import com.example.project03.ui.components.TopAppBarWithoutScaffold
 import com.example.project03.ui.navigation.AppScreens
@@ -61,7 +63,7 @@ fun MostrarRestaurantes(navController: NavController) {
     val mainViewModel: MainViewModel = viewModel()
     val isHome = false
     Scaffold(topBar = {
-        TopAppBarWithoutScaffold(isHome, navController, title = "Restaurantes")
+        TopAppBarWithoutScaffold(isHome, navController, title = stringResource(R.string.restaurants))
     }, bottomBar = {
         BottomNavigationBar(navController)
     }) { padding ->

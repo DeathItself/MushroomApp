@@ -19,11 +19,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.project03.R
 import com.example.project03.ui.components.BannerCard
 import com.example.project03.ui.components.CarouselCard
 import com.example.project03.ui.components.TopAppBarWithoutScaffold
@@ -32,6 +34,7 @@ import com.example.project03.ui.components.getMyLocation
 import com.example.project03.ui.navigation.BottomNavigationBar
 import com.example.project03.ui.navigation.ContentBottomSheet
 import com.example.project03.ui.theme.interFamily
+import com.example.project03.util.data.Data
 import com.example.project03.viewmodel.ApiWeatherViewModel
 import com.example.project03.viewmodel.MainViewModel
 
@@ -50,7 +53,7 @@ fun HomeScreen(navController: NavController) {
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
-        ){
+        ) {
             ContentHomeScreen(padding = padding, navController = navController)
 
             //submenu
@@ -68,6 +71,7 @@ fun HomeScreen(navController: NavController) {
 fun ContentHomeScreen(padding: PaddingValues, navController: NavController) {
     val context = LocalContext.current
     val viewModel: ApiWeatherViewModel = viewModel()
+    val user = Data.getUserObj()
     LaunchedEffect(Unit){
         val(latitude, longitude) = getMyLocation(context)
         viewModel.setCoordinates(latitude!!, longitude!!)
@@ -85,16 +89,15 @@ fun ContentHomeScreen(padding: PaddingValues, navController: NavController) {
             modifier = Modifier
                 .padding(start = 25.dp, bottom = 10.dp),
             fontSize = 30.sp,
-            text = "Bienvenido, user!",
+            text = stringResource(R.string.welcome)+", " + user.username,
             fontWeight = FontWeight.Medium,
             fontFamily = interFamily
         )
         WeatherBanner(viewModel, navController)
         Spacer(modifier = Modifier.padding(10.dp))
         Text(
-            modifier = Modifier
-                .padding(start = 25.dp, bottom = 10.dp),
-            text = "Seta del dia",
+            modifier = Modifier.padding(start = 25.dp, bottom = 10.dp),
+            text = stringResource(R.string.Mush_of_the_day),
             color = MaterialTheme.colorScheme.onSurface,
             style = MaterialTheme.typography.headlineMedium,
             fontFamily = interFamily,

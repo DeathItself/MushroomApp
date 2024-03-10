@@ -26,6 +26,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -33,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.project03.R
 import com.example.project03.ui.components.TextFields
 import com.example.project03.ui.components.UIBottom
 import com.example.project03.ui.navigation.AppScreens
@@ -59,7 +61,7 @@ fun LoginScreen(
         ){
             if(showLoginForm.value){
                 Text(
-                    text = "Inicia sesión",
+                    text = stringResource(R.string.log_in),
                     style = MaterialTheme.typography.titleMedium,
                     fontSize = 33.sp,
                 )
@@ -78,7 +80,7 @@ fun LoginScreen(
                 }
 //                viewModel.checkLoggedIn(navController)
                 SubmitBottom(
-                    textId = "Unirse",
+                    textId = stringResource(R.string.join_us),
                     enabled = showLoginForm.value
                 ){
                     showLoginForm.value = false
@@ -86,7 +88,7 @@ fun LoginScreen(
 
             }else{
                 Text(
-                    text = "Resgistrate",
+                    text = stringResource(R.string.register),
                     style = MaterialTheme.typography.titleMedium,
                     fontSize = 25.sp,
                 )
@@ -104,7 +106,7 @@ fun LoginScreen(
                 }
 
                 SubmitBottom(
-                    textId = "Iniciar sesión",
+                    textId = stringResource(R.string.login),
                     enabled = !showLoginForm.value
                 ){
                     showLoginForm.value = true
@@ -139,14 +141,14 @@ fun UseForm(
         Spacer(modifier = Modifier.height(10.dp))
 
         SubmitBottom(
-            textId = if(isCreateAccount) "Unirse" else "Iniciar sesión",
+            textId = if(isCreateAccount) stringResource(R.string.register) else stringResource(R.string.log_in),
             enabled = true
         ){
             onDone(email.value.split("@").get(0), email.value.trim(), password.value.trim())
         }
 
         Spacer(modifier = Modifier.height(20.dp))
-        val text = if(isCreateAccount) "¿Ya tienes cuenta? Inicia sesión" else "Eres nuevo? Únete a nosotros!"
+        val text = if(isCreateAccount) stringResource(R.string.already_have_an_account) else stringResource(R.string.dont_have_an_account)
         HorizontalDivider(
             modifier = Modifier.width(330.dp),
             thickness = 1.dp,
