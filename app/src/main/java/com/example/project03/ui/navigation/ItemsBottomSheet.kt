@@ -11,17 +11,19 @@ import androidx.compose.material.icons.rounded.FilterList
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.example.project03.R
 
-sealed class ItemsBottomSheet(
+data class ItemsBottomSheet(
     val title: String,
     @StringRes val titleRes: Int, // Almacena el ID del recurso
     val icon: ImageVector
-) {
-    object ItemMenu01 : ItemsBottomSheet("Learn",R.string.BottomSheetMenuLearn, Icons.Rounded.Category)
-    object ItemMenu02 : ItemsBottomSheet("Eat",R.string.BottomSheetMenuEat, Icons.Rounded.Dining)
-    object ItemMenu03 : ItemsBottomSheet("Forum",R.string.BottomSheetMenuForum, Icons.Rounded.Diversity3)
-    object ItemMenu04 : ItemsBottomSheet("Wiki",R.string.BottomSheetMenuWiki, Icons.Rounded.AutoStories)
-    object ItemMenu05 : ItemsBottomSheet("Ranking",R.string.BottomSheetMenuRank,Icons.Rounded.FilterList)
+)
 
-    object ItemMenu06 : ItemsBottomSheet("Weather", R.string.BottomSheetMenuWeather, Icons.Rounded.Cloud)
-
+object Menu {
+    val itemsMenu = listOf(
+        ItemsBottomSheet("Learn",R.string.BottomSheetMenuLearn, Icons.Rounded.Category),
+        ItemsBottomSheet("Eat",R.string.BottomSheetMenuEat, Icons.Rounded.Dining),
+        ItemsBottomSheet("Forum",R.string.BottomSheetMenuForum, Icons.Rounded.Diversity3),
+        ItemsBottomSheet("Wiki",R.string.BottomSheetMenuWiki, Icons.Rounded.AutoStories),
+        ItemsBottomSheet("Ranking",R.string.BottomSheetMenuRank,Icons.Rounded.FilterList),
+        ItemsBottomSheet("Weather", R.string.BottomSheetMenuWeather, Icons.Rounded.Cloud)
+    )
 }

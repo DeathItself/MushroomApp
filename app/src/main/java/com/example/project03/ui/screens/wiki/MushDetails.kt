@@ -15,12 +15,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import com.example.project03.R
 import com.example.project03.model.Mushroom
 import com.example.project03.ui.components.TopAppBarWithoutScaffold
 import com.example.project03.ui.navigation.BottomNavigationBar
@@ -49,9 +51,9 @@ fun RecibirDatosSeta(padding: PaddingValues, s: String) {
     ) {
         if (mushObj != null) {
             val isEdibleText = when (mushObj.isEdible) {
-                true -> "Comestible"
-                false -> "No comestible"
-                else -> "Información no disponible"
+                true -> stringResource(R.string.edible)
+                false -> stringResource(R.string.not_edible)
+                else -> stringResource(R.string.unknown)
             }
             Text(text = mushObj.commonName, fontWeight = FontWeight.Bold)
             AsyncImage(
@@ -104,7 +106,7 @@ fun Mapa(mushroom: Mushroom?) {
             mapType = MapType.HYBRID
         )
     ) {
-        val edible = if (mushroom?.isEdible == true) "Comestible" else "No comestible"
+        val edible = if (mushroom?.isEdible == true) stringResource(R.string.edible) else stringResource(R.string.not_edible)
         if (mushroom != null) {
             Marker(
                 state = MarkerState(position = LatLng(mushroom.latitude, mushroom.longitude)),

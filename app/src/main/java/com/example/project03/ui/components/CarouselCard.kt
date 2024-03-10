@@ -19,7 +19,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
@@ -35,6 +34,7 @@ import coil.request.ImageRequest
 import coil.size.Scale
 import com.example.project03.R
 import com.example.project03.ui.navigation.AppScreens
+import com.example.project03.ui.theme.interFamily
 import com.example.project03.util.data.Data
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
@@ -78,7 +78,7 @@ fun CarouselCard(navController: NavController) {
                     ) {
                         Text(
                             modifier = Modifier,
-                            text = "No hay setas añadidas",
+                            text = stringResource(R.string.no_mushrooms_found),
                             style = MaterialTheme.typography.bodySmall,
                             fontSize = 20.sp,
                             color = MaterialTheme.colorScheme.inverseSurface,
@@ -102,7 +102,7 @@ fun CarouselCard(navController: NavController) {
                     ) {
                         Text(
                             modifier = Modifier.padding(8.dp),
-                            text = "Añade una seta",
+                            text = stringResource(R.string.add_mushroom),
                             style = MaterialTheme.typography.bodySmall,
                             fontSize = 20.sp,
                             color = MaterialTheme.colorScheme.inverseSurface,
@@ -124,9 +124,10 @@ fun CarouselCard(navController: NavController) {
             Text(
                 text = stringResource(R.string.carrouselMyMush),
                 Modifier.padding(8.dp),
-                style = MaterialTheme.typography.headlineMedium
+                style = MaterialTheme.typography.headlineMedium,
+                fontFamily = interFamily,
+                fontWeight = FontWeight.Medium
             )
-
             HorizontalPager(
                 count = mushroomList.size,
                 state = pagerState,
@@ -147,7 +148,7 @@ fun CarouselCard(navController: NavController) {
                             .data(mushroomList.toList()[page].photo).crossfade(true)
                             .scale(Scale.FILL).build(),
                             contentDescription = "photo of a mushroom",
-                            contentScale = ContentScale.FillBounds,
+                            contentScale = ContentScale.Crop,
 
                             placeholder = painterResource(id = R.drawable.placeholder),
                             error = painterResource(id = R.drawable.error),
@@ -161,21 +162,11 @@ fun CarouselCard(navController: NavController) {
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(horizontal = 8.dp),
+                                .padding(horizontal = 8.dp, vertical = 8.dp),
                             contentAlignment = Alignment.Center
                         ) {
-                            Text(
-                                modifier = Modifier
-                                    .shadow(
-                                        elevation = 99.dp, shape = RoundedCornerShape(12.dp)
-                                    )
-                                    .padding(8.dp),
-                                text = mushroomList.toList()[page].commonName,
-                                style = MaterialTheme.typography.bodySmall,
-                                fontSize = 20.sp,
-                                color = Color.White,
-                                fontWeight = FontWeight.Bold
-                            )
+                            OutLineText(text = mushroomList.toList()[page].commonName)
+
                         }
                     }
                 }

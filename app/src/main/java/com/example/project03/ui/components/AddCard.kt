@@ -38,6 +38,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
@@ -63,7 +64,7 @@ fun AddCard(navController: NavController) {
     val mushroom = Data.wikiDBList()
     val imagePath = ImagePath.imagePath
     var nameMushroom = ""
-    var description = ""
+    var commentary = ""
     val context = LocalContext.current
     var latitude by remember { mutableDoubleStateOf(0.0) }
     var longitude by remember { mutableDoubleStateOf(0.0) }
@@ -87,7 +88,8 @@ fun AddCard(navController: NavController) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Seta Encontrada!", style = MaterialTheme.typography.headlineMedium
+                text = stringResource(R.string.mushroom_found)+"!",
+                style = MaterialTheme.typography.headlineMedium
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -129,7 +131,7 @@ fun AddCard(navController: NavController) {
             nameMushroom = categoryList(mushroom)
 
             Spacer(modifier = Modifier.height(10.dp))
-            description = textField()
+            commentary = textField()
             LaunchedEffect(key1 = true) {
                 val (lat, lon) = getMyLocation(context)
                 if (lat != null) {
@@ -152,7 +154,7 @@ fun AddCard(navController: NavController) {
                     // Aqui se guarda la informacion recogida en CategoryList, TextField y la imagen en la base de datos
                     CoroutineScope(Dispatchers.IO).launch {
                         val result = Data.addMushroom(
-                            nameMushroom, description, imagePath, mushroom, latitude, longitude, userId
+                            nameMushroom, commentary, imagePath, mushroom, latitude, longitude, userId
                         )
                         withContext(Dispatchers.Main) {
                             if (result == "Mushroom added") {
@@ -171,7 +173,8 @@ fun AddCard(navController: NavController) {
                 )
             ) {
                 Text(
-                    "Guardar", color = Color.White
+                    stringResource(R.string.save),
+                    color = Color.White
                 )
             }
         }
@@ -206,7 +209,7 @@ fun textField(): String {
         readOnly = false,
         textStyle = MaterialTheme.typography.bodyMedium,
         placeholder = {
-            Text(text = "Escribe un comentario")
+            Text(text = stringResource(R.string.write_a_commentary))
         },
         singleLine = true,
         shape = RoundedCornerShape(12.dp),
@@ -228,7 +231,7 @@ fun textField(): String {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun categoryList(mushroom: List<Mushroom>): String {
-    val options = mushroom.indices.map { mushroom[it].commonName } + "Otro"
+    val options = mushroom.indices.map { mushroom[it].commonName } + stringResource(R.string.other)
     var expanded by remember { mutableStateOf(false) }
     var selectedOptionText by remember { mutableStateOf(options[0]) }
 
@@ -242,7 +245,7 @@ fun categoryList(mushroom: List<Mushroom>): String {
             readOnly = true,
             value = selectedOptionText,
             onValueChange = {},
-            label = { Text("Tipo de seta") },
+            label = { Text(stringResource(R.string.mushroom_type)) },
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
             colors = ExposedDropdownMenuDefaults.textFieldColors(
                 focusedTextColor = Color.Black,
