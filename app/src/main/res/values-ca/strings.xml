@@ -106,4 +106,8 @@
     <string name="submit_response">enviar resposta</string>
     <string name="newer">Més nou</string>
     <string name="older">Més antic</string>
+    <string name="scientific_name">Nom científic</string>
+    <string name="date_of_recolection">Data de recol·lecció</string>
+    <string name="delete">esborrar</string>
+    <string name="global_score">Puntuacions globals</string>
 </resources>

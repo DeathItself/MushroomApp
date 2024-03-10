@@ -34,10 +34,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -89,9 +90,9 @@ fun RecibirDatosSeta(padding: PaddingValues, myMushID: String, navController: Na
         item {
             if (mushObj != null) {
                 val isEdibleText = when (mushObj.isEdible) {
-                    true -> "Comestible"
-                    false -> "No comestible"
-                    else -> "Información no disponible"
+                    true -> stringResource(R.string.edible)
+                    false -> stringResource(R.string.not_edible)
+                    else -> stringResource(R.string.unknown)
                 }
                 Column(
                     modifier = Modifier.fillMaxSize(),
@@ -142,7 +143,8 @@ fun RecibirDatosSeta(padding: PaddingValues, myMushID: String, navController: Na
                         horizontalAlignment = Alignment.Start
                     ) {
                         Row (modifier = Modifier.padding(3.dp)){
-                            Text(text = "Nombre científico: ", fontSize = 18.sp,fontFamily = interFamily, fontWeight = FontWeight.SemiBold)
+                            Text(text = stringResource(R.string.scientific_name)+": ",
+                                fontSize = 18.sp,fontFamily = interFamily, fontWeight = FontWeight.SemiBold)
                             Text(
                                 text = mushObj.scientificName,
                                 fontSize = 18.sp,
@@ -150,34 +152,52 @@ fun RecibirDatosSeta(padding: PaddingValues, myMushID: String, navController: Na
                                 fontStyle = FontStyle.Italic
                             )
                         }
+                        Row (modifier = Modifier.padding(3.dp)) {
+                            Text(text = stringResource(R.string.commentary)+": ",
+                                fontSize = 18.sp,
+                                fontFamily = interFamily, fontWeight = FontWeight.SemiBold)
+                            Text (
+                                text = mushObj.commentary,
+                                fontWeight = FontWeight.Bold,
+                                textAlign = TextAlign.Center,
+                            )
+                        }
 
                         Row(modifier = Modifier.padding(3.dp)) {
-                            Text(text = "Descripcion: ",fontSize = 18.sp, fontFamily = interFamily, fontWeight = FontWeight.SemiBold)
+                            Text(text = stringResource(R.string.description)+": ",
+                                fontSize = 18.sp, fontFamily = interFamily, fontWeight = FontWeight.SemiBold)
                             Text(text = mushObj.description, fontSize = 18.sp,fontFamily = interFamily,)
                         }
 
                         Row (modifier = Modifier.padding(3.dp)){
-                            Text(text = "Hábitat: ",fontSize = 18.sp, fontFamily = interFamily, fontWeight = FontWeight.SemiBold)
+                            Text(text = stringResource(R.string.habitat)+": ",
+                                fontSize = 18.sp, fontFamily = interFamily, fontWeight = FontWeight.SemiBold)
                             Text(text = mushObj.habitat, fontSize = 18.sp,fontFamily = interFamily)
                         }
 
                         Row(modifier = Modifier.padding(3.dp)) {
-                            Text(text = "Estado: ",fontSize = 18.sp, fontFamily = interFamily, fontWeight = FontWeight.SemiBold)
+                            Text(text = stringResource(R.string.edible)+": ",
+                                fontSize = 18.sp, fontFamily = interFamily, fontWeight = FontWeight.SemiBold)
                             Text(text = isEdibleText, fontSize = 18.sp,fontFamily = interFamily)
                         }
 
 
                         Row(modifier = Modifier.padding(3.dp)) {
-                            Text(text = "Estación: ", fontSize = 18.sp,fontFamily = interFamily, fontWeight = FontWeight.SemiBold)
+                            Text(text = stringResource(R.string.seasons)+": ",
+                                fontSize = 18.sp,fontFamily = interFamily, fontWeight = FontWeight.SemiBold)
                             Text(text = mushObj.seasons, fontSize = 18.sp, fontFamily = interFamily)
                         }
-                        //TODO
-                        Text(
-                            text = mushObj.timestamp.toDate().toString(),
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier.align(Alignment.CenterHorizontally)
-                        )
-
+                        Row(modifier = Modifier.padding(3.dp)) {
+                            Text(
+                                text = stringResource(R.string.date_of_recolection)+": ",
+                                fontSize = 18.sp,fontFamily = interFamily, fontWeight = FontWeight.SemiBold
+                            )
+                            Text(
+                                text = mushObj.timestamp.toDate().toString(),
+                                fontWeight = FontWeight.Bold,
+                                textAlign = TextAlign.Center,
+                            )
+                        }
                     }
 
                     Row(
@@ -212,7 +232,8 @@ fun RecibirDatosSeta(padding: PaddingValues, myMushID: String, navController: Na
                                 contentDescription = "Borrar",
                                 tint = Color.White
                             )
-                            Text("Borrar", color = Color.White, fontFamily = interFamily)
+                            Text(stringResource(R.string.delete),
+                                color = Color.White, fontFamily = interFamily)
                         }
                     }
                     //mostramos la ubicacion de la seta en un mapa pequeño debajo de la descripcion

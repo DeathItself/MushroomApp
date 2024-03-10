@@ -27,7 +27,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.project03.ui.theme.interFamily
 import com.example.project03.R
-import com.example.project03.model.CityName
 import com.example.project03.viewmodel.ApiGeocodingViewModel
 import kotlinx.coroutines.launch
 

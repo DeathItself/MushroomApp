@@ -10,8 +10,6 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.project03.repository.ForumRepository
 import com.example.project03.ui.components.CameraScreen
-import com.example.project03.ui.screens.restaurant.MostrarRestaurantes
-import com.example.project03.ui.screens.restaurant.RecibirRestaurante
 import com.example.project03.ui.screens.addMushrooms.AddMushroomScreen
 import com.example.project03.ui.screens.authentication.LoginScreen
 import com.example.project03.ui.screens.edit.EditMyMushroomScreen
@@ -22,6 +20,7 @@ import com.example.project03.ui.screens.maps.MapScreen
 import com.example.project03.ui.screens.myMush.MostrarMisSetasScreen
 import com.example.project03.ui.screens.myMush.MyMushroomDetailsScreen
 import com.example.project03.ui.screens.permission.CamLocationPermission
+import com.example.project03.ui.screens.permission.HomeLocationPermission
 import com.example.project03.ui.screens.permission.LocationPermission
 import com.example.project03.ui.screens.quiz.QuizApp
 import com.example.project03.ui.screens.quiz.RankingScreen
@@ -67,6 +66,9 @@ fun AppNavigation() {
         }
         composable(route = AppScreens.CamLocationScreen.route) {
             CamLocationPermission(navController)
+        }
+        composable(route = AppScreens.HomeLocationScreen.route) {
+            HomeLocationPermission(navController)
         }
         composable(route = AppScreens.MisSetasScreen.route) {
             MostrarMisSetasScreen(navController)

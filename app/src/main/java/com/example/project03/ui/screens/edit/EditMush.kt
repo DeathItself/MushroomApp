@@ -164,13 +164,13 @@ fun EditMyMushroomForm(
                 Text(stringResource(R.string.cancel))
             }
         }
-//        dev info about the mushroom
+/*//        dev info about the mushroom
         Text(
             text = "Mush DevInfo:\n"
                     + "${myMushroom.myMushID}, "
                     + "${myMushroom.latitude}, "
                     + "${myMushroom.longitude},"
                     + "${myMushroom.timestamp.toDate()}"
-        )
+        )*/
     }
 }

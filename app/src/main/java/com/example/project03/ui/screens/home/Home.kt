@@ -31,6 +31,7 @@ import com.example.project03.ui.components.CarouselCard
 import com.example.project03.ui.components.TopAppBarWithoutScaffold
 import com.example.project03.ui.components.WeatherBanner
 import com.example.project03.ui.components.getMyLocation
+import com.example.project03.ui.navigation.AppScreens
 import com.example.project03.ui.navigation.BottomNavigationBar
 import com.example.project03.ui.navigation.ContentBottomSheet
 import com.example.project03.ui.theme.interFamily
@@ -74,8 +75,12 @@ fun ContentHomeScreen(padding: PaddingValues, navController: NavController) {
     val user = Data.getUserObj()
     LaunchedEffect(Unit){
         val(latitude, longitude) = getMyLocation(context)
-        viewModel.setCoordinates(latitude!!, longitude!!)
-        viewModel.GetWeatherData("current", latitude, longitude)
+        if (latitude == null || longitude == null){
+            navController.navigate(AppScreens.HomeLocationScreen.route)
+        }else{
+            viewModel.setCoordinates(latitude, longitude)
+            viewModel.GetWeatherData("current", latitude, longitude)
+        }
     }
 
     Column(

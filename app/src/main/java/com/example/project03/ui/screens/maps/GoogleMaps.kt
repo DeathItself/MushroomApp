@@ -27,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -58,7 +59,7 @@ fun MapScreen(navController: NavController) {
     val mainViewModel: MainViewModel = viewModel()
     val isHome = true
     Scaffold(topBar = {
-        TopAppBarWithoutScaffold(isHome, navController, title = "Mapa")
+        TopAppBarWithoutScaffold(isHome, navController, title = stringResource(R.string.BottomNavMap))
     }, bottomBar = {
         BottomNavigationBar(navController)
     }) { padding ->
@@ -130,7 +131,7 @@ fun ContentGoogleMaps(padding: PaddingValues, navController: NavController) {
                 )
             }
             restaurant.forEach { restaurants ->
-                val position = LatLng(restaurants.latitude!!, restaurants.longitud!!)
+                val position = LatLng(restaurants.latitude, restaurants.longitud)
                 val marker =
                     BitmapDescriptorFactory.fromResource(R.drawable.icono_restaurante)
                 Marker(
@@ -210,7 +211,7 @@ fun MushDetailsMap(mushroom: MyMushroom, isEdibleText: String) {
         horizontalAlignment = Alignment.Start
     ) {
         Row (modifier = Modifier.padding(3.dp)){
-            Text(text = "Nombre científico: ",
+            Text(text = stringResource(R.string.scientific_name)+": ",
                 fontSize = 18.sp,fontFamily = interFamily, fontWeight = FontWeight.SemiBold)
             Text(
                 text = mushroom.scientificName,
@@ -225,33 +226,43 @@ fun MushDetailsMap(mushroom: MyMushroom, isEdibleText: String) {
             Text (
                 text = mushroom.commentary,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.align(Alignment.CenterHorizontally)
+                textAlign = TextAlign.Center,
             )
         }
-
         Row(modifier = Modifier.padding(3.dp)) {
-            Text(text = "Descripcion: ",
+            Text(text = stringResource(R.string.description)+": ",
                 fontSize = 20.sp, fontFamily = interFamily, fontWeight = FontWeight.SemiBold)
-            Text(text = mushroom.description, fontSize = 20.sp,fontFamily = interFamily,)
+            Text(text = mushroom.description, fontSize = 20.sp,fontFamily = interFamily)
         }
 
         Row (modifier = Modifier.padding(3.dp)){
-            Text(text = "Hábitat: ",
+            Text(text = stringResource(R.string.habitat)+": ",
                 fontSize = 20.sp, fontFamily = interFamily, fontWeight = FontWeight.SemiBold)
             Text(text = mushroom.habitat, fontSize = 20.sp,fontFamily = interFamily)
         }
 
         Row(modifier = Modifier.padding(3.dp)) {
-            Text(text = "Estado: ",
+            Text(text = stringResource(R.string.edible)+": ",
                 fontSize = 20.sp, fontFamily = interFamily, fontWeight = FontWeight.SemiBold)
             Text(text = isEdibleText, fontSize = 20.sp,fontFamily = interFamily)
         }
 
 
         Row(modifier = Modifier.padding(3.dp)) {
-            Text(text = "Estación: ",
+            Text(text = stringResource(R.string.seasons)+": ",
                 fontSize = 20.sp,fontFamily = interFamily, fontWeight = FontWeight.SemiBold)
             Text(text = mushroom.seasons, fontSize = 20.sp, fontFamily = interFamily)
+        }
+        Row(modifier = Modifier.padding(3.dp)) {
+            Text(
+                text = stringResource(R.string.date_of_recolection)+": ",
+                fontSize = 18.sp,fontFamily = interFamily, fontWeight = FontWeight.SemiBold
+            )
+            Text(
+                text = mushroom.timestamp.toDate().toString(),
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center,
+            )
         }
 
     }

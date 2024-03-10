@@ -7,6 +7,7 @@ sealed class AppScreens(val route: String){
     object CameraScreen: AppScreens("camera_screen")
     object LocationScreen : AppScreens("location_screen")
     object CamLocationScreen: AppScreens("cam_location_screen")
+    object HomeLocationScreen: AppScreens("home_location_permission")
     object MisSetasScreen: AppScreens("misSetas_screen")
     object SetasDetailsScreen: AppScreens("detail_screen")
     object MisSetasDetailsScreen: AppScreens("misSetas_detail_screen")

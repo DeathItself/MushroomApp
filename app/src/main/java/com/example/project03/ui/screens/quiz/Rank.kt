@@ -21,7 +21,6 @@ import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -36,9 +35,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -50,7 +48,6 @@ import com.example.project03.ui.navigation.AppScreens
 import com.example.project03.ui.navigation.BottomNavigationBar
 import com.example.project03.ui.navigation.ContentBottomSheet
 import com.example.project03.ui.theme.interFamily
-import com.example.project03.ui.navigation.ContentBottomSheet
 import com.example.project03.util.data.Data
 import com.example.project03.util.db.getUserName
 import com.example.project03.viewmodel.MainViewModel
@@ -189,7 +186,8 @@ fun RankingsList(rankings: List<Ranking>, modifier: Modifier) {
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = "Puntuaciones globales", modifier = Modifier.padding(12.dp), fontFamily = interFamily, fontWeight = FontWeight.Bold, fontSize = 30.sp)
+            Text(text = stringResource(R.string.global_score),
+                modifier = Modifier.padding(12.dp), fontFamily = interFamily, fontWeight = FontWeight.Bold, fontSize = 30.sp)
             LazyColumn {
                 items(rankings) { ranking ->
                     RankingItem(ranking)
