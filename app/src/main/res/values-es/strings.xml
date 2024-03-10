@@ -41,8 +41,8 @@
     <string name="the_correct_ans_was">La respuesta correcta era</string>
     <string name="exit">Salir</string>
     <string name="you_have_identified_all_mushrooms">"Has acertado todas las setas "</string>
-    <string name="with">" con"</string>
-    <string name="score">puntos</string>
+    <string name="with">" con "</string>
+    <string name="score">" puntos"</string>
     <string name="congratulations">¡Felicidades!</string>
     <string name="there_is_no_mushrooms_available">No hay setas disponibles</string>
     <string name="there_is_no_answers_available">**No hay respuestas disponibles**</string>

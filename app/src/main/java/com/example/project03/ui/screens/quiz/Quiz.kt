@@ -19,15 +19,19 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -50,6 +54,7 @@ import com.example.project03.ui.components.TopAppBarWithoutScaffold
 import com.example.project03.ui.navigation.AppScreens
 import com.example.project03.ui.navigation.BottomNavigationBar
 import com.example.project03.ui.navigation.ContentBottomSheet
+import com.example.project03.ui.theme.interFamily
 import com.example.project03.util.data.Data
 import com.example.project03.viewmodel.MainViewModel
 import com.google.firebase.auth.ktx.auth
@@ -124,32 +129,32 @@ fun generateImageQuestion(
 fun QuizApp(navController: NavController) {
     val mainViewModel: MainViewModel = viewModel()
     val mushrooms = Data.wikiDBList()
-    val score = remember { mutableStateOf(0) }
+    val score = remember { mutableIntStateOf(0) }
     val usedMushrooms = remember { mutableStateOf(HashSet<String>()) }
     val triggerNewQuestion = remember { mutableStateOf(false) }
     val currentQuestion =
-        mutableStateOf(generateImageQuestion(mushrooms, score.value, usedMushrooms.value))
+        mutableStateOf(generateImageQuestion(mushrooms, score.intValue, usedMushrooms.value))
     val options = currentQuestion.value.options
     val isHome = false
-    val selectedIndex = remember { mutableStateOf(-1) } // -1 indica que no hay selección
-    val startTime = remember { mutableStateOf(20000) }
-    val elapsedTime = remember { mutableStateOf(0) }
-    var checker = remember { mutableStateOf(false) }
-    var checkerTrue: Boolean = false
+    val selectedIndex = remember { mutableIntStateOf(-1) } // -1 indica que no hay selección
+    val startTime = remember { mutableIntStateOf(20000) }
+    val elapsedTime = remember { mutableIntStateOf(0) }
+    val checker = remember { mutableStateOf(false) }
+    var checkerTrue = false
     if (currentQuestion.value.question == stringResource(R.string.there_is_no_answers_available)){
         // Muestra el resultado si no quedan mas preguntas
         checkerTrue = true
-        ShowResultScreen(score.value, mushrooms.size, navController)
-        elapsedTime.value = 0
+        ShowResultScreen(score.intValue, mushrooms.size, navController)
+        elapsedTime.intValue = 0
     } else {
         // Observa cambios en el trigger para generar una nueva pregunta
         if (triggerNewQuestion.value) {
             // Update the question and reset states
             currentQuestion.value =
-                generateImageQuestion(mushrooms, score.value, usedMushrooms.value)
+                generateImageQuestion(mushrooms, score.intValue, usedMushrooms.value)
             triggerNewQuestion.value = false
-            selectedIndex.value = -1
-            elapsedTime.value = 0
+            selectedIndex.intValue = -1
+            elapsedTime.intValue = 0
         }
         Scaffold(topBar = {
             TopAppBarWithoutScaffold(isHome, navController, title = "Quiz")
@@ -172,51 +177,69 @@ fun QuizApp(navController: NavController) {
                         withContext(Dispatchers.IO) {
                             while (remainingTime > 0) {
                                 delay(1000)
-                                elapsedTime.value += 1000
+                                elapsedTime.intValue += 1000
                             }
                         }
                     }
-                    if (elapsedTime.value <= 20000) {
-                        remainingTime = startTime.value - elapsedTime.value
+                    if (elapsedTime.intValue <= 20000) {
+                        remainingTime = startTime.intValue - elapsedTime.intValue
                     }
                     Row(horizontalArrangement = Arrangement.Center) {
 
                         Text(
                             modifier = Modifier
-                                .padding(horizontal = 50.dp),
-                            text = stringResource(R.string.score)+": " + score.value,
-                            style = MaterialTheme.typography.bodyLarge,
+                                .padding(horizontal = 30.dp),
+                            text = stringResource(R.string.score)+": " + score.intValue,
+                            fontFamily = interFamily,
+                            fontWeight = FontWeight.SemiBold,
+                            fontSize = 20.sp
                         )
 
                         Text(
                             modifier = Modifier,
                             text = stringResource(R.string.time_remaining)+": " + remainingTime / 1000 + "s",
                             style = MaterialTheme.typography.bodyLarge,
+                            fontFamily = interFamily,
+                            fontWeight = FontWeight.SemiBold,
+                            fontSize = 20.sp
                         )
                     }
                     Column(
                         Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 0.dp)
+                            .padding(vertical = 0.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         when (question.type) {
                             QuestionType.Image -> {
                                 AsyncImage(
                                     modifier = Modifier
-                                        .size(250.dp)
+                                        .size(270.dp)
                                         .align(Alignment.CenterHorizontally),
                                     model = question.image,
                                     contentDescription = null,
                                 )
                                 // Muestra las opciones como RadioButtons
                                 options.forEachIndexed { index, option ->
-                                    Row(verticalAlignment = Alignment.CenterVertically) {
-                                        RadioButton(selected = selectedIndex.value == index, // Verifica si este RadioButton está seleccionado
-                                            onClick = {
-                                                selectedIndex.value =
-                                                    index // Actualiza el estado con el índice de la opción seleccionada
-                                            })
-                                        Text(option)
+                                    ElevatedCard (
+                                        modifier = Modifier
+                                            .selectable(selectedIndex.intValue == index){
+                                                selectedIndex.intValue = index
+                                            }
+                                            .fillMaxWidth(0.9f)
+                                            .padding(vertical = 5.dp),
+                                        shape = RoundedCornerShape(12.dp),
+                                        colors = CardDefaults.elevatedCardColors(
+                                            containerColor = if (selectedIndex.intValue == index)MaterialTheme.colorScheme.surfaceContainerLow else MaterialTheme.colorScheme.surfaceContainerHighest,
+                                            contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                                            disabledContainerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                                            disabledContentColor = MaterialTheme.colorScheme.onTertiaryContainer
+                                        )
+                                    ){
+                                        Text(
+                                            modifier = Modifier.padding(27.dp),
+                                            text = option
+                                        )
                                     }
                                 }
                             }
@@ -224,11 +247,11 @@ fun QuizApp(navController: NavController) {
                             else -> {
                                 checkerTrue = true
                                 ShowResultScreen(
-                                    score.value,
+                                    score.intValue,
                                     usedMushrooms.value.size,
                                     navController
                                 )
-                                elapsedTime.value = 0
+                                elapsedTime.intValue = 0
                             }
                         }
                     }
@@ -244,14 +267,16 @@ fun QuizApp(navController: NavController) {
                             )
                         }
                     }*/
-                    Column {
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalAlignment = Alignment.End
+                    ) {
                         if (!checker.value || remainingTime > 0) {
                             Button(modifier = Modifier
-                                .align(Alignment.CenterHorizontally)
-                                .padding(50.dp),
+                                .padding(10.dp),
                                 onClick = {
                                     // Primero, verifica si se ha seleccionado alguna opción
-                                    if (selectedIndex.value == -1) {
+                                    if (selectedIndex.intValue == -1) {
                                         // Si no hay selección, muestra un Toast y retorna
                                         Toast.makeText(
                                             context,
@@ -262,13 +287,13 @@ fun QuizApp(navController: NavController) {
                                     }
 
                                     // Lógica para manejar la respuesta seleccionada
-                                    if (selectedIndex.value == options.indexOf(currentQuestion.value.correctAnswer) && remainingTime > 0) {
+                                    if (selectedIndex.intValue == options.indexOf(currentQuestion.value.correctAnswer) && remainingTime > 0) {
                                         // Respuesta correcta, incrementa la puntuación y prepara la siguiente pregunta
                                         val bonusPoints = remainingTime / 1000
-                                        score.value += bonusPoints
-                                        selectedIndex.value =
+                                        score.intValue += bonusPoints
+                                        selectedIndex.intValue =
                                             -1 // Resetea la selección para la siguiente pregunta
-                                        elapsedTime.value = 0
+                                        elapsedTime.intValue = 0
                                         usedMushrooms.value.add(currentQuestion.value.correctAnswer)
                                         triggerNewQuestion.value = true
                                         Toast.makeText(
@@ -278,7 +303,7 @@ fun QuizApp(navController: NavController) {
                                         ).show()
                                     } else {
                                         // Respuesta incorrecta, resetea la puntuación y prepara la siguiente pregunta
-                                        score.value = 0
+                                        score.intValue = 0
                                         Toast.makeText(
                                             context,
                                             "Respuesta incorrecta",
@@ -287,22 +312,22 @@ fun QuizApp(navController: NavController) {
                                             .show()
                                         triggerNewQuestion.value = false
                                         checker.value = true
-                                        elapsedTime.value = 20000
+                                        elapsedTime.intValue = 20000
                                     }
                                 }) {
                                 if (checkerTrue) {
-                                    Text(stringResource(R.string.quiz_finished))
+                                    Text(stringResource(R.string.quiz_finished), fontFamily = interFamily)
                                 } else if (!checker.value) {
-                                    Text(stringResource(R.string.next_question))
+                                    Text(stringResource(R.string.next_question), fontFamily = interFamily)
                                 } else {
-                                    Text(stringResource(R.string.retry))
+                                    Text(stringResource(R.string.retry), fontFamily = interFamily)
                                 }
                             }
                         }
                     }
                     if (checker.value || remainingTime <= 0) {
                         triggerNewQuestion.value = false
-                        score.value = 0
+                        score.intValue = 0
                         question.image?.let {
                             ShowFailureScreen(
                                 correctAnswer = question.correctAnswer,
@@ -330,24 +355,26 @@ fun ShowResultScreen(score: Int, totalMushrooms: Int, navController: NavControll
     var timestamp: com.google.firebase.Timestamp = com.google.firebase.Timestamp.now()
     Column(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp)
+            .fillMaxSize()
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
         Text(
             text = stringResource(R.string.congratulations),
             style = MaterialTheme.typography.displayMedium,
-            modifier = Modifier.align(Alignment.CenterHorizontally)
+            fontFamily = interFamily,
         )
         Text(
             text = stringResource(R.string.you_have_identified_all_mushrooms) +totalMushrooms+ stringResource(
                 R.string.with
             ) +score + stringResource(R.string.score)+".",
             style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.align(Alignment.CenterHorizontally)
+            fontFamily = interFamily,
+            fontSize = 17.sp
         )
         Button(
             modifier = Modifier
-                .align(Alignment.CenterHorizontally)
                 .padding(16.dp),
             onClick = {
                 // Share the score
@@ -375,12 +402,12 @@ fun ShowResultScreen(score: Int, totalMushrooms: Int, navController: NavControll
                         }
                     }
                 }
-            }) {
-            Text(stringResource(R.string.share_score))
+            }
+        ) {
+            Text(stringResource(R.string.share_score), fontFamily = interFamily)
         }
         Button(
             modifier = Modifier
-                .align(Alignment.CenterHorizontally)
                 .padding(16.dp),
             onClick = {
                 // Restart the quiz
@@ -388,7 +415,7 @@ fun ShowResultScreen(score: Int, totalMushrooms: Int, navController: NavControll
                     AppScreens.QuizScreen.route
                 )
             }) {
-            Text(stringResource(R.string.play_again))
+            Text(stringResource(R.string.play_again), fontFamily = interFamily)
         }
     }
 }
@@ -421,6 +448,7 @@ fun ShowFailureScreen(
                 style = TextStyle(
                     color = Color.Red,
                     fontSize = 24.sp,
+                    fontFamily = interFamily,
                     fontWeight = FontWeight.Bold
                 )
             )
@@ -429,7 +457,8 @@ fun ShowFailureScreen(
                 text = stringResource(R.string.the_correct_ans_was)+": " +correctAnswer,
                 style = TextStyle(
                     color = MaterialTheme.colorScheme.onSurface,
-                    fontSize = 18.sp
+                    fontSize = 18.sp,
+                    fontFamily = interFamily
                 )
             )
 
@@ -444,7 +473,7 @@ fun ShowFailureScreen(
                     modifier = Modifier
                         .width(120.dp)
                 ) {
-                    Text(text = stringResource(R.string.retry))
+                    Text(text = stringResource(R.string.retry), fontFamily = interFamily)
                 }
 
                 Button(
@@ -452,7 +481,7 @@ fun ShowFailureScreen(
                     modifier = Modifier
                         .width(120.dp)
                 ) {
-                    Text(text = stringResource(R.string.exit))
+                    Text(text = stringResource(R.string.exit), fontFamily = interFamily)
                 }
             }
         }
