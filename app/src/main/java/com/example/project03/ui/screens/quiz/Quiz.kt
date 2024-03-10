@@ -32,6 +32,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -70,7 +71,8 @@ import kotlinx.coroutines.withContext
 fun generateImageQuestion(
     mushrooms: List<Mushroom>,
     score: Int,
-    usedMushrooms: HashSet<String>
+    usedMushrooms: HashSet<String>,
+    difficulty: MutableState<String>
 ): Question {
     if (mushrooms.isEmpty()) return Question(
         image = "",
@@ -91,6 +93,13 @@ fun generateImageQuestion(
         }
     } else {
         mushrooms.filter { it.dificulty == "Hard" && !usedMushrooms.contains(it.commonName) }
+    }
+    if (score < 30) {
+        difficulty.value = "Dificuldad: baja"
+    } else if (score < 80) {
+        difficulty.value = "Dificuldad: media"
+    } else {
+        difficulty.value = "Dificuldad: alta"
     }
     val selectedMushroom: Mushroom
 
@@ -132,8 +141,9 @@ fun QuizApp(navController: NavController) {
     val score = remember { mutableIntStateOf(0) }
     val usedMushrooms = remember { mutableStateOf(HashSet<String>()) }
     val triggerNewQuestion = remember { mutableStateOf(false) }
+    var difficulty = remember { mutableStateOf("") }
     val currentQuestion =
-        mutableStateOf(generateImageQuestion(mushrooms, score.intValue, usedMushrooms.value))
+        mutableStateOf(generateImageQuestion(mushrooms, score.intValue, usedMushrooms.value, difficulty))
     val options = currentQuestion.value.options
     val isHome = false
     val selectedIndex = remember { mutableIntStateOf(-1) } // -1 indica que no hay selección
@@ -151,7 +161,7 @@ fun QuizApp(navController: NavController) {
         if (triggerNewQuestion.value) {
             // Update the question and reset states
             currentQuestion.value =
-                generateImageQuestion(mushrooms, score.intValue, usedMushrooms.value)
+                generateImageQuestion(mushrooms, score.intValue, usedMushrooms.value, difficulty)
             triggerNewQuestion.value = false
             selectedIndex.intValue = -1
             elapsedTime.intValue = 0
@@ -202,6 +212,13 @@ fun QuizApp(navController: NavController) {
                             fontFamily = interFamily,
                             fontWeight = FontWeight.SemiBold,
                             fontSize = 20.sp
+                        )
+//                        nivel de la seta
+                        Text(
+                            modifier = Modifier
+                                .padding(horizontal = 50.dp),
+                            text = difficulty.value,
+                            style = MaterialTheme.typography.bodyLarge
                         )
                     }
                     Column(

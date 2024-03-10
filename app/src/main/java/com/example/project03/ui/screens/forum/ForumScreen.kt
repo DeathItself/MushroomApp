@@ -51,6 +51,7 @@ import com.example.project03.model.ForumQuestion
 import com.example.project03.ui.components.TopAppBarWithoutScaffold
 import com.example.project03.ui.navigation.BottomNavigationBar
 import com.example.project03.ui.navigation.ContentBottomSheet
+import com.example.project03.util.data.Data
 import com.example.project03.viewmodel.ForumViewModel
 import com.example.project03.viewmodel.MainViewModel
 import com.google.firebase.Timestamp
@@ -286,7 +287,8 @@ fun QuestionItem(
                     .scrollable(
                         state = rememberScrollableState { delta -> delta },
                         orientation = Orientation.Vertical,
-                        enabled = true)
+                        enabled = true
+                    )
             ) {item {
                 if (answers.isNotEmpty()) {
                     answers.forEach { answer ->
@@ -332,6 +334,7 @@ fun AddResponseButton(
 
     var answerText by remember { mutableStateOf("") }
     var addingAnswer by remember { mutableStateOf(false) }
+    var user= Data.getUserObj()
 
     if (!addingAnswer) {
         Button(onClick = { addingAnswer = true }) {
@@ -358,9 +361,9 @@ fun AddResponseButton(
                         id = UUID.randomUUID().toString(),
                         questionId = questionId,
                         content = answerText,
-                        userId = currentUser?.uid ?: "",
+                        userId = user.id,
                         timestamp = Timestamp.now(),
-                        userName = currentUser?.email?.split("@")?.get(0) ?: "unknown",
+                        userName = user.username
                     )
                     forumViewModel.postAnswer(newResponse)
                     addingAnswer = false
