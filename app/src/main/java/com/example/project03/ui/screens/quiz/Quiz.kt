@@ -4,6 +4,9 @@ import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Context
 import android.widget.Toast
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.ScrollableState
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,6 +18,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -128,7 +132,7 @@ fun QuizApp(navController: NavController) {
     val selectedIndex = remember { mutableStateOf(-1) } // -1 indica que no hay selección
     val startTime = remember { mutableStateOf(20000) }
     val elapsedTime = remember { mutableStateOf(0) }
-    var checker: Boolean = false
+    var checker = remember { mutableStateOf(false) }
     var checkerTrue: Boolean = false
     if (currentQuestion.value.question == "No hay más preguntas disponibles") {
         // Muestra el resultado si no quedan mas preguntas
@@ -150,147 +154,160 @@ fun QuizApp(navController: NavController) {
         }, bottomBar = {
             BottomNavigationBar(navController)
         }) { padding ->
-            Column(
+            LazyColumn(
                 Modifier
                     .padding(padding)
                     .fillMaxWidth()
+                    .scrollable(orientation = Orientation.Vertical,
+                        enabled = true,
+                        reverseDirection = false,
+                        state = ScrollableState { delta -> delta })
             ) {
-                val question = currentQuestion.value
-                Text(
-                    modifier = Modifier
-                        .padding(5.dp)
-                        .align(Alignment.CenterHorizontally),
-                    text = "QUIZ",
-                    style = MaterialTheme.typography.displayMedium,
-                )
-                Text(
-                    modifier = Modifier
-                        .padding(horizontal = 10.dp)
-                        .align(Alignment.CenterHorizontally),
-                    text = "Puntuación: ${score.value}",
-                    style = MaterialTheme.typography.bodyMedium,
-                )
-                var remainingTime = 0
-                LaunchedEffect(Unit) {
-                    withContext(Dispatchers.IO) {
-                        while (remainingTime > 0) {
-                            delay(1000)
-                            elapsedTime.value += 1000
+                item {
+                    val question = currentQuestion.value
+                    var remainingTime = 0
+                    LaunchedEffect(Unit) {
+                        withContext(Dispatchers.IO) {
+                            while (remainingTime > 0) {
+                                delay(1000)
+                                elapsedTime.value += 1000
+                            }
                         }
                     }
-                }
-                if (elapsedTime.value <= 20000) {
-                    remainingTime = startTime.value - elapsedTime.value
-                }
-                Text(
-                    modifier = Modifier
-                        .padding(top = 10.dp)
-                        .align(Alignment.CenterHorizontally),
-                    text = "Tiempo restante: ${remainingTime / 1000}s",
-                    style = MaterialTheme.typography.bodyMedium,
-                )
-                Column(
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 0.dp)
-                ) {
-                    when (question.type) {
-                        QuestionType.Image -> {
-                            AsyncImage(
-                                modifier = Modifier
-                                    .size(150.dp)
-                                    .align(Alignment.CenterHorizontally),
-                                model = question.image,
-                                contentDescription = null,
+                    if (elapsedTime.value <= 20000) {
+                        remainingTime = startTime.value - elapsedTime.value
+                    }
+                    Row(horizontalArrangement = Arrangement.Center) {
+
+                        Text(
+                            modifier = Modifier
+                                .padding(horizontal = 50.dp),
+                            text = "Puntuación: ${score.value}",
+                            style = MaterialTheme.typography.bodyLarge,
+                        )
+
+                        Text(
+                            modifier = Modifier,
+                            text = "Tiempo restante: ${remainingTime / 1000}s",
+                            style = MaterialTheme.typography.bodyLarge,
+                        )
+                    }
+                    Column(
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 0.dp)
+                    ) {
+                        when (question.type) {
+                            QuestionType.Image -> {
+                                AsyncImage(
+                                    modifier = Modifier
+                                        .size(250.dp)
+                                        .align(Alignment.CenterHorizontally),
+                                    model = question.image,
+                                    contentDescription = null,
+                                )
+                                // Muestra las opciones como RadioButtons
+                                options.forEachIndexed { index, option ->
+                                    Row(verticalAlignment = Alignment.CenterVertically) {
+                                        RadioButton(selected = selectedIndex.value == index, // Verifica si este RadioButton está seleccionado
+                                            onClick = {
+                                                selectedIndex.value =
+                                                    index // Actualiza el estado con el índice de la opción seleccionada
+                                            })
+                                        Text(option)
+                                    }
+                                }
+                            }
+
+                            else -> {
+                                checkerTrue = true
+                                ShowResultScreen(
+                                    score.value,
+                                    usedMushrooms.value.size,
+                                    navController
+                                )
+                                elapsedTime.value = 0
+                            }
+                        }
+                    }
+                    val context = LocalContext.current
+                    /*if (remainingTime <= 0) {
+                        triggerNewQuestion.value = false
+                        score.value = 0
+                        question.image?.let {
+                            ShowFailureScreen(
+                                correctAnswer = question.correctAnswer,
+                                imagen = it,
+                                navController
                             )
-                            // Muestra las opciones como RadioButtons
-                            options.forEachIndexed { index, option ->
-                                Row(verticalAlignment = Alignment.CenterVertically) {
-                                    RadioButton(selected = selectedIndex.value == index, // Verifica si este RadioButton está seleccionado
-                                        onClick = {
-                                            selectedIndex.value =
-                                                index // Actualiza el estado con el índice de la opción seleccionada
-                                        })
-                                    Text(option)
+                        }
+                    }*/
+                    Column {
+                        if (!checker.value || remainingTime > 0) {
+                            Button(modifier = Modifier
+                                .align(Alignment.CenterHorizontally)
+                                .padding(50.dp),
+                                onClick = {
+                                    // Primero, verifica si se ha seleccionado alguna opción
+                                    if (selectedIndex.value == -1) {
+                                        // Si no hay selección, muestra un Toast y retorna
+                                        Toast.makeText(
+                                            context,
+                                            "Por favor, selecciona una opción",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                        return@Button
+                                    }
+
+                                    // Lógica para manejar la respuesta seleccionada
+                                    if (selectedIndex.value == options.indexOf(currentQuestion.value.correctAnswer) && remainingTime > 0) {
+                                        // Respuesta correcta, incrementa la puntuación y prepara la siguiente pregunta
+                                        val bonusPoints = remainingTime / 1000
+                                        score.value += bonusPoints
+                                        selectedIndex.value =
+                                            -1 // Resetea la selección para la siguiente pregunta
+                                        elapsedTime.value = 0
+                                        usedMushrooms.value.add(currentQuestion.value.correctAnswer)
+                                        triggerNewQuestion.value = true
+                                        Toast.makeText(
+                                            context,
+                                            "Correcto! Has obtenido +$bonusPoints puntos por tiempo restante",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    } else {
+                                        // Respuesta incorrecta, resetea la puntuación y prepara la siguiente pregunta
+                                        score.value = 0
+                                        Toast.makeText(
+                                            context,
+                                            "Respuesta incorrecta",
+                                            Toast.LENGTH_SHORT
+                                        )
+                                            .show()
+                                        triggerNewQuestion.value = false
+                                        checker.value = true
+                                        elapsedTime.value = 20000
+                                    }
+                                }) {
+                                if (checkerTrue) {
+                                    Text("Quiz finalizado")
+                                } else if (!checker.value) {
+                                    Text("Siguiente pregunta")
+                                } else {
+                                    Text("Quiz finalizado")
                                 }
                             }
                         }
-
-                        else -> {
-                            checkerTrue = true
-                            ShowResultScreen(score.value, usedMushrooms.value.size, navController)
-                            elapsedTime.value = 0
-                        }
                     }
-                }
-                val context = LocalContext.current
-                if (remainingTime <= 0) {
-                    triggerNewQuestion.value = false
-                    score.value = 0
-                    checker = true
-                    question.image?.let {
-                        ShowFailureScreen(
-                            correctAnswer = question.correctAnswer,
-                            imagen = it,
-                            navController
-                        )
-                    }
-                }
-                Button(modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .padding(16.dp),
-                    onClick = {
-                        // Primero, verifica si se ha seleccionado alguna opción
-                        if (selectedIndex.value == -1) {
-                            // Si no hay selección, muestra un Toast y retorna
-                            Toast.makeText(
-                                context,
-                                "Por favor, selecciona una opción",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                            return@Button
+                    if (checker.value || remainingTime <= 0) {
+                        triggerNewQuestion.value = false
+                        score.value = 0
+                        question.image?.let {
+                            ShowFailureScreen(
+                                correctAnswer = question.correctAnswer,
+                                imagen = it,
+                                navController
+                            )
                         }
-
-                        // Lógica para manejar la respuesta seleccionada
-                        if (selectedIndex.value == options.indexOf(currentQuestion.value.correctAnswer) && remainingTime > 0) {
-                            // Respuesta correcta, incrementa la puntuación y prepara la siguiente pregunta
-                            val bonusPoints = remainingTime / 1000
-                            score.value += bonusPoints
-                            selectedIndex.value =
-                                -1 // Resetea la selección para la siguiente pregunta
-                            elapsedTime.value = 0
-                            usedMushrooms.value.add(currentQuestion.value.correctAnswer)
-                            triggerNewQuestion.value = true
-                            Toast.makeText(
-                                context,
-                                "Correcto! Has obtenido +$bonusPoints puntos por tiempo restante",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        } else {
-                            // Respuesta incorrecta, resetea la puntuación y prepara la siguiente pregunta
-                            score.value = 0
-                            Toast.makeText(context, "Respuesta incorrecta", Toast.LENGTH_SHORT)
-                                .show()
-                            triggerNewQuestion.value = false
-                            checker = true
-                            elapsedTime.value = 20000
-                        }
-                    }) {
-                    if (checkerTrue) {
-                        Text("Quiz finalizado")
-                    }else if (!checker){
-                        Text("Siguiente pregunta")
-                    }else{
-                        Text("Quiz finalizado")
-                    }
-                }
-                if (checker) {
-                    question.image?.let {
-                        ShowFailureScreen(
-                            correctAnswer = question.correctAnswer,
-                            imagen = it,
-                            navController
-                        )
                     }
                 }
             }
@@ -332,7 +349,10 @@ fun ShowResultScreen(score: Int, totalMushrooms: Int, navController: NavControll
                 // Share the score
                 CoroutineScope(Dispatchers.IO).launch {
                     val result = Data.addRank(
-                        score.toDouble(), userId, timestamp, rango// Asegúrate de pasar el userId aquí
+                        score.toDouble(),
+                        userId,
+                        timestamp,
+                        rango// Asegúrate de pasar el userId aquí
                     )
                     withContext(Dispatchers.Main) {
                         if (result == "New user added") { //Preguntar a Kevin porque puso esto

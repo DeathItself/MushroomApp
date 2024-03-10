@@ -1,6 +1,10 @@
 package com.example.project03.ui.screens.quiz
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,6 +17,7 @@ import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -22,15 +27,19 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.project03.model.Ranking
 import com.example.project03.ui.components.TopAppBarWithoutScaffold
+import com.example.project03.ui.navigation.AppScreens
 import com.example.project03.ui.navigation.BottomNavigationBar
+import com.example.project03.ui.navigation.ContentBottomSheet
 import com.example.project03.util.data.Data
 import com.example.project03.util.db.getUserName
 import com.example.project03.viewmodel.MainViewModel
@@ -42,17 +51,36 @@ import kotlinx.coroutines.async
 @Composable
 fun RankingScreen(navController: NavController) {
     val mainViewModel: MainViewModel = viewModel()
+    val userMaxScores = mutableMapOf<String, Double>() // Mapa para almacenar puntuaciones máximas
     val id = Firebase.auth.currentUser?.uid
     val isHome = false
     val rankings = Data.myRankList() // Assuming Data.myRankList fetches all scores
+    val filteredRankings = rankings.filter { ranking ->
+        val userId = ranking.userId
+        val maxScore = userMaxScores[userId] ?: 0.0
+
+        // Mostrar solo si la puntuación del ranking es la máxima
+        ranking.puntuacion == maxScore
+    }
+    for (ranking in rankings) {
+        val userId = ranking.userId
+        val score = ranking.puntuacion
+
+        // Actualizar la puntuación máxima del usuario si es mayor
+        if ((userMaxScores[userId]?.compareTo(score) ?: 0) < 0) {
+            userMaxScores[userId] = score
+        }
+    }
+
     val filterOptions = listOf(
         "Todos",
         "Más alto",
         "Más bajo",
-        "Mío"
+        "Mío",
+        "Mas nuevo",
+        "Mas antiguo"
     )
     val selectedFilter = remember { mutableStateOf(filterOptions[0]) }
-    val expanded = remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -66,24 +94,16 @@ fun RankingScreen(navController: NavController) {
                 .fillMaxSize()
                 .padding(padding)
         ) {
-            // Dropdown menu for filtering
-            DropdownMenu(
-                expanded = expanded.value,
-                onDismissRequest = { expanded.value = false },
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                filterOptions.forEach { option ->
-                    DropdownMenuItem(
-                        onClick = {
-                            selectedFilter.value = option
-                            expanded.value = false // Cierra el menú después de seleccionar una opción
-                        }
-                    ) {
-                        Text(text = option)
-                    }
+            // Dropdown for filter selection
+            DropdownList(
+                itemList = filterOptions, // Use your list of filter options
+                selectedIndex = selectedFilter.value.indexOf(selectedFilter.value), // Get index of selected option
+                modifier = Modifier.fillMaxWidth(),
+                onItemClick = { index ->
+                    selectedFilter.value =
+                        filterOptions[index] // Update selected filter based on index
                 }
-            }
-
+            )
             // Show rankings based on selected filter
             when (selectedFilter.value) {
                 "Todos" -> {
@@ -116,20 +136,38 @@ fun RankingScreen(navController: NavController) {
                         ) {
                             Text("Tu puntuación: ${userRanking.puntuacion}")
                             Button(
-                                onClick = { /* Handle user action */ },
+                                onClick = { navController.navigate(route = AppScreens.QuizScreen.route) },
                                 modifier = Modifier.padding(start = 16.dp)
                             ) {
-                                Text("Reintentar")
+                                Text("Mejorar puntuación")
                             }
                         }
                     } else {
                         Text("No se encontró tu rango")
                     }
                 }
+
+                "Mas nuevo" -> {
+                    RankingsList(
+                        rankings.sortedByDescending { it.timestamp },
+                        modifier = Modifier
+                    ) // Ordenado por más nuevo
+                }
+
+                "Mas antiguo" -> {
+                    RankingsList(
+                        rankings.sortedBy { it.timestamp },
+                        modifier = Modifier
+                    ) // Ordenado por mas antiguo
+                }
             }
         }
     }
-
+    if (mainViewModel.showBottomSheet) {
+        ModalBottomSheet(onDismissRequest = { mainViewModel.showBottomSheet = false }) {
+            ContentBottomSheet(mainViewModel, navController)
+        }
+    }
 }
 
 @Composable
@@ -163,5 +201,43 @@ fun RankingItem(ranking: Ranking) {
             text = ranking.puntuacion.toString(),
             modifier = Modifier.align(Alignment.CenterVertically)
         )
+    }
+}
+
+@Composable
+fun DropdownList(
+    itemList: List<String>,
+    selectedIndex: Int,
+    modifier: Modifier,
+    onItemClick: (Int) -> Unit
+) {
+    var showDropdown by rememberSaveable { mutableStateOf(false) }
+
+    Box(
+        modifier = modifier
+            .background(Color.White) // Use a neutral background color
+            .border(width = 1.dp, color = Color.Gray)
+            .clickable { showDropdown = true }
+            .padding(all = 4.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(text = itemList[selectedIndex])
+
+        DropdownMenu(
+            expanded = showDropdown,
+            onDismissRequest = { showDropdown = false },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            itemList.forEachIndexed { index, item ->
+                DropdownMenuItem(
+                    onClick = {
+                        onItemClick(index)
+                        showDropdown = false
+                    }
+                ) {
+                    Text(text = item)
+                }
+            }
+        }
     }
 }
