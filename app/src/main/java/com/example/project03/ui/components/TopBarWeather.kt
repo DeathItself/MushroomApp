@@ -42,7 +42,7 @@ fun TopBarWeather(isHome: Boolean, navController: NavController){
         modifier = Modifier,
         title = {
             Text(
-                stringResource(R.string.city_text),
+                stringResource(R.string.BottomSheetMenuWeather),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 fontFamily = interFamily,
