@@ -36,7 +36,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -46,6 +45,7 @@ import com.example.project03.ui.components.TopBarWeather
 import com.example.project03.ui.components.getMyLocation
 import com.example.project03.ui.navigation.BottomNavigationBar
 import com.example.project03.ui.navigation.ContentBottomSheet
+import com.example.project03.ui.theme.interFamily
 import com.example.project03.viewmodel.ApiGeocodingViewModel
 import com.example.project03.viewmodel.ApiWeatherViewModel
 import com.example.project03.viewmodel.MainViewModel
@@ -189,7 +189,7 @@ fun ShowHourly(
         Text(
             text = "Horas",
             fontSize = 30.sp,
-            style = MaterialTheme.typography.bodyLarge
+            fontFamily = interFamily
         )
         Spacer(modifier = Modifier.height(15.dp))
         Row(
@@ -214,6 +214,7 @@ fun ShowHourly(
                             text = "${hour.toString().padStart(2, '0')}:00",
                             modifier = Modifier.width(80.dp),
                             style = MaterialTheme.typography.bodyMedium.copy(fontSize = 23.sp),
+                            fontFamily = interFamily
                         )
                     }
 
@@ -227,6 +228,7 @@ fun ShowHourly(
                                     .width(80.dp)
                                     .padding(horizontal = 12.dp),
                                 style = MaterialTheme.typography.bodyMedium.copy(fontSize = 18.sp),
+                                fontFamily = interFamily
                             )
 
                             Spacer(modifier = Modifier.height(17.dp))
@@ -242,6 +244,7 @@ fun ShowHourly(
                                     modifier = Modifier
                                         .width(80.dp),
                                     style = MaterialTheme.typography.bodyMedium.copy(fontSize = 18.sp),
+                                    fontFamily = interFamily
                                 )
                             }
                         }
@@ -295,7 +298,7 @@ fun ShowDaily(
             Text(
                 text = "Próximos días:",
                 fontSize = 30.sp,
-                style = MaterialTheme.typography.bodyLarge
+                fontFamily = interFamily
             )
 
             Spacer(modifier = Modifier.height(20.dp))
@@ -306,10 +309,11 @@ fun ShowDaily(
             ) {
                 Text(
                     text = "Dias",
+                    fontFamily = interFamily,
                     modifier = Modifier.width(87.dp)
                 )
-                Text(text = "Precip.%")
-                Text(text = "TºMax / Min")
+                Text(text = "Precip.%", fontFamily = interFamily)
+                Text(text = "TºMax / Min", fontFamily = interFamily)
             }
 
             Spacer(modifier = Modifier.height(15.dp))
@@ -326,7 +330,7 @@ fun ShowDaily(
                             fontSize = 21.sp,
                             style = MaterialTheme.typography.bodyMedium,
                             modifier = Modifier.width(110.dp),
-                            fontFamily = FontFamily.Monospace
+                            fontFamily = interFamily
                         )
                         Spacer(modifier = Modifier.width(10.dp))
                         Row {
@@ -338,7 +342,7 @@ fun ShowDaily(
                             Text(
                                 text = "${datoClimatico.probabilidadPrecipitacion}",
                                 fontSize = 16.sp,
-                                style = MaterialTheme.typography.bodyMedium
+                                fontFamily = interFamily
                             )
                         }
                         Spacer(modifier = Modifier.width(10.dp))
@@ -347,14 +351,14 @@ fun ShowDaily(
                             text = "${datoClimatico.temperaturaMaxima}º/${datoClimatico.temperaturaMinima}º",
                             fontSize = 20.sp,
                             style = MaterialTheme.typography.titleMedium,
-                            fontFamily = FontFamily.Monospace
+                            fontFamily = interFamily
                         )
                     }
                     Spacer(modifier = Modifier.height(25.dp))
                 }
             }
         }
-    }
+    } 
 }
 
 fun obtenerDatoClimaticoParaDia(dailyWeatherData: DailyWeatherData, index: Int): DatoClimatico {

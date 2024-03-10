@@ -3,6 +3,7 @@ package com.example.project03.ui.screens.maps
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -26,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
@@ -36,6 +38,7 @@ import com.example.project03.ui.components.TopAppBarWithoutScaffold
 import com.example.project03.ui.navigation.AppScreens
 import com.example.project03.ui.navigation.BottomNavigationBar
 import com.example.project03.ui.navigation.ContentBottomSheet
+import com.example.project03.ui.theme.interFamily
 import com.example.project03.util.data.Data
 import com.example.project03.viewmodel.MainViewModel
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
@@ -128,7 +131,7 @@ fun ContentGoogleMaps(padding: PaddingValues, navController: NavController) {
             restaurant.forEach { restaurants ->
                 val position = LatLng(restaurants.latitude!!, restaurants.longitud!!)
                 val marker =
-                    BitmapDescriptorFactory.fromResource(R.drawable.map_pin_eat_overlay)
+                    BitmapDescriptorFactory.fromResource(R.drawable.icono_restaurante)
                 Marker(
                     icon = marker,
                     onClick = {
@@ -195,33 +198,53 @@ fun MapContentBottomSheet2(restaurants: Restaurants) {
 
 @Composable
 fun MushDetailsMap(mushroom: MyMushroom, isEdibleText: String) {
-    Text(text = mushroom.commonName, fontWeight = FontWeight.Bold)
+    Text(text = mushroom.commonName, fontWeight = FontWeight.Black, fontFamily = interFamily, fontSize = 30.sp)
+    Spacer(modifier = Modifier.height(25.dp))
     AsyncImage(
         modifier = Modifier.size(200.dp), model = mushroom.photo, contentDescription = null
     )
-    Spacer(modifier = Modifier.height(16.dp))
-    Text(text = mushroom.scientificName, fontStyle = FontStyle.Italic)
+    Spacer(modifier = Modifier.height(26.dp))
     Column(
-        modifier = Modifier.padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally
+        modifier = Modifier.padding(12.dp),
+        horizontalAlignment = Alignment.Start
     ) {
-        Text(
-            text = mushroom.description,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.align(Alignment.CenterHorizontally)
-        )
-        Text(
-            text = mushroom.habitat,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.align(Alignment.CenterHorizontally)
-        )
+        Row (modifier = Modifier.padding(3.dp)){
+            Text(text = "Nombre científico: ", fontSize = 18.sp,fontFamily = interFamily, fontWeight = FontWeight.SemiBold)
+            Text(
+                text = mushroom.scientificName,
+                fontSize = 20.sp,
+                fontFamily = interFamily,
+                fontStyle = FontStyle.Italic
+            )
+        }
+
+        Row(modifier = Modifier.padding(3.dp)) {
+            Text(text = "Descripcion: ",fontSize = 20.sp, fontFamily = interFamily, fontWeight = FontWeight.SemiBold)
+            Text(text = mushroom.description, fontSize = 20.sp,fontFamily = interFamily,)
+        }
+
+        Row (modifier = Modifier.padding(3.dp)){
+            Text(text = "Hábitat: ",fontSize = 20.sp, fontFamily = interFamily, fontWeight = FontWeight.SemiBold)
+            Text(text = mushroom.habitat, fontSize = 20.sp,fontFamily = interFamily)
+        }
+
+        Row(modifier = Modifier.padding(3.dp)) {
+            Text(text = "Estado: ",fontSize = 20.sp, fontFamily = interFamily, fontWeight = FontWeight.SemiBold)
+            Text(text = isEdibleText, fontSize = 20.sp,fontFamily = interFamily)
+        }
+
+
+        Row(modifier = Modifier.padding(3.dp)) {
+            Text(text = "Estación: ", fontSize = 20.sp,fontFamily = interFamily, fontWeight = FontWeight.SemiBold)
+            Text(text = mushroom.seasons, fontSize = 20.sp, fontFamily = interFamily)
+        }
+
     }
-    Text(text = isEdibleText, fontWeight = FontWeight.Bold)
-    Text(text = mushroom.seasons, fontWeight = FontWeight.Bold)
 }
 
 @Composable
 fun RestaurantMap(restaurants: Restaurants) {
-    Text(text = restaurants.nom, fontWeight = FontWeight.Bold)
+    Text(text = restaurants.nom, fontWeight = FontWeight.Black, fontFamily = interFamily, fontSize = 30.sp)
     AsyncImage(
         modifier = Modifier.size(200.dp), model = restaurants.photo, contentDescription = null
     )

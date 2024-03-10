@@ -32,6 +32,7 @@ import com.example.project03.ui.components.Loading
 import com.example.project03.ui.components.TopAppBarWithoutScaffold
 import com.example.project03.ui.navigation.BottomNavigationBar
 import com.example.project03.ui.navigation.ContentBottomSheet
+import com.example.project03.ui.theme.interFamily
 import com.example.project03.viewmodel.MainViewModel
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.launch
@@ -114,15 +115,15 @@ fun EditMyMushroomForm(
 
         OutlinedTextField(value = commonName,
             onValueChange = { commonName = it },
-            label = { Text("Nombre Común") })
+            label = { Text("Nombre Común", fontFamily = interFamily) })
         OutlinedTextField(value = description,
             onValueChange = { description = it },
-            label = { Text("Descripción") })
+            label = { Text("Descripción", fontFamily = interFamily) })
         OutlinedTextField(value = habitat,
             onValueChange = { habitat = it },
-            label = { Text("Hábitat") })
+            label = { Text("Hábitat", fontFamily = interFamily) })
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Text("Comestible")
+            Text("Comestible", fontFamily = interFamily)
             Switch(checked = isEdible ?: false, onCheckedChange = { isEdible = it })
         }
         OutlinedTextField(value = seasons,

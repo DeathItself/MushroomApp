@@ -19,10 +19,12 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.project03.ui.theme.interFamily
 import com.example.project03.viewmodel.ApiGeocodingViewModel
 import kotlinx.coroutines.launch
 
@@ -40,7 +42,9 @@ fun TopBarWeather(isHome: Boolean, navController: NavController){
             Text(
                 "Ciudad",
                 maxLines = 1,
-                overflow = TextOverflow.Ellipsis
+                overflow = TextOverflow.Ellipsis,
+                fontFamily = interFamily,
+                fontWeight = FontWeight.Black
             )
         },
         navigationIcon = {

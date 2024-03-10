@@ -1,25 +1,30 @@
 package com.example.project03.ui.screens.myMush
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.ScrollableState
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalBottomSheet
@@ -29,9 +34,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
@@ -40,6 +47,7 @@ import com.example.project03.ui.components.TopAppBarWithoutScaffold
 import com.example.project03.ui.navigation.AppScreens
 import com.example.project03.ui.navigation.BottomNavigationBar
 import com.example.project03.ui.navigation.ContentBottomSheet
+import com.example.project03.ui.theme.interFamily
 import com.example.project03.util.data.Data
 import com.example.project03.util.db.deleteMushroom
 import com.example.project03.viewmodel.MainViewModel
@@ -57,12 +65,16 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun RecibirDatosSeta(padding: PaddingValues, myMushID: String, navController: NavController) {
-
     val mushObj = Data.myMushDBList().find { it.myMushID == myMushID }
     val wikimush = Data.wikiDBList().find { it.commonName == mushObj?.commonName }
     val wikimushImg = wikimush?.photo
+    val pagerState = androidx.compose.foundation.pager.rememberPagerState(
+        initialPage = 0, initialPageOffsetFraction = -0.3f, pageCount = { 2 }
+    )
+
     LazyColumn(modifier = Modifier
         .padding(padding)
         .fillMaxSize()
@@ -70,7 +82,8 @@ fun RecibirDatosSeta(padding: PaddingValues, myMushID: String, navController: Na
             enabled = true,
             reverseDirection = false,
             state = ScrollableState { delta -> delta }),
-        horizontalAlignment = Alignment.CenterHorizontally) {
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         item {
             if (mushObj != null) {
                 val isEdibleText = when (mushObj.isEdible) {
@@ -79,47 +92,86 @@ fun RecibirDatosSeta(padding: PaddingValues, myMushID: String, navController: Na
                     else -> "Información no disponible"
                 }
                 Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    modifier = Modifier.fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
                 ) {
-                    Text(text = mushObj.commonName, fontWeight = FontWeight.Bold)
-                    Row(
-                        modifier = Modifier
-                            .aspectRatio(1.2f)
-                            .padding(16.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceEvenly
-                    ) {
-                        AsyncImage(
-                            modifier = Modifier.width(150.dp),
-                            model = mushObj.photo,
-                            contentDescription = null
-                        )
-                        AsyncImage(
-                            modifier = Modifier.width(150.dp),
-                            model = wikimushImg,
-                            contentDescription = "Photo of the type of mushroom"
-                        )
+                    Text(
+                        modifier = Modifier.padding(15.dp),
+                        text = mushObj.commonName,
+                        fontFamily = interFamily,
+                        fontSize = 30.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+
+                    //Carrusel de imagen
+                    HorizontalPager(
+                        state = pagerState
+                    ) {page ->
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.Bottom
+                        ) {
+                            ElevatedCard(
+                                modifier = Modifier
+                                    .fillMaxSize(0.7f)
+                                    .padding(horizontal = 8.dp),
+                                shape = RoundedCornerShape(12.dp),
+                                elevation = CardDefaults.cardElevation(999.dp),
+                                colors = CardDefaults.elevatedCardColors(Color.Transparent)
+                            ) {
+                                Box(
+                                    contentAlignment = Alignment.BottomCenter
+                                ){
+                                    AsyncImage(
+                                        modifier = Modifier.size(280.dp),
+                                        model = if (page == 0) mushObj.photo else wikimushImg,
+                                        contentDescription = null,
+                                        contentScale = ContentScale.Crop
+                                    )
+                                }
+                            }
+                        }
                     }
                     Spacer(modifier = Modifier.height(16.dp))
-                    Text(text = mushObj.scientificName, fontStyle = FontStyle.Italic)
                     Column(
-                        modifier = Modifier.padding(16.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
+                        modifier = Modifier.padding(12.dp),
+                        horizontalAlignment = Alignment.Start
                     ) {
-                        Text(
-                            text = mushObj.description,
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier.align(Alignment.CenterHorizontally)
-                        )
-                        Text(
-                            text = mushObj.habitat,
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier.align(Alignment.CenterHorizontally)
-                        )
+                        Row (modifier = Modifier.padding(3.dp)){
+                            Text(text = "Nombre científico: ", fontSize = 18.sp,fontFamily = interFamily, fontWeight = FontWeight.SemiBold)
+                            Text(
+                                text = mushObj.scientificName,
+                                fontSize = 18.sp,
+                                fontFamily = interFamily,
+                                fontStyle = FontStyle.Italic
+                            )
+                        }
+
+                        Row(modifier = Modifier.padding(3.dp)) {
+                            Text(text = "Descripcion: ",fontSize = 18.sp, fontFamily = interFamily, fontWeight = FontWeight.SemiBold)
+                            Text(text = mushObj.description, fontSize = 18.sp,fontFamily = interFamily,)
+                        }
+
+                        Row (modifier = Modifier.padding(3.dp)){
+                            Text(text = "Hábitat: ",fontSize = 18.sp, fontFamily = interFamily, fontWeight = FontWeight.SemiBold)
+                            Text(text = mushObj.habitat, fontSize = 18.sp,fontFamily = interFamily)
+                        }
+
+                        Row(modifier = Modifier.padding(3.dp)) {
+                            Text(text = "Estado: ",fontSize = 18.sp, fontFamily = interFamily, fontWeight = FontWeight.SemiBold)
+                            Text(text = isEdibleText, fontSize = 18.sp,fontFamily = interFamily)
+                        }
+
+
+                        Row(modifier = Modifier.padding(3.dp)) {
+                            Text(text = "Estación: ", fontSize = 18.sp,fontFamily = interFamily, fontWeight = FontWeight.SemiBold)
+                            Text(text = mushObj.seasons, fontSize = 18.sp, fontFamily = interFamily)
+                        }
+
                     }
-                    Text(text = isEdibleText, fontWeight = FontWeight.Bold)
-                    Text(text = mushObj.seasons, fontWeight = FontWeight.Bold)
+
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -135,7 +187,7 @@ fun RecibirDatosSeta(padding: PaddingValues, myMushID: String, navController: Na
                             Icon(
                                 Icons.Filled.Edit, contentDescription = "Editar", tint = Color.White
                             )
-                            Text("Editar", color = Color.White)
+                            Text("Editar", color = Color.White, fontFamily = interFamily)
                         }
 
                         Button(
@@ -152,7 +204,7 @@ fun RecibirDatosSeta(padding: PaddingValues, myMushID: String, navController: Na
                                 contentDescription = "Borrar",
                                 tint = Color.White
                             )
-                            Text("Borrar", color = Color.White)
+                            Text("Borrar", color = Color.White, fontFamily = interFamily)
                         }
                     }
                     //mostramos la ubicacion de la seta en un mapa pequeño debajo de la descripcion
@@ -160,8 +212,6 @@ fun RecibirDatosSeta(padding: PaddingValues, myMushID: String, navController: Na
                 }
             }
         }
-
-
     }
 }
 
@@ -196,11 +246,10 @@ fun Mapa(mushroom: MyMushroom) {
 fun MyMushroomDetailsScreen(navController: NavController, myMushID: String) {
     val mainViewModel: MainViewModel = viewModel()
     val isHome = false
-    Scaffold(topBar = {
-        TopAppBarWithoutScaffold(isHome, navController, title = "Mis Setas")
-    }, bottomBar = {
-        BottomNavigationBar(navController)
-    }) { padding ->
+    Scaffold(
+        topBar = { TopAppBarWithoutScaffold(isHome, navController, title = "Mis Setas") },
+        bottomBar = { BottomNavigationBar(navController) }
+    ) { padding ->
         RecibirDatosSeta(padding = padding, myMushID, navController)
         //submenu
         if (mainViewModel.showBottomSheet) {

@@ -44,6 +44,7 @@ import com.example.project03.ui.components.TopAppBarWithoutScaffold
 import com.example.project03.ui.navigation.AppScreens
 import com.example.project03.ui.navigation.BottomNavigationBar
 import com.example.project03.ui.navigation.ContentBottomSheet
+import com.example.project03.ui.theme.interFamily
 import com.example.project03.util.data.Data
 import com.example.project03.util.db.deleteMushroom
 import com.example.project03.viewmodel.MainViewModel
@@ -140,11 +141,13 @@ fun MyMushroomList(mushrooms: List<MyMushroom>, navController: NavController) {
                                 text = mushroom.commonName,
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 20.sp,
+                                fontFamily = interFamily,
                                 modifier = Modifier.padding(bottom = 4.dp)
                             )
                             Text(
                                 text = mushroom.scientificName,
                                 fontSize = 16.sp,
+                                fontFamily = interFamily,
                                 modifier = Modifier
                                     .padding(bottom = 4.dp)
                                     .padding(end = 10.dp)

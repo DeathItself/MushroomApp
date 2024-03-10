@@ -148,7 +148,7 @@ fun CarouselCard(navController: NavController) {
                             .data(mushroomList.toList()[page].photo).crossfade(true)
                             .scale(Scale.FILL).build(),
                             contentDescription = "photo of a mushroom",
-                            contentScale = ContentScale.FillBounds,
+                            contentScale = ContentScale.Crop,
 
                             placeholder = painterResource(id = R.drawable.placeholder),
                             error = painterResource(id = R.drawable.error),

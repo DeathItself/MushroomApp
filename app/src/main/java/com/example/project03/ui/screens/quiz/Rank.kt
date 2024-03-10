@@ -11,8 +11,12 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material3.Button
+import androidx.compose.material3.CardColors
 import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -25,12 +29,17 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.project03.model.Ranking
 import com.example.project03.ui.components.TopAppBarWithoutScaffold
 import com.example.project03.ui.navigation.BottomNavigationBar
+import com.example.project03.ui.navigation.ContentBottomSheet
+import com.example.project03.ui.theme.interFamily
 import com.example.project03.util.data.Data
 import com.example.project03.util.db.getUserName
 import com.example.project03.viewmodel.MainViewModel
@@ -43,7 +52,7 @@ import kotlinx.coroutines.async
 fun RankingScreen(navController: NavController) {
     val mainViewModel: MainViewModel = viewModel()
     val id = Firebase.auth.currentUser?.uid
-    val isHome = false
+    val isHome = true
     val rankings = Data.myRankList() // Assuming Data.myRankList fetches all scores
     val filterOptions = listOf(
         "Todos",
@@ -128,6 +137,12 @@ fun RankingScreen(navController: NavController) {
                 }
             }
         }
+
+        if (mainViewModel.showBottomSheet) {
+            ModalBottomSheet(onDismissRequest = { mainViewModel.showBottomSheet = false }) {
+                ContentBottomSheet(mainViewModel, navController)
+            }
+        }
     }
 
 }
@@ -135,9 +150,15 @@ fun RankingScreen(navController: NavController) {
 @Composable
 fun RankingsList(rankings: List<Ranking>, modifier: Modifier) {
     Surface(modifier = modifier.fillMaxSize()) {
-        LazyColumn {
-            items(rankings) { ranking ->
-                RankingItem(ranking)
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(text = "Puntuaciones globales", modifier = Modifier.padding(12.dp), fontFamily = interFamily, fontWeight = FontWeight.Bold, fontSize = 30.sp)
+            LazyColumn {
+                items(rankings) { ranking ->
+                    RankingItem(ranking)
+                }
             }
         }
     }
@@ -153,15 +174,27 @@ fun RankingItem(ranking: Ranking) {
         userName = coroutineScope.async { getUserName(ranking.userId) }.await().toString()
     }
 
-    Row(
+    ElevatedCard(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp)
-    ) {
-        Text(text = userName, modifier = Modifier.width(200.dp))
-        Text(
-            text = ranking.puntuacion.toString(),
-            modifier = Modifier.align(Alignment.CenterVertically)
+            .padding(horizontal = 20.dp, vertical = 4.dp)
+            .fillMaxSize(), colors = CardColors(
+            MaterialTheme.colorScheme.inverseOnSurface,
+            MaterialTheme.colorScheme.inverseSurface,
+            Color.Transparent,
+            Color.Transparent
         )
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(20.dp)
+        ) {
+            Text(text = userName, modifier = Modifier.width(270.dp), fontFamily = interFamily, fontWeight = FontWeight.SemiBold, fontSize = 20.sp)
+            Text(
+                text = ranking.puntuacion.toString(),
+                fontFamily = interFamily,
+                modifier = Modifier.align(Alignment.CenterVertically)
+            )
+        }
     }
 }
