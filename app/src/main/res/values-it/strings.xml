@@ -104,4 +104,6 @@
     <string name="add_response">aggiungi risposta</string>
     <string name="your_response">la tua risposta</string>
     <string name="submit_response">invia risposta</string>
+    <string name="newer">Più recente</string>
+    <string name="older">Più vecchio</string>
 </resources>

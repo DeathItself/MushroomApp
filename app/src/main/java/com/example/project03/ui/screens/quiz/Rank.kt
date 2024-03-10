@@ -79,8 +79,8 @@ fun RankingScreen(navController: NavController) {
         stringResource(R.string.higher),
         stringResource(R.string.lower),
         stringResource(R.string.mine),
-        "Mas nuevo",
-        "Mas antiguo"
+        stringResource(R.string.newer),
+        stringResource(R.string.older)
 
     )
     val selectedFilter = remember { mutableStateOf(filterOptions[0]) }
@@ -150,14 +150,14 @@ fun RankingScreen(navController: NavController) {
                     }
                 }
 
-                "Mas nuevo" -> {
+               stringResource(R.string.newer) -> {
                     RankingsList(
                         rankings.sortedByDescending { it.timestamp },
                         modifier = Modifier
                     ) // Ordenado por más nuevo
                 }
 
-                "Mas antiguo" -> {
+                stringResource(R.string.older) -> {
                     RankingsList(
                         rankings.sortedBy { it.timestamp },
                         modifier = Modifier

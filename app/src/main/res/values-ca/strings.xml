@@ -104,4 +104,6 @@
     <string name="add_response">afegir resposta</string>
     <string name="your_response">la teva resposta</string>
     <string name="submit_response">enviar resposta</string>
+    <string name="newer">Més nou</string>
+    <string name="older">Més antic</string>
 </resources>
