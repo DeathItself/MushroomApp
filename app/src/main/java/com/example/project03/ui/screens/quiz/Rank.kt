@@ -1,7 +1,6 @@
 package com.example.project03.ui.screens.quiz
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -34,9 +33,11 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -87,8 +88,8 @@ fun RankingScreen(navController: NavController) {
         stringResource(R.string.mine),
         stringResource(R.string.newer),
         stringResource(R.string.older)
-
     )
+    
     val selectedFilter = remember { mutableStateOf(filterOptions[0]) }
 
     Scaffold(
@@ -104,15 +105,22 @@ fun RankingScreen(navController: NavController) {
                 .padding(padding)
         ) {
             // Dropdown for filter selection
-            DropdownList(
-                itemList = filterOptions, // Use your list of filter options
-                selectedIndex = selectedFilter.value.indexOf(selectedFilter.value), // Get index of selected option
-                modifier = Modifier.fillMaxWidth(),
-                onItemClick = { index ->
-                    selectedFilter.value =
-                        filterOptions[index] // Update selected filter based on index
-                }
-            )
+            Column (modifier = Modifier.padding(16.dp)
+                .clip(MaterialTheme.shapes.small)
+            ){
+                DropdownList(
+                    itemList = filterOptions, // Use your list of filter options
+                    selectedIndex = selectedFilter.value.indexOf(selectedFilter.value), // Get index of selected option
+                    modifier = Modifier.fillMaxWidth()
+                        .padding(16.dp)
+                        .clip(MaterialTheme.shapes.small),
+                    onItemClick = { index ->
+                        selectedFilter.value =
+                            filterOptions[index] // Update selected filter based on index
+                    }
+                )
+            }
+
             // Show rankings based on selected filter
             when (selectedFilter.value) {
                 stringResource(R.string.all_rank) -> {
@@ -242,18 +250,24 @@ fun DropdownList(
 
     Box(
         modifier = modifier
-            .background(Color.White) // Use a neutral background color
-            .border(width = 1.dp, color = Color.Gray)
+            .background(MaterialTheme.colorScheme.inverseOnSurface) // Use a neutral background color
             .clickable { showDropdown = true }
-            .padding(all = 4.dp),
+            .padding(16.dp),
         contentAlignment = Alignment.Center
     ) {
-        Text(text = itemList[selectedIndex])
+        Text(
+            text = itemList[selectedIndex],
+            fontFamily = interFamily,
+            fontWeight = FontWeight.SemiBold,
+            fontSize = 20.sp
+        )
 
         DropdownMenu(
             expanded = showDropdown,
             onDismissRequest = { showDropdown = false },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth().
+            padding(16.dp)
+                .clip(MaterialTheme.shapes.small)
         ) {
             itemList.forEachIndexed { index, item ->
                 DropdownMenuItem(
@@ -262,7 +276,13 @@ fun DropdownList(
                         showDropdown = false
                     }
                 ) {
-                    Text(text = item)
+                    Text(
+                        text = item,
+                        fontFamily = interFamily,
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 20.sp,
+                        textAlign = TextAlign.Center
+                    )
                 }
             }
         }

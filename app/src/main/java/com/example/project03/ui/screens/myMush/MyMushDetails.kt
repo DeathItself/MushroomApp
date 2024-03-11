@@ -1,5 +1,6 @@
 package com.example.project03.ui.screens.myMush
 
+import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.ScrollableState
@@ -31,6 +32,10 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -77,6 +82,7 @@ fun RecibirDatosSeta(padding: PaddingValues, myMushID: String, navController: Na
     val pagerState = androidx.compose.foundation.pager.rememberPagerState(
         initialPage = 0, initialPageOffsetFraction = -0.3f, pageCount = { 2 }
     )
+    var isDeleted by remember { mutableStateOf("") }
 
     LazyColumn(modifier = Modifier
         .padding(padding)
@@ -222,11 +228,17 @@ fun RecibirDatosSeta(padding: PaddingValues, myMushID: String, navController: Na
                             onClick = {
                                 // Llama a la función para borrar la seta
                                 CoroutineScope(Dispatchers.IO).launch {
-                                    FirebaseFirestore.getInstance()
-                                        .deleteMushroom(mushObj.commonName, mushObj.description)
+                                    isDeleted=FirebaseFirestore.getInstance()
+                                        .deleteMushroom(mushObj.commonName, mushObj.commentary)
                                 }
+                                navController.popBackStack()
                             }, colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
                         ) {
+                            if (isDeleted=="true"){
+                                Toast.makeText(navController.context, "Seta eliminada", Toast.LENGTH_SHORT).show()
+                            }else if (isDeleted=="false"){
+                                Toast.makeText(navController.context, "Error al eliminar la seta", Toast.LENGTH_SHORT).show()
+                            }
                             Icon(
                                 Icons.Filled.DeleteForever,
                                 contentDescription = "Borrar",

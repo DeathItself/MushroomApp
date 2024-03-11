@@ -102,15 +102,17 @@ suspend fun FirebaseFirestore.updateScore(ranking: Ranking) {
     collection("puntuacion").document(ranking.userId).set(ranking)
 }
 
-suspend fun FirebaseFirestore.deleteMushroom(commonName: String, Description: String) {
+suspend fun FirebaseFirestore.deleteMushroom(commonName: String, commentary: String): String{
     val documentId = FirebaseFirestore.getInstance().collection("my_mushrooms")
-        .whereEqualTo("commonName", commonName).whereEqualTo("description", Description).get()
+        .whereEqualTo("commonName", commonName).whereEqualTo("commentary", commentary).get()
         .await().documents[0].id
     try {
         // Delete the mushroom document
         collection("my_mushrooms").document(documentId).delete().await()
+        return "true"
     } catch (e: Exception) {
         println("Error deleting mushroom from Firebase: ${e.message}")
+        return "false"
     }
 }
 
